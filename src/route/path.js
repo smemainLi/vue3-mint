@@ -3,6 +3,8 @@ export const Index = r => require.ensure([], () => r(require('../views/index.vue
 
 /* 预约 */
 export const order = r => require.ensure([], () => r(require('../views/order/index.vue')), e => console.log(e), 'order')
+export const notice = r => require.ensure([], () => r(require('../views/order/notice.vue')), e => console.log(e), 'notice')
+export const onlineBooking = r => require.ensure([], () => r(require('../views/order/onlineBooking.vue')), e => console.log(e), 'onlineBooking')
 
 /* 缴费 */
 export const pay = r => require.ensure([], () => r(require('../views/pay/index.vue')), e => console.log(e), 'pay')

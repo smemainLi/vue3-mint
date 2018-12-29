@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?da4oz2');
-  src:  url('fonts/icomoon.eot?da4oz2#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?da4oz2') format('truetype'),
-    url('fonts/icomoon.woff?da4oz2') format('woff'),
-    url('fonts/icomoon.svg?da4oz2#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?bfd6a9');
+  src:  url('fonts/icomoon.eot?bfd6a9#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?bfd6a9') format('truetype'),
+    url('fonts/icomoon.woff?bfd6a9') format('woff'),
+    url('fonts/icomoon.svg?bfd6a9#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -27,7 +27,7 @@
 .icon-navigation:before {
   content: "\e90d";
 }
-.icon-wechat:before {
+.icon-message:before {
   content: "\e90f";
 }
 .icon-edit:before {

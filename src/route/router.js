@@ -12,6 +12,8 @@ const router = new Router({
     { path: '/', name: 'index', meta: { title: '首页' }, component: routerPath.Index },
     /* 预约 */
     { path: '/order/index', meta: { title: '在线预约' }, name: 'order', component: routerPath.order },
+    { path: '/order/notice', meta: { title: '预约须知' }, name: 'notice', component: routerPath.notice },
+    { path: '/order/onlineBooking', meta: { title: '在线预约' }, name: 'onlineBooking', component: routerPath.onlineBooking },
     /* 缴费 */
     { path: '/pay/index', meta: { title: '缴费' }, name: 'pay', component: routerPath.pay },
     /* 精选项目 */
