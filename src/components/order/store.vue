@@ -57,6 +57,7 @@ export default {
         display: flex;
         justify-content: flex-start;
         color: $color-35;
+        font-size: 32px;
         .store-distance {
           position: absolute;
           right: 32px;

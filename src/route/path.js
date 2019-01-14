@@ -5,6 +5,10 @@ export const Index = r => require.ensure([], () => r(require('../views/index.vue
 export const order = r => require.ensure([], () => r(require('../views/order/index.vue')), e => console.log(e), 'order')
 export const notice = r => require.ensure([], () => r(require('../views/order/notice.vue')), e => console.log(e), 'notice')
 export const onlineBooking = r => require.ensure([], () => r(require('../views/order/onlineBooking.vue')), e => console.log(e), 'onlineBooking')
+export const addOrEdit = r => require.ensure([], () => r(require('../views/order/addOrEdit.vue')), e => console.log(e), 'addOrEdit')
+export const payment = r => require.ensure([], () => r(require('../views/order/payment.vue')), e => console.log(e), 'payment')
+export const orderSuccess = r => require.ensure([], () => r(require('../views/order/orderSuccess.vue')), e => console.log(e), 'orderSuccess')
+export const payPassword = r => require.ensure([], () => r(require('../views/order/payPassword.vue')), e => console.log(e), 'payPassword')
 
 /* 缴费 */
 export const pay = r => require.ensure([], () => r(require('../views/pay/index.vue')), e => console.log(e), 'pay')
@@ -20,6 +24,7 @@ export const consult = r => require.ensure([], () => r(require('../views/consult
 
 /* 预约记录 */
 export const arecord = r => require.ensure([], () => r(require('../views/arecord/index.vue')), e => console.log(e), 'arecord')
+export const appointmentDetails = r => require.ensure([], () => r(require('../views/arecord/appointmentDetails.vue')), e => console.log(e), 'appointmentDetails')
 
 /* 缴费记录 */
 export const precord = r => require.ensure([], () => r(require('../views/precord/index.vue')), e => console.log(e), 'precord')

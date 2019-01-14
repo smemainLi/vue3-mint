@@ -29,7 +29,7 @@ export default {
     width: 100%;
     color: $color-ff;
     font-size: 36px;
-    background: linear-gradient(-32deg, rgb(0, 140, 167), rgb(47, 180, 206));
+    background: $color-gradient;
     .btn-name {
       margin-left: 14px;
       letter-spacing: 2px;

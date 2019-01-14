@@ -1,57 +1,38 @@
 <template>
   <div class="online-booking">
-    <field v-model="test1" :label="'门诊'" :placeholder="'请填写门诊'" :isDate="false" :hasBr="true"></field>
-    <field v-model="test2" :label="'预约日期'" :placeholder="'请选择日期'" :isDate="true" :hasBr="true"></field>
-    <field v-model="test3" :label="'就诊时间'" :placeholder="'请选择时间段'" :isDate="false" :hasBr="false"></field>
-    <button @click="tttestt">测试测试</button>
+    <online-basic-info></online-basic-info>
+    <online-service-items></online-service-items>
+    <online-description></online-description>
+    <online-choose-patient></online-choose-patient>
+    <general-button :isAgree="isAgree" :btnName="btnName" @click.native="makeAnAppointment"></general-button>
+    <agree-notice @isAgreePro="isAgreeProtocol"></agree-notice>
   </div>
 </template>
 
 <script>
-import field from '../../components/order/field'
+import onlineBasicInfo from '../../components/order/onlineBasicInfo.vue'
+import onlineServiceItems from '../../components/order/onlineServiceItems.vue'
+import onlineDescription from '../../components/order/onlineDescription.vue'
+import onlineChoosePatient from '../../components/order/onlineChoosePatient.vue'
+import generalButton from '../../components/common/generalButton.vue'
+import agreeNotice from '../../components/order/agreeNotice.vue'
 
 export default {
   data () {
     return {
-      test1: '',
-      test2: '',
-      test3: '',
-      fieldData: [
-        {
-          label: '门诊',
-          // appointmentDate:'2018-12-18',
-          // visitingTime:''
-          placeholder: '请填写门诊',
-          value: '上冲门诊',
-          hasBr: true
-        },
-        {
-          label: '预约日期',
-          // appointmentDate:'2018-12-18',
-          // visitingTime:''
-          placeholder: '请选择日期',
-          value: '2018-12-18',
-          hasBr: true
-        },
-        {
-          label: '就诊时间',
-          // appointmentDate:'2018-12-18',
-          // visitingTime:''
-          placeholder: '请选择时间段',
-          value: '',
-          hasBr: false
-        }
-      ]
+      isAgree: true,
+      btnName: '确定预约'
     }
   },
   components: {
-    field
+    onlineBasicInfo, onlineServiceItems, onlineDescription, onlineChoosePatient, generalButton, agreeNotice
   },
   methods: {
-    tttestt () {
-      console.log(this.test1)
-      console.log(this.test2)
-      console.log(this.test3)
+    makeAnAppointment () {
+      this.$router.push('/order/payment')
+    },
+    isAgreeProtocol (val) { // 回调方法，接收子组件传的参数
+      this.isAgree = val
     }
   }
 }

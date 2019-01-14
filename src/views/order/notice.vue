@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import bottomButton from '../../components/common/bottomButton'
+import bottomButton from '../../components/common/bottomButton.vue'
 
 export default {
   data () {

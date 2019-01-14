@@ -12,8 +12,12 @@ const router = new Router({
     { path: '/', name: 'index', meta: { title: '首页' }, component: routerPath.Index },
     /* 预约 */
     { path: '/order/index', meta: { title: '在线预约' }, name: 'order', component: routerPath.order },
-    { path: '/order/notice', meta: { title: '预约须知' }, name: 'notice', component: routerPath.notice },
+    { path: '/order/notice', meta: { title: '在线预约' }, name: 'notice', component: routerPath.notice },
     { path: '/order/onlineBooking', meta: { title: '在线预约' }, name: 'onlineBooking', component: routerPath.onlineBooking },
+    { path: '/order/addOrEdit', meta: { title: '添加或编辑就诊人' }, name: 'addOrEdit', component: routerPath.addOrEdit },
+    { path: '/order/payment', meta: { title: '支付' }, name: 'payment', component: routerPath.payment },
+    { path: '/order/orderSuccess', meta: { title: '预约成功' }, name: 'orderSuccess', component: routerPath.orderSuccess },
+    { path: '/order/payPassword', meta: { title: '支付' }, name: 'payPassword', component: routerPath.payPassword },
     /* 缴费 */
     { path: '/pay/index', meta: { title: '缴费' }, name: 'pay', component: routerPath.pay },
     /* 精选项目 */
@@ -24,6 +28,7 @@ const router = new Router({
     { path: '/consult/index', meta: { title: '在线客服' }, name: 'consult', component: routerPath.consult },
     /* 预约记录 */
     { path: '/arecord/index', meta: { title: '我的预约' }, name: 'arecord', component: routerPath.arecord },
+    { path: '/arecord/appointmentDetails', meta: { title: '我的预约' }, name: 'appointmentDetails', component: routerPath.appointmentDetails },
     /* 缴费记录 */
     { path: '/precord/index', meta: { title: '我的门店消费' }, name: 'precord', component: routerPath.precord },
     /* 我买的商品 */

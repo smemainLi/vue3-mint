@@ -8,8 +8,8 @@
 </template>
 
 <script>
-import store from '../../components/order/store'
-import bottomButton from '../../components/common/bottomButton'
+import store from '../../components/order/store.vue'
+import bottomButton from '../../components/common/bottomButton.vue'
 
 export default {
   data () {
