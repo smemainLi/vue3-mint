@@ -1,5 +1,6 @@
 <template>
   <div class="order">
+    <button @click="testtest">dsfsdfsdfsd</button>
     <div class="store-list">
       <store :store="item" v-for="(item,index) in storeList" @click.native="selectStore" :key="index"></store>
     </div>
@@ -86,7 +87,29 @@ export default {
       if (flag === 0) {
         this.$router.push('/order/notice')
       }
+    },
+    test () {
+      window.addEventListener('touchmove',
+        function (ev) {
+          event.preventDefault()
+        },
+        { passive: false })
+    },
+    testtest () {
+      this.$toast({
+        message: '操作成功',
+        iconClass: 'mintui  mintui-field-warning'
+        // iconClass: 'mintui  mintui-field-success'
+        // iconClass: 'mintui  mintui-field-error'
+        // iconClass: 'mintui  mintui-search'
+        // iconClass: 'mintui  mintui-back'
+        // iconClass: 'mintui  mintui-more'
+        // iconClass: 'mintui mintui-success'
+      })
     }
+  },
+  created () {
+    this.test()
   }
 }
 </script>

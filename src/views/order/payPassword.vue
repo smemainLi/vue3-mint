@@ -1,12 +1,10 @@
 <template>
   <div class="pay-password">
     <div class="pay-tip">
-      <div class="tip-content">
-        <div class="member-tip" v-cloak>{{memberTip}}</div>
-        <div class="forget-tip" v-cloak>{{forgetTip}}</div>
-      </div>
+      <div class="member-tip" v-cloak>{{memberTip}}</div>
       <!-- 密码输入框 -->
-      <van-password-input :value="password" info="密码为 6 位数字" @focus="showKeyboard=true" />
+      <van-password-input :value="password" @focus="showKeyboard=true" />
+      <div class="forget-tip" v-cloak>{{forgetTip}}</div>
     </div>
     <!-- 数字键盘 -->
     <van-number-keyboard :show="showKeyboard" @input="onInput" @delete="onDelete" @blur="showKeyboard=false" />
@@ -40,20 +38,18 @@ export default {
 <style lang="scss" scoped>
 .pay-password {
   .pay-tip {
-    padding: 0 32px;
-    .tip-content {
-      display: flex;
-      justify-content: center;
+    padding: 40% 32px 0 32px;
+    text-align: center;
+    position: static;
+    .member-tip {
+      color: $color-1E8FA5;
+      font-size: 34px;
+      margin-bottom: 43px;
+    }
+    .forget-tip {
+      color: $color-88;
       font-size: 24px;
-      padding: 20px 0;
-      .member-tip {
-        color: $color-1E8FA5;
-      }
-      .forget-tip {
-        position: absolute;
-        right: 32px;
-        color: $color-88;
-      }
+      margin-top: 46px;
     }
     /deep/ .van-password-input__security i {
       background-color: $color-008CA7;

@@ -8,7 +8,7 @@
         <patient-item :patient="item" v-for="(item,index) in patientList" @click.native="selectPatient(item)" :key="index"></patient-item>
       </div>
     </div>
-    <router-link :to="{path:'/order/addOrEdit'}" tag="div" class="add-patient">
+    <router-link :to="{path:'/order/addPatient'}" tag="div" class="add-patient">
       <span class="add-content" v-cloak>{{addContent}}</span>
     </router-link>
   </div>

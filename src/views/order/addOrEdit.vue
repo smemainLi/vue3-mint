@@ -1,5 +1,4 @@
 <template>
-  <!-- ###################对应添加或者编辑页面的时候要修改document.title################## -->
   <div class="add-or-edit">
     <div class="tip-message">
       <span class="tip-content" v-cloak>{{tipContent}}</span>

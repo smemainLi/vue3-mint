@@ -6,8 +6,8 @@
         <div class="box-title" v-cloak>{{title}}</div>
         <div class="box-message" v-cloak>{{message}}</div>
         <div class="box-buttons">
-          <button class="com-button btn-cancel" v-cloak>{{btnCancel}}</button>
-          <button class="com-button btn-confirm" v-cloak>{{btnConfirm}}</button>
+          <button class="com-button btn-cancel" @click="cancel" v-cloak>{{btnCancel}}</button>
+          <button class="com-button btn-confirm" @click="confirm" v-cloak>{{btnConfirm}}</button>
         </div>
       </div>
     </div>
@@ -22,6 +22,16 @@ export default {
       message: '取消后，挂号费将退至会员红包',
       btnCancel: '取消',
       btnConfirm: '确定'
+    }
+  },
+  methods: {
+    cancel () {
+      this.$emit('getDialogStatusCancel', false)
+    },
+    confirm () {
+      this.$emit('getDialogStatusConfirm', false)
+      this.$router.push({ path: '/arecord/appointmentDetails' })
+      /* this.$router.push({ path: '/arecord/appointmentDetails', query: { redirect: '/arecord/appointmentDetails' } }) */
     }
   }
 }

@@ -28,8 +28,11 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.index
-  text-align center
-  h3
-    cursor pointer
+.index {
+  text-align: center;
+
+  h3 {
+    cursor: pointer;
+  }
+}
 </style>

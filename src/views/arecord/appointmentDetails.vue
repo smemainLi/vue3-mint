@@ -4,7 +4,7 @@
     <status-info :statusList="statusList"></status-info>
     <service-info :subitemStatus="subitemStatus" :serviceList="serviceList"></service-info>
     <general-button class="btn-style" :btnName="btnName" v-show="subitemStatus===success" @click.native="cancelReservation"></general-button>
-    <dialog-box v-show="boxMask"></dialog-box>
+    <dialog-box v-show="boxMask" @getDialogStatusConfirm="changeDialogStatusConfirm" @getDialogStatusCancel="changeDialogStatusCancel"></dialog-box>
   </div>
 </template>
 
@@ -26,119 +26,137 @@ export default {
       statusList: [],
       serviceList: [],
       btnName: '取消预约',
-      boxMask: false // 是否显示弹框的标志
+      boxMask: false, // 是否显示弹框的标志
+      topVal: 0// 记录滚动的高度
     }
   },
   components: { qrcodeDisplay, statusInfo, serviceInfo, generalButton, dialogBox },
   created () {
-    switch (this.subitemStatus) {
-      case this.success:
-        this.statusList = [
-          { label: '状态', value: '预约成功', hasBr: true, isStatus: true },
-          { label: '预约方式', value: '线上预约', hasBr: false, isStatus: false }
-        ]
-        this.serviceList = [
-          { label: '门店', value: '上冲诊所', hasBr: true },
-          { label: '预约日期', value: '2018-01-12 10:00~10:30', hasBr: true },
-          { label: '下单时间', value: '2018-01-10 14:21', hasBr: true },
-          { label: '就诊人', value: '露久', hasBr: true },
-          { label: '服务项目', value: '矫正', hasBr: true },
-          { label: '情况说明', value: '正颚手术', hasBr: true },
-          { label: '挂号费', value: '￥8', hasBr: true },
-          { label: '支付方式', value: '微信支付', hasBr: true },
-          { label: '收银员', value: '刘百搭', hasBr: false }
-        ]
-        break
-      case this.cancel:
-        this.statusList = [
-          { label: '状态', value: '已取消', hasBr: true, isStatus: true },
-          { label: '预约方式', value: '线上预约', hasBr: true, isStatus: false },
-          { label: '取消时间', value: '2018-01-14 14:21', hasBr: false, isStatus: false }
-        ]
-        this.serviceList = [
-          { label: '门店', value: '上冲诊所', hasBr: true },
-          { label: '预约日期', value: '2018-01-12 10:00~10:30', hasBr: true },
-          { label: '下单时间', value: '2018-01-10 14:21', hasBr: true },
-          { label: '就诊人', value: '露久', hasBr: true },
-          { label: '服务项目', value: '矫正', hasBr: true },
-          { label: '情况说明', value: '正颚手术', hasBr: true },
-          { label: '挂号费', value: '￥8（已退款）', hasBr: true },
-          { label: '支付方式', value: '微信支付', hasBr: true },
-          { label: '收银员', value: '刘百搭', hasBr: false }
-        ]
-        break
-      case this.used:
-        this.statusList = [
-          { label: '状态', value: '已使用', hasBr: true, isStatus: true },
-          { label: '预约方式', value: '线上预约', hasBr: true, isStatus: false },
-          { label: '到店时间', value: '2018-01-14 14:21', hasBr: false, isStatus: false }
-        ]
-        this.serviceList = [
-          { label: '门店', value: '上冲诊所', hasBr: true },
-          { label: '预约日期', value: '2018-01-12 10:00~10:30', hasBr: true },
-          { label: '下单时间', value: '2018-01-10 14:21', hasBr: true },
-          { label: '就诊人', value: '露久', hasBr: true },
-          { label: '服务项目', value: '矫正', hasBr: true },
-          { label: '情况说明', value: '正颚手术', hasBr: true },
-          { label: '挂号费', value: '￥8', hasBr: true },
-          { label: '支付方式', value: '微信支付', hasBr: true },
-          { label: '收银员', value: '刘百搭', hasBr: false }
-        ]
-        break
-      case this.expired:
-        this.statusList = [
-          { label: '状态', value: '已失效', hasBr: true, isStatus: true },
-          { label: '预约方式', value: '线上预约', hasBr: false, isStatus: false }
-        ]
-        this.serviceList = [
-          { label: '门店', value: '上冲诊所', hasBr: true },
-          { label: '预约日期', value: '2018-01-12 10:00~10:30', hasBr: true },
-          { label: '下单时间', value: '2018-01-10 14:21', hasBr: true },
-          { label: '就诊人', value: '露久', hasBr: true },
-          { label: '服务项目', value: '矫正', hasBr: true },
-          { label: '情况说明', value: '正颚手术', hasBr: true },
-          { label: '挂号费', value: '￥8（已退款）', hasBr: true },
-          { label: '支付方式', value: '微信支付', hasBr: true },
-          { label: '收银员', value: '刘百搭', hasBr: false }
-        ]
-        break
-      default:
-        break
+    this.loadData()
+  },
+  watch: {
+    boxMask: function (newVal, oldVal) {
+      console.log(newVal)
     }
   },
   methods: {
+    /* 根据状态加载数据 */
+    loadData () {
+      switch (this.subitemStatus) {
+        case this.success:
+          this.statusList = [
+            { label: '状态', value: '预约成功', hasBr: true, isStatus: true },
+            { label: '预约方式', value: '线上预约', hasBr: false, isStatus: false }
+          ]
+          this.serviceList = [
+            { label: '门店', value: '上冲诊所', hasBr: true },
+            { label: '预约日期', value: '2018-01-12 10:00~10:30', hasBr: true },
+            { label: '下单时间', value: '2018-01-10 14:21', hasBr: true },
+            { label: '就诊人', value: '露久', hasBr: true },
+            { label: '服务项目', value: '矫正', hasBr: true },
+            { label: '情况说明', value: '正颚手术', hasBr: true },
+            { label: '挂号费', value: '￥8', hasBr: true },
+            { label: '支付方式', value: '微信支付', hasBr: true },
+            { label: '收银员', value: '刘百搭', hasBr: false }
+          ]
+          break
+        case this.cancel:
+          this.statusList = [
+            { label: '状态', value: '已取消', hasBr: true, isStatus: true },
+            { label: '预约方式', value: '线上预约', hasBr: true, isStatus: false },
+            { label: '取消时间', value: '2018-01-14 14:21', hasBr: false, isStatus: false }
+          ]
+          this.serviceList = [
+            { label: '门店', value: '上冲诊所', hasBr: true },
+            { label: '预约日期', value: '2018-01-12 10:00~10:30', hasBr: true },
+            { label: '下单时间', value: '2018-01-10 14:21', hasBr: true },
+            { label: '就诊人', value: '露久', hasBr: true },
+            { label: '服务项目', value: '矫正', hasBr: true },
+            { label: '情况说明', value: '正颚手术', hasBr: true },
+            { label: '挂号费', value: '￥8（已退款）', hasBr: true },
+            { label: '支付方式', value: '微信支付', hasBr: true },
+            { label: '收银员', value: '刘百搭', hasBr: false }
+          ]
+          break
+        case this.used:
+          this.statusList = [
+            { label: '状态', value: '已使用', hasBr: true, isStatus: true },
+            { label: '预约方式', value: '线上预约', hasBr: true, isStatus: false },
+            { label: '到店时间', value: '2018-01-14 14:21', hasBr: false, isStatus: false }
+          ]
+          this.serviceList = [
+            { label: '门店', value: '上冲诊所', hasBr: true },
+            { label: '预约日期', value: '2018-01-12 10:00~10:30', hasBr: true },
+            { label: '下单时间', value: '2018-01-10 14:21', hasBr: true },
+            { label: '就诊人', value: '露久', hasBr: true },
+            { label: '服务项目', value: '矫正', hasBr: true },
+            { label: '情况说明', value: '正颚手术', hasBr: true },
+            { label: '挂号费', value: '￥8', hasBr: true },
+            { label: '支付方式', value: '微信支付', hasBr: true },
+            { label: '收银员', value: '刘百搭', hasBr: false }
+          ]
+          break
+        case this.expired:
+          this.statusList = [
+            { label: '状态', value: '已失效', hasBr: true, isStatus: true },
+            { label: '预约方式', value: '线上预约', hasBr: false, isStatus: false }
+          ]
+          this.serviceList = [
+            { label: '门店', value: '上冲诊所', hasBr: true },
+            { label: '预约日期', value: '2018-01-12 10:00~10:30', hasBr: true },
+            { label: '下单时间', value: '2018-01-10 14:21', hasBr: true },
+            { label: '就诊人', value: '露久', hasBr: true },
+            { label: '服务项目', value: '矫正', hasBr: true },
+            { label: '情况说明', value: '正颚手术', hasBr: true },
+            { label: '挂号费', value: '￥8（已退款）', hasBr: true },
+            { label: '支付方式', value: '微信支付', hasBr: true },
+            { label: '收银员', value: '刘百搭', hasBr: false }
+          ]
+          break
+        default:
+          break
+      };
+    },
     /* 取消预约 */
     cancelReservation () {
       this.boxMask = true
-      /* window.addEventListener('touchmove', (e) => { // 监听滚动事件
-        console.log('sdfhsdiufhisdhfihsdihf')
-        if (this.boxMask) {
-          e.preventDefault()// 禁止浏览器默认行为
-        }
-      }, false) */
-      /* document.addEventListener('touchstart', function (event) {
-        event.preventDefault()
-      }, false) */
-      /* window.addEventListener('touchmove', function (event) {
-        console.log(event)
-        // 判断默认行为是否可以被禁用
-        if (event.cancelable) {
-          // 判断默认行为是否已经被禁用
-          if (!event.defaultPrevented) {
-            event.preventDefault()
-          }
-        }
-      }, false) */
-      window.addEventListener('scroll', this.scrollFn)
+      this.stopBodyScroll(this.boxMask)
     },
-    scrollFn () {
-      console.log('dskjfhsdkfhsdk')
+    /* 禁止页面滚动 */
+    stopBodyScroll (isFixed) {
+      let bodyEl = document.body
+      let top = 0
+      if (isFixed) {
+        top = window.scrollY
+        this.topVal = top// 存储这个值，当点击取消的时候可以用到
+        bodyEl.style.position = 'fixed'
+        bodyEl.style.top = -top + 'px'
+      } else {
+        top = this.topVal
+        bodyEl.style.position = ''
+        bodyEl.style.top = ''
+        window.scrollTo(0, top) // 回到原先的top
+      }
+    },
+    /* 改变弹窗的状态，由确定按钮触发 */
+    changeDialogStatusConfirm (status) {
+      console.log(status)
+      this.boxMask = status
+      this.stopBodyScroll(this.boxMask)
+      this.subitemStatus = '已取消'/* 状态变为‘已取消’ */
+      this.loadData()
+    },
+    /* 改变弹窗的状态，由取消按钮触发 */
+    changeDialogStatusCancel (status) {
+      console.log(status)
+      this.boxMask = status
+      this.stopBodyScroll(this.boxMask)
     }
   },
+
   destroyed () {
-    window.removeEventListener('touchmove', (e) => {
-      e.preventDefault()
-    }, false)
+    /* 退出本页面的时候，window回到原先的0的位置 */
+    this.stopBodyScroll(false)
   }
 }
 </script>
