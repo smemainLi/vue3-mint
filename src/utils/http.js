@@ -44,7 +44,7 @@ class $axios {
   }
 
   post(url, data = {}) {
-    this.$http.post(url, data).then((res) => {
+    return this.$http.post(url, data).then((res) => {
       return res
     }).catch((err) => {
       return Promise.reject(err)
