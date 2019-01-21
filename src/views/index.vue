@@ -20,7 +20,8 @@ export default {
         { name: '预约记录', url: '/arecord/index' },
         { name: '缴费记录', url: '/precord/index' },
         { name: '我买的商品', url: '/bought/index' },
-        { name: '会员卡', url: '/mcard/index' }
+        { name: '会员卡', url: '/mcard/index' },
+        { name: '登录', url: '/mcard/login' }
       ]
     }
   }
