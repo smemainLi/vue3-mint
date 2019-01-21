@@ -35,7 +35,8 @@ const router = new Router({
     /* 我买的商品 */
     { path: '/bought/index', meta: { title: '我买的商品' }, name: 'bought', component: routerPath.bought },
     /* 会员卡 */
-    { path: '/mcard/index', meta: { title: '会员卡' }, name: 'mcard', component: routerPath.mcard }
+    { path: '/mcard/index', meta: { title: '会员卡' }, name: 'mcard', component: routerPath.mcard },
+    { path: '/mcard/login', meta: { title: '登录/开通会员卡' }, name: 'login', component: routerPath.login }
   ]
 })
 

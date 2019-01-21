@@ -34,3 +34,4 @@ export const bought = r => require.ensure([], () => r(require('../views/bought/i
 
 /* 会员卡 */
 export const mcard = r => require.ensure([], () => r(require('../views/mcard/index.vue')), e => console.log(e), 'mcard')
+export const login = r => require.ensure([], () => r(require('../views/mcard/login.vue')), e => console.log(e), 'login')
