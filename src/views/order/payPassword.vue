@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
   data () {
     return {
@@ -22,10 +23,27 @@ export default {
     }
   },
   methods: {
+    ...mapActions({ appointmentPay: 'appointmentPay' }),
     onInput (key) {
       // 截取字符串'this.password+key'从下标0到6不包含下标为6的一串字符串
       this.password = (this.password + key).slice(0, 6)
-      if (this.password.length === 6) this.$router.push({ path: '/order/orderSuccess' })
+      if (this.password.length === 6) {
+        console.log(this.$route.query.payType)
+        console.log(JSON.parse(localStorage.getItem('bookingData')))// 反序列化，JSON.parse()将JSON字符串转成JSON对象
+        let data = JSON.parse(localStorage.getItem('bookingData'))
+        data.payPass = this.password// 给对象添加新属性
+        console.log(data)
+        this.appointmentPay(data).then((res) => {
+          console.log(res)
+          if (res.data.registerId) {
+            /* 模拟成功跳转预约详情页面 */
+            this.$router.push({ path: '/order/orderSuccess', query: { registerId: res.data.registerId } })
+          }
+        }).catch((err) => {
+          this.$toast('数据错误')
+          throw new Error(err)
+        })
+      }
     },
     onDelete () {
       // 截取字符串'this.password'从下标0到this.password字符串总长减去1不包含下标为this.password字符串总长减去1的一串字符串

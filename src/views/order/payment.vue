@@ -40,8 +40,9 @@ export default {
       mode.selected = true
     },
     immediatePay () {
-      if (this.modeList[0].selected) { // 选择会员支付会跳转密码输入页面
-        this.$router.push({ path: '/order/payPassword' })
+      if (this.modeList[0].selected) {
+        // 如果用户已经设置了钱包支付密码，当选择会员支付会跳转密码输入页面，否则跳转钱包密码设置页面
+        this.$router.push({ path: '/order/payPassword', query: { payType: 2 } })
       } else {
         alert('微信支付')
       }
@@ -69,6 +70,7 @@ export default {
       }
       .amount-value {
         font-size: 80px;
+        font-family: PingFang-SC-Medium;
       }
     }
   }

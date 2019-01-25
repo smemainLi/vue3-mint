@@ -16,12 +16,13 @@
       <div class="field-label">
         <span class="label-content" v-cloak>{{registeredFee.label}}</span>
       </div>
-      <input class="field-input field-fee-input" type="text" :placeholder="registeredFee.placeholder" v-model="registeredFeeVal">
+      <input class="field-input field-fee-input" type="text" readonly="readonly" :placeholder="registeredFee.placeholder" :value="`${feeVal}元`">
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   data () {
     return {
@@ -34,8 +35,16 @@ export default {
         label: '挂号费',
         placeholder: ''
       },
-      registeredFeeVal: '8元'
+      registeredFeeVal: ''
     }
+  },
+  props: [],
+  methods: {
+  },
+  computed: {
+    ...mapState({
+      feeVal: state => state.order.feeVal
+    })
   }
 }
 </script>
@@ -66,6 +75,7 @@ export default {
     .field-fee-input {
       font-size: 32px;
       color: $color-008CA7;
+      font-family: PingFang-SC-Medium;
     }
   }
   .field-br {

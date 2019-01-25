@@ -3,7 +3,6 @@ export const Index = r => require.ensure([], () => r(require('../views/index.vue
 
 /* 预约 */
 export const order = r => require.ensure([], () => r(require('../views/order/index.vue')), e => console.log(e), 'order')
-export const notice = r => require.ensure([], () => r(require('../views/order/notice.vue')), e => console.log(e), 'notice')
 export const onlineBooking = r => require.ensure([], () => r(require('../views/order/onlineBooking.vue')), e => console.log(e), 'onlineBooking')
 export const addOrEdit = r => require.ensure([], () => r(require('../views/order/addOrEdit.vue')), e => console.log(e), 'addOrEdit')
 export const payment = r => require.ensure([], () => r(require('../views/order/payment.vue')), e => console.log(e), 'payment')
@@ -35,3 +34,5 @@ export const bought = r => require.ensure([], () => r(require('../views/bought/i
 /* 会员卡 */
 export const mcard = r => require.ensure([], () => r(require('../views/mcard/index.vue')), e => console.log(e), 'mcard')
 export const login = r => require.ensure([], () => r(require('../views/mcard/login.vue')), e => console.log(e), 'login')
+export const protocol = r => require.ensure([], () => r(require('../views/mcard/protocol.vue')), e => console.log(e), 'protocol')
+export const onceProtocol = r => require.ensure([], () => r(require('../views/mcard/onceProtocol.vue')), e => console.log(e), 'onceProtocol')

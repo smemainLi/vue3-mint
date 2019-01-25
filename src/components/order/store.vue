@@ -15,7 +15,7 @@
         </div>
         <div class="store-nav">
           <i class="icon-guidepost"></i>
-          <span class="nav-content" v-cloak>{{store.storeNav}}</span>
+          <span class="nav-content" v-cloak>{{storeNav}}</span>
         </div>
       </div>
     </div>
@@ -26,6 +26,7 @@
 export default {
   data () {
     return {
+      storeNav: '导航'
     }
   },
   props: ['store']
@@ -38,6 +39,7 @@ export default {
   height: 240px;
   background-color: $color-ff;
   margin-bottom: 24px;
+  padding: 0 0 6px 0;
   .store-info {
     padding: 30px 32px;
     display: flex;
@@ -53,26 +55,29 @@ export default {
     }
     .store-detail {
       margin-left: 22px;
+      position: relative;
       .store-first-row {
         display: flex;
-        justify-content: flex-start;
+        justify-content: space-between;
         color: $color-35;
         font-size: 32px;
         .store-distance {
-          position: absolute;
-          right: 32px;
+          font-size: 28px;
+          color: $color-35;
+          font-family: PingFang-SC-Medium;
         }
       }
       .store-location {
         color: $color-88;
         font-size: 26px;
-        margin-top: 30px;
+        margin-top: 20px;
+        width: 480px;
         .icon-address {
           margin-right: 9px;
         }
       }
       .store-nav {
-        margin-top: 32px;
+        margin-top: 24px;
         width: 156px;
         height: 50px;
         border: 1px solid $color-008CA7;
@@ -82,7 +87,8 @@ export default {
         line-height: 50px;
         text-align: center;
         position: absolute;
-        right: 48px;
+        bottom: -6px;
+        right: 0;
       }
     }
   }

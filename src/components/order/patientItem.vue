@@ -3,13 +3,13 @@
     <div :class="['patient-info',patient.hasBr?'patient-br':'']">
       <div class="font-info">
         <div class="patient-name" v-cloak>{{patient.patientName}}</div>
-        <router-link :to="{path:'/order/editPatient'}" tag="div" class="patient-edit">
+        <router-link :to="{path:'/order/editPatient',query:{patientId:patient.patientId}}" tag="div" class="patient-edit">
           <i class="icon-edit"></i>
         </router-link>
       </div>
       <div class="patient-select">
-        <i class="icon-unselected" v-show="!patient.selected"></i>
-        <i class="icon-selected" v-show="patient.selected"></i>
+        <i class="icon-unselected" v-show="!patient.patientSelected"></i>
+        <i class="icon-selected" v-show="patient.patientSelected"></i>
       </div>
     </div>
   </div>
@@ -19,7 +19,6 @@
 export default {
   data () {
     return {
-      patientName: '一杯'
     }
   },
   props: ['patient'],

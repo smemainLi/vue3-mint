@@ -1,5 +1,5 @@
 <template>
-  <div class="field">
+  <div class="field" v-show="value">
     <div class="field-row">
       <div class="field-label">
         <span class="label-content" v-cloak>{{label}}</span>

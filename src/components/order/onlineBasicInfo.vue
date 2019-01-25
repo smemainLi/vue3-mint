@@ -5,7 +5,7 @@
       <div class="field-label">
         <span class="label-content" v-cloak>{{clinic.label}}</span>
       </div>
-      <input class="field-input" type="text" :placeholder="clinic.placeholder" v-model="clinicVal">
+      <input class="field-input" type="text" readonly="readonly" :placeholder="clinic.placeholder" v-model="clinicVal">
     </div>
     <div class="field-br">
       <hr class="br-style">
@@ -27,57 +27,69 @@
       <div class="field-label">
         <span class="label-content" v-cloak>{{timeSlot.label}}</span>
       </div>
-      <input class="field-input" type="text" readonly="readonly" :placeholder="timeSlot.placeholder" v-model="timeSlotVal" @click="openPop">
+      <input class="field-input" type="text" readonly="readonly" :placeholder="timeSlot.placeholder" v-model="timeSlotVal" @click="selectTime">
     </div>
 
     <!-- 获取预约日期 -->
-    <mt-datetime-picker ref="pickerDate" v-model="pickerDate" @confirm="handleConfirm" type="date" year-format="{value} 年" month-format="{value} 月" date-format="{value} 日">
+    <mt-datetime-picker ref="pickerDate" :startDate="startDate" v-model="pickerDate" @confirm="handleConfirm" type="date" year-format="{value} 年" month-format="{value} 月" date-format="{value} 日">
     </mt-datetime-picker>
 
     <!-- 获取时间段 -->
-    <mt-popup v-model="popupVisible" position="bottom" popup-transition="popup-fade">
-      <mt-picker :slots="slots" @change="getSlotValue"></mt-picker>
-    </mt-popup>
+    <!-- <mt-popup v-model="popupVisible" position="bottom" popup-transition="popup-fade">
+      <mt-picker :slots="slots" :showToolbar="showToolBar" @change="getSlotValue"></mt-picker>
+    </mt-popup> -->
+
+    <!-- <mt-datetime-picker ref="picker" type="time" v-model="pickerValue">
+    </mt-datetime-picker> -->
+
+    <!-- 获取时间段 -->
+    <mt-actionsheet :actions="actions" v-model="sheetVisible">
+    </mt-actionsheet>
+
   </div>
 </template>
 
 <script>
 import { timeFormat } from '../../utils/tools'
+import { mapState } from 'vuex'
 
 export default {
-
   data () {
     return {
+      startDate: new Date(),
       clinic: {
         label: '门诊',
         placeholder: '请填写门诊'
       },
-      clinicVal: '上冲门诊',
+      clinicVal: this.storeName, // 门诊
       appointmentDate: {
         label: '预约日期',
         placeholder: '请选择日期'
       },
-      appointmentDateVal: '',
+      appointmentDateVal: '', // 预约日期
       timeSlot: {
         label: '就诊时间',
         placeholder: '请选择时间段'
       },
-      timeSlotVal: '',
-      popupVisible: false,
-      pickerDate: '',
-      slots: [
-        {
-          flex: 1,
-          values: ['请选择时间段', '9: 00 ~ 9: 30', '9: 30 ~ 10: 00', '10: 00 ~ 10: 30', '10: 30 ~ 11: 00', '11: 00 ~ 11: 30', '11: 30 ~ 12: 00', '12: 00 ~ 12: 30', '12: 30 ~ 13: 00', '13: 00 ~ 13: 30'],
-          className: 'slot',
-          textAlign: 'center'
-        }
-      ]
+      actions: [],
+      sheetVisible: false,
+      timeSlotVal: '', // 就诊时间
+      pickerDate: ''
     }
   },
+  props: ['storeName', 'times'],
   components: {
   },
+  computed: {
+    ...mapState({
+      slots: state => state.order.slots // 时间段，结合组件参照mint ui
+    })
+  },
   methods: {
+    test1 (msg) {
+      console.log(msg)
+    },
+
     openPicker () {
       this.$refs.pickerDate.open()// datetime-picker 提供了两个供外部调用的方法：open 和 close，分别用于打开和关闭选择器
     },
@@ -85,13 +97,22 @@ export default {
       this.appointmentDateVal = timeFormat(val)
       console.log(this.appointmentDateVal)
     },
-    openPop () {
-      this.popupVisible = true
-    },
-    getSlotValue (index, value) {
-      this.timeSlotVal = value
-      console.log(value)
+    selectTime () {
+      this.sheetVisible = true
+      this.actions = []
+      this.actions.length = 0
+      this.times.forEach(item => {
+        this.actions.push({
+          name: item,
+          method: (time) => {
+            this.timeSlotVal = item
+            console.log(time)
+          }
+        })
+      })
     }
+  },
+  mounted () {
   }
 }
 </script>

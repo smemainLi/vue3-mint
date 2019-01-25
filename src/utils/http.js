@@ -24,7 +24,7 @@ class $axios {
     });
     this.$http.interceptors.response.use((response) => {
       console.log('%c 返回数据 <=====', 'color: #4CAF50; font-weight: bold', response.data)
-      return response;
+      return response.data;
     }, (error) => {
       if (error.response) {
         switch (error.response.status) {

@@ -22,7 +22,7 @@ export default {
   },
   methods: {
     detailInfo (subitem) {
-      this.$router.push({ path: '/arecord/appointmentDetails', query: { subitemStatus: subitem.subitemStatus } })
+      this.$router.push({ path: '/arecord/appointmentDetails', query: { subitemStatus: subitem.subitemStatus === '预约成功' ? '已预约' : subitem.subitemStatus } })
     }
   }
 }

@@ -25,18 +25,17 @@ module.exports = {
     port: 9898,
     hotOnly: false,
     disableHostCheck: true,
-    proxy: null
-    // proxy: IS_PROD ? null : {
-    //   '/wx': {
-    //     target: 'http://10.10.21.57:9090',
-    //     ws: true,
-    //     changeOrigin: true
-    //   }
-    // }
+    proxy: IS_PROD ? null : {
+      '/wx': {
+        target: 'http://10.10.21.61:8081',
+        ws: true,
+        changeOrigin: true
+      }
+    }
   }
 }
 
-function addStyleResource (rule) {
+function addStyleResource(rule) {
   rule.use('style-resource')
     .loader('style-resources-loader')
     .options({

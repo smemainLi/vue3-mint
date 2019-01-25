@@ -5,7 +5,7 @@
         <span class="label-content" v-cloak>服务项目</span>
       </div>
       <div class="service-options">
-        <service-item :serviceItem="item.name" :selected="item.selected" v-for="(item,index) in serviceList" @click.native="selectService(item)" :key="index"></service-item>
+        <service-item :serviceItem="item.serviceName" :selected="item.serviceSelected" v-for="(item,index) in serviceList" @click.native="selectService(item)" :key="index"></service-item>
       </div>
     </div>
   </div>
@@ -14,28 +14,25 @@
 <script>
 import serviceItem from './serviceItem.vue'
 export default {
-
   data () {
     return {
-      serviceList: [
-        { name: '牙医美容', selected: true },
-        { name: '矫正/种植', selected: false },
-        { name: '儿童牙医', selected: false },
-        { name: '综合修复', selected: false },
-        { name: '不确定', selected: false }
-      ]
     }
   },
+  props: ['serviceList'],
   components: {
     serviceItem
   },
   methods: {
     // 服务项目只能选中其中一项
     selectService (serviceItem) {
+      console.log(serviceItem)
       this.serviceList.map((item) => {
-        item.selected = false
+        item.serviceSelected = false
       })
-      serviceItem.selected = true
+      serviceItem.serviceSelected = true
+      console.log(serviceItem.serviceId)
+
+      this.$emit('getServiceItemId', serviceItem.serviceId)
     }
   }
 }

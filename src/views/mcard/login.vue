@@ -12,10 +12,10 @@
           <i class="icon-graphic-code">
             <span class="path1"></span><span class="path2"></span>
           </i>
-          <input class="login-field" type="number" :placeholder="gvCodePlaceholder" v-model="gvCode">
+          <input class="login-field" :placeholder="gvCodePlaceholder" v-model="gvCode">
         </div>
-        <div class="gv-code-img">
-          <img class="img-content" :src="gvCodeImg" alt="">
+        <div class="gv-code-img" @click="getGvCode">
+          <img class="img-content" :src="`data:image/png;base64,${gvCodeImg}`" alt="">
         </div>
       </div>
       <div class="login-mv-code">
@@ -30,12 +30,14 @@
         </button>
       </div>
     </div>
-    <general-button :btnName="btnName" @click.native="login"></general-button>
+    <general-button :isAgree="isAgree" :btnName="btnName" @click.native="login"></general-button>
+    <agree-notice :protocolName="protocolName" :flag="flag" @isAgreePro="isAgreeProtocol"></agree-notice>
   </div>
 </template>
 
 <script>
 import generalButton from '../../components/common/generalButton.vue'
+import agreeNotice from '../../components/order/agreeNotice.vue'
 import { mapActions } from 'vuex'
 
 export default {
@@ -46,23 +48,49 @@ export default {
       phonePlaceholder: '请输入您的手机号码',
       gvCode: '',
       gvCodePlaceholder: '请输入图形验证码',
-      gvCodeImg: require('../../assets/images/mcard/mcardBg.png'),
+      gvCodeImg: '',
       mvCode: '',
       mvCodePlaceholder: '请输入短信验证码',
       buttonContent: '发送验证码',
       count: 60,
       timer: '', // 计时器
-      noClick: false// 禁止按钮点击
+      noClick: false, // 禁止按钮点击
+      isAgree: true,
+      protocolName: '会员卡协议',
+      flag: 'login'
     }
   },
-  components: { generalButton },
+  components: { generalButton, agreeNotice },
+  created () {
+    this.getGvCode()
+  },
   methods: {
-    // ...mapActions(['getCodePic']),
-    ...mapActions({ getCodePic: 'getCodePic' }),
+    // ...mapActions(['getCodePic', 'mcardAgreement']),
+    ...mapActions({ getCodePic: 'getCodePic', getPhoneCode: 'getPhoneCode', userLogin: 'userLogin' }),
+    getGvCode () {
+      this.getCodePic().then((res) => {
+        console.log(res)
+        this.gvCodeImg = res.data.vcodeImage
+      }).catch((err) => {
+        this.$toast('数据错误')
+        throw new Error(err)
+      })
+    },
     getMvCode () {
+      if (this.phone === '' || this.phone.length !== 11) {
+        this.$toast({ message: '手机号码有误', duration: 1000 })
+        return
+      }
       this.noClick = true
-      this.buttonContent = `倒计时 ${this.count}s`
-      this.countDown()
+      this.getPhoneCode({ mobile: this.phone, picCode: this.gvCode }).then((res) => {
+        console.log(res)
+        this.$toast(res.message)
+        this.buttonContent = `倒计时 ${this.count}s`
+        this.countDown()
+      }).catch((err) => {
+        this.$toast('数据错误')
+        throw new Error(err)
+      })
     },
     /* 计时器 */
     countDown () {
@@ -80,11 +108,23 @@ export default {
       }, 1000)
     },
     login () {
-      this.getCodePic().then((res) => {
+      if (this.mvCode === '') {
+        this.$toast({ message: '请填写短信验证码', duration: 1000 })
+        return
+      }
+      this.userLogin({ mobile: this.phone, smsCode: this.mvCode }).then((res) => {
         console.log(res)
+        localStorage.setItem('agreement', res.data.agreement)// false：读取协议 true：无需读取协议
+        if (res.message === '登录成功') {
+          setTimeout(() => this.$router.go(-1), 1000)// 登录成功回退上一页
+        }
       }).catch((err) => {
-        this.$toast({ message: err, iconClass: 'mintui  mintui-field-warning' })
+        this.$toast('数据错误')
+        throw new Error(err)
       })
+    },
+    isAgreeProtocol (val) {
+      this.isAgree = val
     }
   }
 }
@@ -100,6 +140,7 @@ export default {
     .login-field {
       font-size: 28px;
       color: $color-88;
+      width: 72%;
     }
     .login-account {
       width: 686px;
@@ -142,6 +183,7 @@ export default {
         .img-content {
           width: 100%;
           height: 100%;
+          border: 1px solid $color-e5;
         }
       }
     }
@@ -172,6 +214,7 @@ export default {
         .button-content {
           font-size: 28px;
           color: $color-88;
+          white-space: nowrap; //文本强制不换行
         }
       }
       .button-no-click {

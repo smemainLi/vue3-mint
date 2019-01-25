@@ -1,7 +1,7 @@
 <template>
   <div class="qrcode-display">
     <div class="qrcode-image">
-      <img class="image-content" :src="qrcodeImg" alt="">
+      <img class="image-content" :src="`data:image/png;base64,${qrcodeImg}`" alt="">
     </div>
     <div class="qrcode-tips">
       <div class="usage-tip" v-cloak>{{tipOne}}</div>
@@ -15,12 +15,13 @@
 export default {
   data () {
     return {
-      qrcodeImg: require('../../assets/images/arecord/qrCode.png'),
+      // qrcodeImg: require('../../assets/images/arecord/qrCode.png'),
       tipOne: '1 到门店后请去前台登记并出示二维码。',
       tipTwo: '2 请按时到来，否则可能需要额外等候。',
       tipThree: '3 就诊当天，不能取消预约。'
     }
-  }
+  },
+  props: ['qrcodeImg']
 }
 </script>
 

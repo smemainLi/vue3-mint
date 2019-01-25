@@ -8,9 +8,9 @@
         <patient-item :patient="item" v-for="(item,index) in patientList" @click.native="selectPatient(item)" :key="index"></patient-item>
       </div>
     </div>
-    <router-link :to="{path:'/order/addPatient'}" tag="div" class="add-patient">
+    <div class="add-patient" @click="addPatient">
       <span class="add-content" v-cloak>{{addContent}}</span>
-    </router-link>
+    </div>
   </div>
 </template>
 
@@ -21,20 +21,29 @@ export default {
   data () {
     return {
       titleContent: '选择就诊人',
-      patientList: [
-        { patientName: '一杯', selected: false, hasBr: true },
-        { patientName: '矿大一天', selected: false, hasBr: false }
-      ],
       addContent: '添加就诊人'
     }
   },
+  props: ['patientList'],
   components: {
     patientItem
   },
   methods: {
     /* 选择就诊人 */
     selectPatient (patientItem) {
-      patientItem.selected = !patientItem.selected
+      this.patientList.map((item) => {
+        item.patientSelected = false
+      })
+      patientItem.patientSelected = true
+      console.log(patientItem.patientId)
+      this.$emit('getPatientItemId', patientItem.patientId)
+    },
+    addPatient () {
+      if (this.patientList.length === 5) {
+        this.$toast({ message: '最多只能添加5位就诊人', duration: 1000 })
+        return
+      }
+      this.$router.push({ path: '/order/addPatient' })
     }
   }
 }

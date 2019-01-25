@@ -6,7 +6,7 @@
         <i class="icon-single-election" v-show="agree"></i>
       </div>
       <div class="notice-content" v-cloak>
-        {{noticeConFront}}<router-link class="content-behind" :to="{path:'/order/notice'}" tag="span" v-cloak>{{noticeConBehind}}</router-link>
+        {{noticeConFront}}<router-link class="content-behind" :to="{path:flag==='login'?'/mcard/userProtocol':'/order/appointmentProtocol',query:{flag:flag}}" tag="span" v-cloak>{{protocolName}}</router-link>
       </div>
     </div>
   </div>
@@ -17,10 +17,11 @@ export default {
   data () {
     return {
       agree: true,
-      noticeConFront: '我已经阅读并同意',
-      noticeConBehind: '预约须知'
+      noticeConFront: '我已经阅读并同意'
+      // noticeConBehind: '预约须知'
     }
   },
+  props: ['protocolName', 'flag'],
   methods: {
     agreeProtocol () {
       this.agree = !this.agree

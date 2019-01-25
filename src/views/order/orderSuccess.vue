@@ -16,8 +16,8 @@
       </div>
     </div>
     <div class="success-buttons">
-      <button class="com-button detail-button" v-cloak>{{detailButton}}</button>
-      <button class="com-button get-more-button" v-cloak>{{getMoreButton}}</button>
+      <router-link class="com-button detail-button" :to="{path:'/arecord/appointmentDetails',query:{registerId:registerId}}" tag="button" v-cloak>{{detailButton}}</router-link>
+      <router-link class="com-button get-more-button" :to="{path:'/mall/index'}" tag="button" v-cloak>{{getMoreButton}}</router-link>
     </div>
   </div>
 </template>
@@ -32,7 +32,8 @@ export default {
       aboveTip: '',
       followingTip: '',
       detailButton: '预约详情',
-      getMoreButton: '捡便宜'
+      getMoreButton: '捡便宜',
+      registerId: this.$route.query.registerId
     }
   },
   created () {
