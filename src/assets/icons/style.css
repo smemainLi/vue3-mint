@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?ht2iml');
-  src:  url('fonts/icomoon.eot?ht2iml#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?ht2iml') format('truetype'),
-    url('fonts/icomoon.woff?ht2iml') format('woff'),
-    url('fonts/icomoon.svg?ht2iml#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?8zq1n');
+  src:  url('fonts/icomoon.eot?8zq1n#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?8zq1n') format('truetype'),
+    url('fonts/icomoon.woff?8zq1n') format('woff'),
+    url('fonts/icomoon.svg?8zq1n#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,6 +24,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-telephone:before {
+  content: "\f095";
+}
 .icon-edit:before {
   content: "\e900";
 }
@@ -60,6 +63,15 @@
 }
 .icon-graphic-code .path2:before {
   content: "\e90a";
+  margin-left: -1em;
+  color: rgb(0, 140, 167);
+}
+.icon-icon-graphic-code .path1:before {
+  content: "\e923";
+  color: rgb(227, 250, 255);
+}
+.icon-icon-graphic-code .path2:before {
+  content: "\e924";
   margin-left: -1em;
   color: rgb(0, 140, 167);
 }

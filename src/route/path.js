@@ -36,3 +36,6 @@ export const mcard = r => require.ensure([], () => r(require('../views/mcard/ind
 export const login = r => require.ensure([], () => r(require('../views/mcard/login.vue')), e => console.log(e), 'login')
 export const protocol = r => require.ensure([], () => r(require('../views/mcard/protocol.vue')), e => console.log(e), 'protocol')
 export const onceProtocol = r => require.ensure([], () => r(require('../views/mcard/onceProtocol.vue')), e => console.log(e), 'onceProtocol')
+export const consumptionList = r => require.ensure([], () => r(require('../views/mcard/consumptionList.vue')), e => console.log(e), 'consumptionList')
+export const consumptionDetail = r => require.ensure([], () => r(require('../views/mcard/consumptionDetail.vue')), e => console.log(e), 'consumptionDetail')
+export const myPatients = r => require.ensure([], () => r(require('../views/mcard/myPatients.vue')), e => console.log(e), 'myPatients')

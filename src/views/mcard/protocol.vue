@@ -17,10 +17,12 @@ export default {
   },
   created () {
     console.log(this.$route.query.flag)
+    this.$indicator.open({ text: '加载中...', spinnerType: 'fading-circle' })
     if (this.$route.query.flag === 'login') { // 从登陆界面点击会员卡协议跳转到本页面
       this.protocolInfo({ code: 'registration_agreement' }).then((res) => {
         console.log(res)
-        this.protocolContent = res.data.copywriting.value
+        this.$indicator.close()
+        if (res.status === 200) this.protocolContent = res.data.copywriting.value
       }).catch((err) => {
         this.$toast('数据错误')
         throw new Error(err)
@@ -28,7 +30,8 @@ export default {
     } else if (this.$route.query.flag === 'online') { // 通过预约界面的预约须知跳转到本页面
       this.protocolInfo({ code: 'reservation_protocol' }).then((res) => {
         console.log(res)
-        this.protocolContent = res.data.copywriting.value
+        this.$indicator.close()
+        if (res.status === 200) this.protocolContent = res.data.copywriting.value
       }).catch((err) => {
         this.$toast('数据错误')
         throw new Error(err)

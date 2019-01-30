@@ -17,6 +17,7 @@
 <script>
 import paymentMode from '../../components/order/paymentMode.vue'
 import generalButton from '../../components/common/generalButton.vue'
+import { mapActions } from 'vuex'
 
 export default {
   data () {
@@ -28,11 +29,13 @@ export default {
         { id: 1, modeName: '会员卡支付', hasTip: true, selected: true, hasBr: true, payImg: require('../../assets/images/order/tdkqLogo.png') },
         { id: 2, modeName: '微信支付', hasTip: false, selected: false, hasBr: false, payImg: require('../../assets/images/order/wechatPay.png') }
       ],
-      btnName: '立即支付'
+      btnName: '立即支付',
+      isSetPayPassword: 1 // 是否设置支付密码 1：未设置 2：已设置
     }
   },
   components: { paymentMode, generalButton },
   methods: {
+    ...mapActions({ getOpenPasswordStatus: 'getOpenPasswordStatus' }),
     selectMode (mode) {
       this.modeList.map((item) => {
         item.selected = false
@@ -41,12 +44,27 @@ export default {
     },
     immediatePay () {
       if (this.modeList[0].selected) {
-        // 如果用户已经设置了钱包支付密码，当选择会员支付会跳转密码输入页面，否则跳转钱包密码设置页面
-        this.$router.push({ path: '/order/payPassword', query: { payType: 2 } })
+        if (this.isSetPayPassword === 1) { // 未设置钱包支付密码
+          this.$router.push({ path: '/order/payPassword', query: { isSetPayPassword: this.isSetPayPassword } })
+        } else {
+          // 如果用户已经设置了钱包支付密码，当选择会员支付会跳转密码输入页面，否则跳转钱包密码设置页面
+          this.$router.push({ path: '/order/payPassword', query: { payType: 2 } })
+        }
       } else {
         alert('微信支付')
       }
     }
+  },
+  created () {
+    /* 获取获取钱包密码开通状态 */
+    this.getOpenPasswordStatus({ registerId: localStorage.getItem('registerId') }).then((res) => {
+      console.log(res)
+      if (res.status === 200) this.isSetPayPassword = res.data.havePayPass ? 1 : 2
+      console.log(this.isSetPayPassword)
+    }).catch((err) => {
+      console.log('数据错误')
+      throw new Error(err)
+    })
   }
 }
 </script>

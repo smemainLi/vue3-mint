@@ -129,14 +129,17 @@ export default {
     this.relationshipVal = this.relationshipList[0].relation// 下拉框默认选中第一项
     if (this.$route.query.patientId) { // 如果能获取到就诊人id，表示进行编辑操作
       console.log(this.$route.query.patientId)
+      this.$indicator.open({ text: '加载中...', spinnerType: 'fading-circle' })
       this.getPatientInfo({ relationshipId: this.$route.query.patientId }).then((res) => {
         console.log(res)
-        console.log(res.data.relationship)
-        this.nameVal = res.data.name
-        this.phoneVal = res.data.mobile
-        this.sexVal = res.data.gender === 0 ? '女' : '男'
-        this.birthdateVal = res.data.birthday
-        this.relationshipVal = res.data.relationship === 1 ? this.relationshipList[1].relation : res.data.relationship === 2 ? this.relationshipList[2].relation : res.data.relationship === 3 ? this.relationshipList[3].relation : res.data.relationship === 4 ? this.relationshipList[4].relation : this.relationshipList[5].relation
+        this.$indicator.close()
+        if (res.status === 200) {
+          this.nameVal = res.data.name
+          this.phoneVal = res.data.mobile
+          this.sexVal = res.data.gender === 0 ? '女' : '男'
+          this.birthdateVal = res.data.birthday
+          this.relationshipVal = res.data.relationship === 1 ? this.relationshipList[1].relation : res.data.relationship === 2 ? this.relationshipList[2].relation : res.data.relationship === 3 ? this.relationshipList[3].relation : res.data.relationship === 4 ? this.relationshipList[4].relation : this.relationshipList[5].relation
+        }
       }).catch((err) => {
         this.$toast('数据错误')
         throw new Error(err)
@@ -155,10 +158,12 @@ export default {
     deleteData () {
       this.deletePatient({ relationshipId: this.$route.query.patientId }).then((res) => {
         console.log(res)
-        this.$toast({ message: '删除成功', duration: 1000 })
-        setTimeout(() => {
-          this.$router.go(-1)
-        }, 1000)
+        if (res.status === 200) {
+          this.$toast({ message: '删除成功', duration: 1000 })
+          setTimeout(() => {
+            this.$router.go(-1)
+          }, 1000)
+        }
       }).catch((err) => {
         this.$toast('数据错误')
         throw new Error(err)
@@ -187,10 +192,12 @@ export default {
           relationship: this.relationshipVal === '本人' ? 1 : this.relationshipVal === '父母' ? 2 : this.relationshipVal === '子女' ? 3 : this.relationshipVal === '夫妻' ? 4 : 5
         }).then((res) => {
           console.log(res)
-          this.$toast({ message: '更改成功', duration: 1000 })
-          setTimeout(() => {
-            this.$router.go(-1)
-          }, 1000)
+          if (res.status === 200) {
+            this.$toast({ message: '更改成功', duration: 1000 })
+            setTimeout(() => {
+              this.$router.go(-1)
+            }, 1000)
+          }
         }).catch((err) => {
           this.$toast('数据错误')
           throw new Error(err)
@@ -205,10 +212,12 @@ export default {
           relationship: this.relationshipVal === '本人' ? 1 : this.relationshipVal === '父母' ? 2 : this.relationshipVal === '子女' ? 3 : this.relationshipVal === '夫妻' ? 4 : 5
         }).then((res) => {
           console.log(res)
-          this.$toast({ message: '添加成功', duration: 1000 })
-          setTimeout(() => {
-            this.$router.go(-1)
-          }, 1000)
+          if (res.status === 200) {
+            this.$toast({ message: '添加成功', duration: 1000 })
+            setTimeout(() => {
+              this.$router.go(-1)
+            }, 1000)
+          }
         }).catch((err) => {
           this.$toast('数据错误')
           throw new Error(err)

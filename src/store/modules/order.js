@@ -22,8 +22,16 @@ const order = {
     deletePatient: ({ commit }, data) => { return $axios.post('/wx/relationship/delete', data) },
     /* 修改就诊人信息 */
     updatePatient: ({ commit }, data) => { return $axios.post('/wx/relationship/update', data) },
-    /* 支付页面 */
-    appointmentPay: ({ commit }, data) => { return $axios.post('/wx/register/toPay', data) }
+    /* 提交预约申请 */
+    submitAppointment: ({ commit }, data) => { return $axios.post('/wx/register/registerAdd', data) },
+    /* 获取钱包密码开通状态 */
+    getOpenPasswordStatus: ({ commit }, data) => { return $axios.post('/wx/register/toPay', data) },
+    /* 修改支付密码 */
+    updatePayPassword: ({ commit }, data) => { return $axios.post('/wx/member/updatePayPass', data) },
+    /* 验证密码 */
+    verifyPassword: ({ commit }, data) => { return $axios.post('/wx/member/memberPass', data) },
+    /* 后端存储状态 */
+    backEndSaveStatus: ({ commit }, data) => { return $axios.post('/wx/register/pay', data) }
   }
 }
 

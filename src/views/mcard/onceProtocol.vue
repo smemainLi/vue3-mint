@@ -21,9 +21,11 @@ export default {
   },
   created () {
     console.log(this.$route.query)
+    this.$indicator.open({ text: '加载中...', spinnerType: 'fading-circle' })
     this.protocolInfo({ code: 'reservation_protocol' }).then((res) => {
       console.log(res)
-      this.protocolContent = res.data.copywriting.value
+      this.$indicator.close()
+      if (res.status === 200) this.protocolContent = res.data.copywriting.value
     }).catch((err) => {
       this.$toast('数据错误')
       throw new Error(err)

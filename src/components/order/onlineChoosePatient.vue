@@ -31,6 +31,8 @@ export default {
   methods: {
     /* 选择就诊人 */
     selectPatient (patientItem) {
+      console.log(patientItem)
+
       this.patientList.map((item) => {
         item.patientSelected = false
       })

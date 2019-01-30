@@ -2,7 +2,7 @@
   <div class="action-item">
     <div class="item-row">
       <div class="item-left-info">
-        <div class="icon-img">
+        <div class="icon-img" v-show="actionItem.imgContent">
           <img class="img-content" :src="actionItem.imgContent" alt="">
         </div>
         <div class="remark-content" v-cloak>{{actionItem.remarkContent}}</div>
@@ -21,10 +21,7 @@
 export default {
   data () {
     return {
-      imgContent: require('../../assets/images/mcard/alarmClock.png'),
-      remarkContent: '我的预约',
-      rightArrow: require('../../assets/images/mcard/arrow.png'),
-      hasBr: true
+      rightArrow: require('../../assets/images/mcard/arrow.png')
     }
   },
   props: ['actionItem']

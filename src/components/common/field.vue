@@ -5,7 +5,7 @@
         <span class="label-content" v-cloak>{{label}}</span>
       </div>
       <div class="field-content">
-        <span :class="['field-value',isStatus?'field-other-style':'']" v-cloak>{{value}}</span>
+        <span :class="['field-value',isStatus||isMoney?'field-other-style':'',]" v-cloak>{{value}}</span>
       </div>
     </div>
     <div class="field-br" v-show="hasBr">
@@ -16,7 +16,7 @@
 
 <script>
 export default {
-  props: ['label', 'value', 'hasBr', 'isStatus']
+  props: ['label', 'value', 'hasBr', 'isStatus', 'isMoney']
 }
 </script>
 

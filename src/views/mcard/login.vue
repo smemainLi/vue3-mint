@@ -44,7 +44,7 @@ export default {
   data () {
     return {
       btnName: '登录',
-      phone: '',
+      phone: '13654789641',
       phonePlaceholder: '请输入您的手机号码',
       gvCode: '',
       gvCodePlaceholder: '请输入图形验证码',
@@ -70,7 +70,7 @@ export default {
     getGvCode () {
       this.getCodePic().then((res) => {
         console.log(res)
-        this.gvCodeImg = res.data.vcodeImage
+        if (res.status === 200) this.gvCodeImg = res.data.vcodeImage
       }).catch((err) => {
         this.$toast('数据错误')
         throw new Error(err)
@@ -85,8 +85,12 @@ export default {
       this.getPhoneCode({ mobile: this.phone, picCode: this.gvCode }).then((res) => {
         console.log(res)
         this.$toast(res.message)
-        this.buttonContent = `倒计时 ${this.count}s`
-        this.countDown()
+        if (res.status === 200) {
+          this.buttonContent = `倒计时 ${this.count}s`
+          this.countDown()
+        } else {
+          this.noClick = false
+        }
       }).catch((err) => {
         this.$toast('数据错误')
         throw new Error(err)
@@ -115,9 +119,10 @@ export default {
       this.userLogin({ mobile: this.phone, smsCode: this.mvCode }).then((res) => {
         console.log(res)
         localStorage.setItem('agreement', res.data.agreement)// false：读取协议 true：无需读取协议
-        if (res.message === '登录成功') {
+        if (res.status === 200) {
           setTimeout(() => this.$router.go(-1), 1000)// 登录成功回退上一页
         }
+        this.$toast({ message: res.message, duration: 1000 })
       }).catch((err) => {
         this.$toast('数据错误')
         throw new Error(err)

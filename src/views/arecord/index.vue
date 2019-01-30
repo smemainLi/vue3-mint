@@ -6,27 +6,57 @@
 
 <script>
 import subitem from '../../components/arecord/subitem.vue'
+import { mapActions } from 'vuex'
+
 export default {
   data () {
     return {
-      subitemList: [
-        { clinicName: '上冲诊所', amountSpent: '￥30', appointmentTime: '2018-12-20 10:30-11:00', orderTime: '2018-12-10 14:20', subitemStatus: '预约成功' },
-        { clinicName: '上冲诊所', amountSpent: '￥30', appointmentTime: '2018-12-20 10:30-11:00', orderTime: '2018-12-10 14:20', subitemStatus: '已取消' },
-        { clinicName: '上冲诊所', amountSpent: '￥0', appointmentTime: '2018-12-20 10:30-11:00', orderTime: '2018-12-10 14:20', subitemStatus: '已使用' },
-        { clinicName: '上冲诊所', amountSpent: '', appointmentTime: '2018-12-20 10:30-11:00', orderTime: '2018-12-10 14:20', subitemStatus: '已失效' }
-      ]
+      subitemList: []
     }
   },
   components: {
     subitem
   },
   methods: {
+    ...mapActions({ getAppointmentList: 'getAppointmentList' }),
+    /* 获取预约列表 */
+    loadAppointmentList () {
+      this.subitemList = []
+      this.subitemList.length = 0
+      this.$indicator.open({ text: '加载中...', spinnerType: 'fading-circle' })
+      this.getAppointmentList().then((res) => {
+        console.log(res)
+        this.$indicator.close()
+        if (res.status === 200) {
+          res.data.registers.forEach(item => {
+            this.subitemList.push({
+              subitemId: item.id,
+              clinicName: item.shopName,
+              amountSpent: `￥${item.money}`,
+              appointmentTime: item.appointment,
+              orderTime: item.createDate,
+              subitemStatus: item.status === '已预约' ? '预约成功' : item.status
+            })
+          })
+        }
+      }).catch((err) => {
+        this.$toast('错误数据')
+        throw new Error(err)
+      })
+    },
     detailInfo (subitem) {
+      localStorage.setItem('registerId', subitem.subitemId)
       this.$router.push({ path: '/arecord/appointmentDetails', query: { subitemStatus: subitem.subitemStatus === '预约成功' ? '已预约' : subitem.subitemStatus } })
     }
+  },
+  created () {
+    this.loadAppointmentList()
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.arecord {
+  padding: 0 0 120px 0;
+}
 </style>

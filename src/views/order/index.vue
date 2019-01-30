@@ -10,7 +10,7 @@
 <script>
 import store from '../../components/order/store.vue'
 import bottomButton from '../../components/common/bottomButton.vue'
-import wx from 'weixin-js-sdk'
+// import wx from 'weixin-js-sdk'
 import { mapActions } from 'vuex'
 
 export default {
@@ -52,36 +52,40 @@ export default {
         { passive: false })
     },
     /* 获取当前地理位置 */
-    getCurrentLocation () {
-      let _this = this
-      wx.ready(function () {
-        wx.getLocation({
-          type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
-          success: function (res) {
-            console.log(res)
-            localStorage.setItem('latitude', res.latitude)// 经度
-            localStorage.setItem('longitude', res.longitude)// 纬度
-            _this.latitude = res.latitude
-            _this.longitude = res.longitude
-            _this.loadStoreList()
-          }
-        })
-      })
-    },
+    // getCurrentLocation () {
+    //   let _this = this
+    //   wx.ready(function () {
+    //     wx.getLocation({
+    //       type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+    //       success: function (res) {
+    //         console.log(res)
+    //         localStorage.setItem('latitude', res.latitude)// 经度
+    //         localStorage.setItem('longitude', res.longitude)// 纬度
+    //         _this.latitude = res.latitude
+    //         _this.longitude = res.longitude
+    //         _this.loadStoreList()
+    //       }
+    //     })
+    //   })
+    // },
     /* 获取店铺列表数据 */
     loadStoreList () {
+      this.$indicator.open({ text: '加载中...', spinnerType: 'fading-circle' })
       this.getStoreList({ latitude: this.latitude, longitude: this.longitude }).then((res) => {
         console.log(res)
-        res.data.shops.map(shop => {
-          console.log(shop)
-          this.storeList.push({
-            storeId: shop.id,
-            storeImg: shop.image ? shop.image : this.placeholderImg,
-            storeName: shop.name,
-            storeDistance: shop.distanceName,
-            storeLocation: shop.address
+        this.$indicator.close()
+        if (res.status === 200) {
+          res.data.shops.map(shop => {
+            console.log(shop)
+            this.storeList.push({
+              storeId: shop.id,
+              storeImg: shop.image ? shop.image : this.placeholderImg,
+              storeName: shop.name,
+              storeDistance: shop.distanceName,
+              storeLocation: shop.address
+            })
           })
-        })
+        }
         console.log(this.storeList)
       }).catch((err) => {
         this.$toast('数据错误')
@@ -90,8 +94,8 @@ export default {
     }
   },
   created () {
-    this.getCurrentLocation()// 暂时关闭
-    // this.loadStoreList()// 暂时添加
+    // this.getCurrentLocation()// 暂时关闭
+    this.loadStoreList()// 暂时添加
   }
 }
 </script>

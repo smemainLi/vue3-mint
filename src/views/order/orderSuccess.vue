@@ -16,7 +16,7 @@
       </div>
     </div>
     <div class="success-buttons">
-      <router-link class="com-button detail-button" :to="{path:'/arecord/appointmentDetails',query:{registerId:registerId}}" tag="button" v-cloak>{{detailButton}}</router-link>
+      <router-link class="com-button detail-button" :to="{path:'/arecord/appointmentDetails'}" tag="button" v-cloak>{{detailButton}}</router-link>
       <router-link class="com-button get-more-button" :to="{path:'/mall/index'}" tag="button" v-cloak>{{getMoreButton}}</router-link>
     </div>
   </div>
