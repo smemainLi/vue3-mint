@@ -19,16 +19,9 @@
 export default {
   data () {
     return {
-      titleName: '补牙',
-      titleFlag: require('../../assets/images/mcard/serviceIcon.png'),
-      userMoney: '￥162',
-      useNum: 'x2',
-      useInfoList: [
-        { titleName: '补牙', titleFlag: require('../../assets/images/mcard/serviceIcon.png'), userMoney: '￥162', useNum: 'x2', hasBr: true },
-        { titleName: '口腔护理药水', titleFlag: require('../../assets/images/mcard/goodsIcon.png'), userMoney: '￥10', useNum: 'x2', hasBr: false }
-      ]
     }
   },
+  props: ['useInfoList'],
   components: {}
 }
 </script>

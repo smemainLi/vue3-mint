@@ -15,7 +15,7 @@
         </div>
         <div class="store-nav">
           <i class="icon-guidepost"></i>
-          <span class="nav-content" v-cloak>{{storeNav}}</span>
+          <span class="nav-content" @click.stop="consultAMap" v-cloak>{{storeNav}}</span>
         </div>
       </div>
     </div>
@@ -23,13 +23,30 @@
 </template>
 
 <script>
+import wx from 'weixin-js-sdk'
 export default {
   data () {
     return {
       storeNav: '导航'
     }
   },
-  props: ['store']
+  props: ['store', 'latitude', 'longitude'],
+  methods: {
+    /* 查看地图接口 */
+    consultAMap () {
+      let _this = this
+      wx.ready(function () {
+        wx.openLocation({
+          latitude: _this.latitude, // 纬度，浮点数，范围为90 ~ -90
+          longitude: _this.longitude, // 经度，浮点数，范围为180 ~ -180。
+          name: _this.store.storeName, // 位置名
+          address: _this.store.storeLocation, // 地址详情说明
+          scale: 12, // 地图缩放级别,整形值,范围从1~28。默认为最大
+          infoUrl: '' // 在查看位置界面底部显示的超链接,可点击跳转
+        })
+      })
+    }
+  }
 }
 </script>
 

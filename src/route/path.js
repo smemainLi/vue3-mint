@@ -17,6 +17,10 @@ export const choice = r => require.ensure([], () => r(require('../views/choice/i
 
 /* 同道商城 */
 export const mall = r => require.ensure([], () => r(require('../views/mall/index.vue')), e => console.log(e), 'mall')
+export const addOrEditAddress = r => require.ensure([], () => r(require('../views/mall/addOrEditAddress.vue')), e => console.log(e), 'addOrEditAddress')
+export const paymentSuccess = r => require.ensure([], () => r(require('../views/mall/paymentSuccess.vue')), e => console.log(e), 'paymentSuccess')
+export const chooseAddress = r => require.ensure([], () => r(require('../views/mall/chooseAddress.vue')), e => console.log(e), 'chooseAddress')
+export const shoppingCart = r => require.ensure([], () => r(require('../views/mall/shoppingCart.vue')), e => console.log(e), 'shoppingCart')
 
 /* 在线咨询 */
 export const consult = r => require.ensure([], () => r(require('../views/consult/index.vue')), e => console.log(e), 'consult')
@@ -39,3 +43,10 @@ export const onceProtocol = r => require.ensure([], () => r(require('../views/mc
 export const consumptionList = r => require.ensure([], () => r(require('../views/mcard/consumptionList.vue')), e => console.log(e), 'consumptionList')
 export const consumptionDetail = r => require.ensure([], () => r(require('../views/mcard/consumptionDetail.vue')), e => console.log(e), 'consumptionDetail')
 export const myPatients = r => require.ensure([], () => r(require('../views/mcard/myPatients.vue')), e => console.log(e), 'myPatients')
+export const mcardBalance = r => require.ensure([], () => r(require('../views/mcard/mcardBalance.vue')), e => console.log(e), 'mcardBalance')
+export const cashWithdrawals = r => require.ensure([], () => r(require('../views/mcard/cashWithdrawals.vue')), e => console.log(e), 'cashWithdrawals')
+export const allBills = r => require.ensure([], () => r(require('../views/mcard/allBills.vue')), e => console.log(e), 'allBills')
+export const withdrawalsSuccess = r => require.ensure([], () => r(require('../views/mcard/withdrawalsSuccess.vue')), e => console.log(e), 'withdrawalsSuccess')
+export const walletPayment = r => require.ensure([], () => r(require('../views/mcard/walletPayment.vue')), e => console.log(e), 'walletPayment')
+export const myBankCard = r => require.ensure([], () => r(require('../views/mcard/myBankCard.vue')), e => console.log(e), 'myBankCard')
+export const recharge = r => require.ensure([], () => r(require('../views/mcard/recharge.vue')), e => console.log(e), 'recharge')

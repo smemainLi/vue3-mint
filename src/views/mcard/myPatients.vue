@@ -40,7 +40,7 @@ export default {
         if (res.data.relationships.length !== 0) this.patientList[this.patientList.length - 1].hasBr = false
       }).catch((err) => {
         this.$toast('数据错误')
-        throw new Error(err)
+        throw err
       })
     }
   },

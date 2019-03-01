@@ -3,7 +3,7 @@
     <div class="user-info">
       <div class="user-left-info">
         <div class="user-img">
-          <img class="img-content" :src="userImg" alt="">
+          <img class="img-content" :src="headImg?headImg:userImg" alt="">
         </div>
         <div class="user-name" v-cloak>{{userName}}</div>
       </div>
@@ -11,7 +11,7 @@
         <img class="qrcode-img" :src="userQrcode" alt="">
       </div>
     </div>
-    <div class="membership-card">
+    <div class="membership-card" @click="mcardBalance">
       <div class="card-title">
         <div class="card-img">
           <img class="img-content" :src="cardImg" alt="">
@@ -19,7 +19,7 @@
         <div class="card-tip" v-cloak>{{cardTip}}</div>
       </div>
       <div class="card-content">
-        <div class="card-balance" v-cloak>{{cardBalance}}</div>
+        <div :class="['card-balance',!walletStatus?'open-tips':'']" v-cloak>{{walletStatus?cardBalance:openTips}}</div>
         <div class="right-arrow">
           <img class="arrow-img" :src="rightArrow" alt="">
         </div>
@@ -36,14 +36,18 @@ export default {
       userQrcode: require('../../assets/images/mcard/qrcodeIcon.png'),
       cardImg: require('../../assets/images/mcard/mcard.png'),
       rightArrow: require('../../assets/images/mcard/arrow.png'),
-      userName: '小仙女蜜儿',
-      cardTip: '会员卡余额',
-      cardBalance: '￥100'
+      openTips: '马上开通',
+      cardTip: '会员卡余额'
     }
   },
+  props: ['headImg', 'userName', 'cardBalance', 'walletStatus'],
   methods: {
     getQrcode () {
       this.$emit('showQrcode', true)
+    },
+    mcardBalance () {
+      if (this.walletStatus) this.$router.push({ path: '/mcard/mcardBalance' })
+      else this.$router.push({ path: '/order/payPassword', query: { isSetPayPassword: 1, openFlag: 'mcardPay' } })
     }
   }
 }
@@ -118,10 +122,14 @@ export default {
     .card-content {
       display: flex;
       justify-content: flex-end;
+      align-items: center;
       .card-balance {
         font-size: 32px;
         color: $color-008CA7;
         margin-right: 15px;
+      }
+      .open-tips {
+        font-size: 28px;
       }
       .right-arrow {
         width: 40px;

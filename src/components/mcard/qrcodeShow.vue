@@ -18,7 +18,7 @@
     </div>
     <div class="last-part">
       <div class="qrcode-img">
-        <img class="qrcode-content" :src="qrcodeImg" alt="">
+        <img class="qrcode-content" :src="`data:image/png;base64,${qrcodeImg}`" alt="">
       </div>
     </div>
   </div>
@@ -31,11 +31,11 @@ export default {
       teethImg: require('../../assets/images/mcard/teeth.png'),
       qrcodeClose: require('../../assets/images/mcard/close.png'),
       frameImg: require('../../assets/images/mcard/frame.png'),
-      qrcodeImg: require('../../assets/images/mcard/qrCode.png'),
       oneTip: '该二维码只作身份验证',
       twoTip: '不会进行扣款的哟，请放心'
     }
   },
+  props: ['qrcodeImg'],
   methods: {
     close () {
       this.$emit('closeQrcode', false)

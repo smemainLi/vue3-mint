@@ -6,7 +6,7 @@
           <img class="image-style" :src="mode.payImg" alt="">
         </div>
         <div class="mode-name" v-cloak>{{mode.modeName}}</div>
-        <div class="mode-tip" v-show="mode.hasTip" v-cloak>
+        <div class="mode-tip" v-show="isSetPayPassword===1?false:!mode.enough" @click="$router.push({ path: '/mcard/recharge', query: { openFlag: 'orderPay' } })" v-cloak>
           {{modeTip}}
           <span class="right-arrow" v-cloak>{{rightArrow}}</span>
         </div>
@@ -30,7 +30,7 @@ export default {
       rightArrow: '>>'
     }
   },
-  props: ['mode']
+  props: ['mode', 'isSetPayPassword']
 }
 </script>
 

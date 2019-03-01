@@ -1,19 +1,30 @@
 <template>
   <div class="general-button">
-    <button :disabled="!isAgree" :class="['button-content',isAgree?'':'not-agree']" v-cloak>{{btnName}}</button>
+    <button :disabled="disabled" :class="['button-content',isAgree&&!hasUnpaid?'':'not-agree']" v-cloak>{{btnName}}</button>
   </div>
 </template>
 
 <script>
 export default {
+  data () {
+    return {
+      disabled: !this.isAgree || this.hasUnpaid
+    }
+  },
   props: {
     btnName: {},
     isAgree: {
-      default: true
+      default: true// true表示同意协议  false表示不同意协议
+    },
+    hasUnpaid: {
+      default: false// 是否存在未支付订单 false 不存在 true 存在
     }
   },
-  created () {
-    console.log(this.isAgree)
+  watch: {
+    hasUnpaid: function (newVal, oldVal) {
+      console.log(newVal, oldVal)
+      this.disabled = !this.isAgree || this.hasUnpaid
+    }
   }
 }
 </script>

@@ -16,7 +16,7 @@
 export default {
   data () {
     return {
-      agree: true,
+      agree: true, // true表示同意  false表示不同意
       noticeConFront: '我已经阅读并同意'
       // noticeConBehind: '预约须知'
     }

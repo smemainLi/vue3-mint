@@ -28,6 +28,7 @@ module.exports = {
     proxy: IS_PROD ? null : {
       '/wx': {
         target: 'http://10.10.21.61:8081',
+        // target: 'http://10.10.100.189:8080',
         ws: true,
         changeOrigin: true
       }

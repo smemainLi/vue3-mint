@@ -1,6 +1,6 @@
 <template>
   <div class="mcard">
-    <top @showQrcode="showQrcode"></top>
+    <top :headImg="headImg" :userName="userName" :cardBalance="cardBalance" :walletStatus="walletStatus" @showQrcode="showQrcode"></top>
     <div class="my-shop-action">
       <action-item :actionItem="item" v-for="(item,index) in shopActionList" @click.native="selectAction(item)" :key="'shop'+index"></action-item>
     </div>
@@ -8,7 +8,7 @@
       <action-item :actionItem="item" v-for="(item,index) in shopAccountList" @click.native="selectAction(item)" :key="'account'+index"></action-item>
     </div>
     <div class="qrcode-mask" v-show="qrcodeDisplay">
-      <qrcode-show @closeQrcode="closeQrcode"></qrcode-show>
+      <qrcode-show :qrcodeImg="qrcodeImg" @closeQrcode="closeQrcode"></qrcode-show>
     </div>
     <button class="exit-button" @click="logout">
       <span class="btn-name" v-cloak>{{btnName}}</span>
@@ -27,6 +27,11 @@ export default {
     return {
       qrcodeDisplay: false,
       btnName: '退出登录',
+      headImg: '',
+      userName: '',
+      cardBalance: '',
+      qrcodeImg: '',
+      walletStatus: false, // 钱包开通状态 false 表示未开通 true 表示已开通
       shopActionList: [
         {
           imgContent: require('../../assets/images/mcard/alarmClock.png'),
@@ -43,7 +48,7 @@ export default {
         {
           imgContent: require('../../assets/images/mcard/goods.png'),
           remarkContent: '我买过的商品',
-          path: '',
+          path: '/bought/index',
           hasBr: false
         }
       ],
@@ -57,7 +62,7 @@ export default {
         {
           imgContent: require('../../assets/images/mcard/phone.png'),
           remarkContent: '修改绑定手机',
-          path: '',
+          path: '/mcard/updateBindPhone',
           hasBr: true
         },
         {
@@ -73,7 +78,7 @@ export default {
     top, actionItem, qrcodeShow
   },
   methods: {
-    ...mapActions({ userLogout: 'userLogout' }),
+    ...mapActions({ getPersonalInfo: 'getPersonalInfo', getPersonalQrCode: 'getPersonalQrCode', userLogout: 'userLogout' }),
     /* 显示二维码 */
     showQrcode (flag) {
       this.qrcodeDisplay = flag
@@ -84,8 +89,40 @@ export default {
     },
     selectAction (actionRow) {
       console.log(actionRow)
-      if (actionRow.path === '/order/payPassword') this.$router.push({ path: '/order/payPassword', query: { updateFlag: 'isUpdate' } })
+      if (actionRow.path === '/order/payPassword') {
+        if (!this.walletStatus) this.$toast({ message: '请先开通会员卡支付', duration: 1000 })
+        else this.$router.push({ path: '/order/payPassword', query: { updateFlag: 'isUpdate' } })
+      } else if (actionRow.path === '/mcard/updateBindPhone') this.$router.push({ path: '/mcard/updateBindPhone', query: { pageFlag: 'updateBindPhone' } })
       else { this.$router.push({ path: actionRow.path }) }
+    },
+    /* 加载个人信息 */
+    loadPersonalInfo () {
+      this.$indicator.open({ text: '加载中...', spinnerType: 'fading-circle' })
+      this.getPersonalInfo().then((res) => {
+        this.$indicator.close()
+        console.log(res)
+        if (res.status === 200) {
+          this.headImg = res.data.headimgurl
+          this.userName = res.data.name
+          this.cardBalance = `￥${res.data.balance}`
+          this.walletStatus = !!res.data.walletStatus
+        }
+      }).catch((err) => {
+        this.$toast('数据错误')
+        throw err
+      })
+    },
+    /* 加载个人二维码 */
+    loadPersonalQrCode () {
+      this.getPersonalQrCode().then((res) => {
+        console.log(res)
+        if (res.status === 200) {
+          this.qrcodeImg = res.data.qrcode
+        }
+      }).catch((err) => {
+        this.$toast('数据错误')
+        throw err
+      })
     },
     /* 用户退出登录 */
     logout () {
@@ -110,11 +147,15 @@ export default {
             }
           }).catch((err) => {
             this.$toast('数据错误')
-            throw new Error(err)
+            throw err
           })
         }
       })
     }
+  },
+  created () {
+    this.loadPersonalInfo()
+    this.loadPersonalQrCode()
   }
 }
 </script>

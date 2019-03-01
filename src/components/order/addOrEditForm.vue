@@ -142,7 +142,7 @@ export default {
         }
       }).catch((err) => {
         this.$toast('数据错误')
-        throw new Error(err)
+        throw err
       })
     }
   },
@@ -166,7 +166,7 @@ export default {
         }
       }).catch((err) => {
         this.$toast('数据错误')
-        throw new Error(err)
+        throw err
       })
     },
     /* 提交表单 */
@@ -200,7 +200,7 @@ export default {
           }
         }).catch((err) => {
           this.$toast('数据错误')
-          throw new Error(err)
+          throw err
         })
       } else {
         /* 添加就诊人 */
@@ -220,7 +220,7 @@ export default {
           }
         }).catch((err) => {
           this.$toast('数据错误')
-          throw new Error(err)
+          throw err
         })
       }
     }

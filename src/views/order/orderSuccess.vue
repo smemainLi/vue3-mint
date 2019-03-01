@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
   data () {
     return {
@@ -37,8 +38,18 @@ export default {
     }
   },
   created () {
-    this.aboveTip = `请在${this.tipDate} ${this.tipTime}前来就诊，`
+    // this.aboveTip = `请在${this.tipDate} ${this.tipTime}前来就诊，`
     this.followingTip = '如不按时，则需要您额外等候'
+    this.getAppointmentDetail({ registerId: localStorage.getItem('registerId') }).then((res) => {
+      console.log(res)
+      if (res.status === 200) this.aboveTip = `请在${res.data.register.appointment}前来就诊`
+    }).catch((err) => {
+      this.$toast('数据错误')
+      throw err
+    })
+  },
+  methods: {
+    ...mapActions({ getAppointmentDetail: 'getAppointmentDetail' })
   }
 }
 </script>

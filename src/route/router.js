@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import wx from 'weixin-js-sdk'
 import * as routerPath from '../route/path'
 import { getCookie } from '../utils/tools'
-import { isLogin, getAuthorizeUrl, getJsSdkConfig } from '../utils/getData'
+import { isLogin, getAuthorizeUrlSuper, getJsSdkConfig } from '../utils/getData'
 
 Vue.use(Router)
 
@@ -29,6 +29,11 @@ const router = new Router({
     { path: '/choice/index', meta: { title: '服务项目' }, name: 'choice', component: routerPath.choice },
     /* 同道商城 */
     { path: '/mall/index', meta: { title: '同道商城' }, name: 'mall', component: routerPath.mall },
+    { path: '/mall/addAddress', meta: { title: '收货地址' }, name: 'addAddress', component: routerPath.addOrEditAddress },
+    { path: '/mall/editAddress', meta: { title: '收货地址' }, name: 'editAddress', component: routerPath.addOrEditAddress },
+    { path: '/mall/paymentSuccess', meta: { title: '付款成功' }, name: 'paymentSuccess', component: routerPath.paymentSuccess },
+    { path: '/mall/chooseAddress', meta: { title: '下单' }, name: 'chooseAddress', component: routerPath.chooseAddress },
+    { path: '/mall/shoppingCart', meta: { title: '购物车' }, name: 'shoppingCart', component: routerPath.shoppingCart },
     /* 在线咨询 */
     { path: '/consult/index', meta: { title: '在线客服' }, name: 'consult', component: routerPath.consult },
     /* 预约记录 */
@@ -40,11 +45,20 @@ const router = new Router({
     { path: '/bought/index', meta: { title: '我买的商品' }, name: 'bought', component: routerPath.bought },
     /* 会员卡 */
     { path: '/mcard/index', meta: { title: '会员卡' }, name: 'mcard', component: routerPath.mcard },
-    { path: '/mcard/login', meta: { title: '登录/开通会员卡' }, name: 'login', component: routerPath.login },
+    { path: '/mcard/login', meta: { title: '登录', keepAlive: true }, name: 'login', component: routerPath.login },
+    { path: '/mcard/forgetPayPwd', meta: { title: '忘记支付密码' }, name: 'forgetPayPwd', component: routerPath.login },
+    { path: '/mcard/updateBindPhone', meta: { title: '修改绑定手机' }, name: 'updateBindPhone', component: routerPath.login },
     { path: '/mcard/userProtocol', meta: { title: '会员卡协议' }, name: 'userProtocol', component: routerPath.protocol },
     { path: '/mcard/consumptionList', meta: { title: '我的门店消费' }, name: 'consumptionList', component: routerPath.consumptionList },
     { path: '/mcard/consumptionDetail', meta: { title: '我的门店消费' }, name: 'consumptionDetail', component: routerPath.consumptionDetail },
     { path: '/mcard/myPatients', meta: { title: '我的就诊人' }, name: 'myPatients', component: routerPath.myPatients },
+    { path: '/mcard/mcardBalance', meta: { title: '会员卡余额' }, name: 'mcardBalance', component: routerPath.mcardBalance },
+    { path: '/mcard/cashWithdrawals', meta: { title: '提现' }, name: 'cashWithdrawals', component: routerPath.cashWithdrawals },
+    { path: '/mcard/allBills', meta: { title: '我的账单' }, name: 'allBills', component: routerPath.allBills },
+    { path: '/mcard/withdrawalsSuccess', meta: { title: '提现' }, name: 'withdrawalsSuccess', component: routerPath.withdrawalsSuccess },
+    { path: '/mcard/walletPayment', meta: { title: '付款' }, name: 'walletPayment', component: routerPath.walletPayment },
+    { path: '/mcard/myBankCard', meta: { title: '我的银行卡' }, name: 'myBankCard', component: routerPath.myBankCard },
+    { path: '/mcard/recharge', meta: { title: '充值' }, name: 'recharge', component: routerPath.recharge },
   ]
 })
 
@@ -57,11 +71,11 @@ router.beforeEach((to, from, next) => {
     //    * 如果已经授权，可以请求sdk认证
     //    */
     //   // 微信授权
-    //   getAuthorizeUrl({ pageUri: to.path }).then((res) => {
+    //   getAuthorizeUrlSuper({ pageUri: to.path }).then((res) => {
     //     console.log(res)
     //     location.href = res.data.authorizeUrl
     //   }).catch((err) => {
-    //     throw new Error(err)
+    //     throw err
     //   })
     // } else {
     //   /* 判断是否登录过 */
@@ -70,7 +84,7 @@ router.beforeEach((to, from, next) => {
     //     localStorage.setItem('isLogin', res.data.login)
     //     if (!res.data.login && to.path !== '/' && to.path !== '/order/index' && to.path !== '/mcard/userProtocol') next({ path: '/mcard/login' })
     //   }).catch((err) => {
-    //     throw new Error(err)
+    //     throw err
     //   })
 
   //   /* sdk认证 */
@@ -82,10 +96,10 @@ router.beforeEach((to, from, next) => {
   //       timestamp: res.data.timestamp, // 必填，生成签名的时间戳
   //       nonceStr: res.data.noncestr, // 必填，生成签名的随机串
   //       signature: res.data.sign, // 必填，签名
-  //       jsApiList: ['getLocation'] // 必填，需要使用的JS接口列表
+  //       jsApiList: ['getLocation', 'openLocation', 'chooseWXPay'] // 必填，需要使用的JS接口列表
   //     })
   //   }).catch((err) => {
-  //     throw new Error(err)
+  //     throw err
   //   });
   // }
 
@@ -95,7 +109,7 @@ router.beforeEach((to, from, next) => {
     localStorage.setItem('isLogin', res.data.login)
     if (!res.data.login && to.path !== '/' && to.path !== '/order/index' && to.path !== '/mcard/userProtocol') next({ path: '/mcard/login' })
   }).catch((err) => {
-    throw new Error(err)
+    throw err
   })
   next()
 })

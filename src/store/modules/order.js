@@ -13,7 +13,7 @@ const order = {
     /* 获取门店列表 */
     getStoreList: ({ commit }, data) => { return $axios.post('/wx/register/getShop', data) },
     /* 获取预约界面数据 */
-    getRegisterData: ({ commit }, data) => { return $axios.post('/wx/register/register') },
+    getRegisterData: ({ commit }, data) => { return $axios.post('/wx/register/register', data) },
     /* 添加就诊人 */
     addPatient: ({ commit }, data) => { return $axios.post('/wx/relationship/add', data) },
     /* 获取就诊人详细信息 */
@@ -24,14 +24,22 @@ const order = {
     updatePatient: ({ commit }, data) => { return $axios.post('/wx/relationship/update', data) },
     /* 提交预约申请 */
     submitAppointment: ({ commit }, data) => { return $axios.post('/wx/register/registerAdd', data) },
+    /* 获取支付渠道 */
+    getPayChannel: ({ commit }, data) => { return $axios.post('/wx/pay/getPayChannel', data) },
     /* 获取钱包密码开通状态 */
-    getOpenPasswordStatus: ({ commit }, data) => { return $axios.post('/wx/register/toPay', data) },
+    // getOpenPasswordStatus: ({ commit }, data) => { return $axios.post('/wx/register/toPay', data) },
     /* 修改支付密码 */
-    updatePayPassword: ({ commit }, data) => { return $axios.post('/wx/member/updatePayPass', data) },
+    // updatePayPassword: ({ commit }, data) => { return $axios.post('/wx/member/updatePayPass', data) },
+    /* 开通钱包 */
+    openPayPassword: ({ commit }, data) => { return $axios.post('/wx/member/wealth/open', data) },
+    /* 验证支付密码 */
+    verifyPassword: ({ commit }, data) => { return $axios.post('/wx/pay/payOfWealth', data) },
     /* 验证密码 */
-    verifyPassword: ({ commit }, data) => { return $axios.post('/wx/member/memberPass', data) },
+    // verifyPassword: ({ commit }, data) => { return $axios.post('/wx/member/memberPass', data) },
     /* 后端存储状态 */
-    backEndSaveStatus: ({ commit }, data) => { return $axios.post('/wx/register/pay', data) }
+    // backEndSaveStatus: ({ commit }, data) => { return $axios.post('/wx/register/pay', data) },
+    /* 获取微信支付配置 */
+    getWechatPayConfig: ({ commit }, data) => { return $axios.post('/wx/pay/payOfWeiXin', data) }
   }
 }
 

@@ -1,7 +1,7 @@
 <template>
   <div class="order">
     <div class="store-list">
-      <store :store="item" v-for="(item,index) in storeList" @click.native="selectStore(item)" :key="index"></store>
+      <store :store="item" :latitude="latitude" :longitude="longitude" v-for="(item,index) in storeList" @click.native="selectStore(item)" :key="index"></store>
     </div>
     <bottom-button :btnName="btnName" :hasIcon="true"></bottom-button>
   </div>
@@ -10,7 +10,7 @@
 <script>
 import store from '../../components/order/store.vue'
 import bottomButton from '../../components/common/bottomButton.vue'
-// import wx from 'weixin-js-sdk'
+import wx from 'weixin-js-sdk'
 import { mapActions } from 'vuex'
 
 export default {
@@ -52,22 +52,22 @@ export default {
         { passive: false })
     },
     /* 获取当前地理位置 */
-    // getCurrentLocation () {
-    //   let _this = this
-    //   wx.ready(function () {
-    //     wx.getLocation({
-    //       type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
-    //       success: function (res) {
-    //         console.log(res)
-    //         localStorage.setItem('latitude', res.latitude)// 经度
-    //         localStorage.setItem('longitude', res.longitude)// 纬度
-    //         _this.latitude = res.latitude
-    //         _this.longitude = res.longitude
-    //         _this.loadStoreList()
-    //       }
-    //     })
-    //   })
-    // },
+    getCurrentLocation () {
+      let _this = this
+      wx.ready(function () {
+        wx.getLocation({
+          type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+          success: function (res) {
+            console.log(res)
+            localStorage.setItem('latitude', res.latitude)// 经度
+            localStorage.setItem('longitude', res.longitude)// 纬度
+            _this.latitude = res.latitude
+            _this.longitude = res.longitude
+            _this.loadStoreList()
+          }
+        })
+      })
+    },
     /* 获取店铺列表数据 */
     loadStoreList () {
       this.$indicator.open({ text: '加载中...', spinnerType: 'fading-circle' })
@@ -89,9 +89,10 @@ export default {
         console.log(this.storeList)
       }).catch((err) => {
         this.$toast('数据错误')
-        throw new Error(err)
+        throw err
       })
     }
+
   },
   created () {
     // this.getCurrentLocation()// 暂时关闭

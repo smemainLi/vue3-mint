@@ -25,7 +25,7 @@ export default {
         if (res.status === 200) this.protocolContent = res.data.copywriting.value
       }).catch((err) => {
         this.$toast('数据错误')
-        throw new Error(err)
+        throw err
       })
     } else if (this.$route.query.flag === 'online') { // 通过预约界面的预约须知跳转到本页面
       this.protocolInfo({ code: 'reservation_protocol' }).then((res) => {
@@ -34,7 +34,7 @@ export default {
         if (res.status === 200) this.protocolContent = res.data.copywriting.value
       }).catch((err) => {
         this.$toast('数据错误')
-        throw new Error(err)
+        throw err
       })
     }
   },
@@ -42,7 +42,7 @@ export default {
     console.log(to)
     console.log(from)
     console.log(next)
-    if (to.path === '/order/onlineBooking') {
+    if (to.path === '/order/onlineBooking' || to.path === '/mcard/login') {
       to.meta.keepAlive = true
     } else {
       to.meta.keepAlive = false

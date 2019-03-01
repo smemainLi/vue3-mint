@@ -28,7 +28,7 @@ export default {
       if (res.status === 200) this.protocolContent = res.data.copywriting.value
     }).catch((err) => {
       this.$toast('数据错误')
-      throw new Error(err)
+      throw err
     })
   }
   // beforeRouteLeave (to, from, next) {
