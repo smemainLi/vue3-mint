@@ -52,7 +52,9 @@ export default {
       forgetPayPwdBtn: '下一步',
       // phone: '13654789641',
       // phone: '13765432190',/* 13426213521 */
-      phone: '13426213521',
+      // phone: '13192297496',
+      // phone: '13426213521',
+      phone: '13725864895',
       phonePlaceholder: '请输入您的手机号码',
       gvCode: '', // 图形验证码
       gvCodePlaceholder: '请输入图形验证码',

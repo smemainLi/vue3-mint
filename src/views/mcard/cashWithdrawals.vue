@@ -28,22 +28,30 @@ export default {
       bankName: '', // 银行名称
       bankNumVal: '', // 银行卡号
       cardholderVal: '', // 持卡人
+      minAmount: '', // 最小可提现金额
       btnName: '确定提现'
     }
   },
   components: { amountInput, actionItem, generalButton },
   methods: {
-    ...mapActions({ getCashWithdrawal: 'getCashWithdrawal' }),
+    ...mapActions({ getCashWithdrawal: 'getCashWithdrawal', withdraw: 'withdraw' }),
     bankCardInfo (actionRow) {
       console.log(actionRow)
       this.$router.push({ path: actionRow.path, query: { isBinding: this.isBinding, bankName: this.bankName, bankNumVal: this.bankNumVal, cardholderVal: this.cardholderVal } })
     },
-    confirmWithdrawals () {
-      this.$router.push({ path: '/mcard/withdrawalsSuccess' })
+    /* 提现金额 */
+    async confirmWithdrawals () {
+      await this.withdraw().then((res) => {
+        console.log(res)
+      }).catch((err) => {
+        console.log(err)
+      })
+      // this.$router.push({ path: '/mcard/withdrawalsSuccess' })
     },
     getAmountMoneyVal (amountMoney) { // 获取输入金额
       // console.log(amountMoney)
-      if (amountMoney && this.isBinding) this.isAgree = true
+      if (amountMoney && this.isBinding && amountMoney >= this.minAmount) this.isAgree = true
+      else this.isAgree = false
     }
   },
   created () {
@@ -59,6 +67,7 @@ export default {
         this.isBinding = res.data.backStatus ? 'hasCard' : 'noCard'
         this.bankNumVal = res.data.cardNumber
         this.cardholderVal = res.data.cardholder
+        this.minAmount = res.data.minWithdrawAmount
       }
     }).catch((err) => {
       this.$toast('数据错误')
@@ -70,6 +79,7 @@ export default {
 
 <style lang="scss" scoped>
 .cash-withdrawals {
+  width: 100%;
   .withdrawals-top {
     height: 375px;
     background: url("../../assets/images/mcard/cashWithdrawalsBg.png") no-repeat

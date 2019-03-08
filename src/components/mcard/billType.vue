@@ -2,7 +2,7 @@
   <div class="bill-type">
     <!-- 关系 -->
     <div class="field-row field-select">
-      <select class="field-option" name="billType" v-model="billTypeVal">
+      <select class="field-option" name="billType" v-model="billTypeVal" @change="getBillType">
         <option v-for="(item,index) in billTypeList" :value="item.billType" :key="index">{{item.billType}}</option>
       </select>
     </div>
@@ -23,6 +23,12 @@ export default {
   },
   created () {
     this.billTypeVal = this.billTypeList[0].billType// 下拉框默认选中第一项
+    console.log(this.billTypeVal)
+  },
+  methods: {
+    getBillType () {
+      this.$emit('getType', this.billTypeVal)
+    }
   }
 }
 </script>

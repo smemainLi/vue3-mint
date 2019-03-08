@@ -5,7 +5,7 @@ class $axios {
   constructor() {
     this.$http = axios.create({
       baseURL: '',
-      timeout: 5000,
+      timeout: 12000,
       headers: {
         'Accept': 'application/json',
         'Access-Control-Allow-Methods': 'GET, PUT, POST, DELETE, OPTIONS',
@@ -38,17 +38,19 @@ class $axios {
       } else {
         error.message = '连接到服务器失败'
       }
-      // this.$toast({ message: error.message, iconClass: 'mintui  mintui-field-warning' })
+      throw error.message
       return Promise.reject(error.response)
     });
   }
 
   post(url, data = {}) {
-    return this.$http.post(url, data).then((res) => {
-      return res
-    }).catch((err) => {
-      return Promise.reject(err)
-    });
+    // return this.$http.post(url, data).then((res) => {
+    //   return res
+    // }).catch((err) => {
+    //   // return Promise.reject(err)
+    //   return err
+    // });
+    return this.$http.post(url, data)
   }
 }
 

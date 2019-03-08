@@ -92,7 +92,7 @@ export default {
       if (actionRow.path === '/order/payPassword') {
         if (!this.walletStatus) this.$toast({ message: '请先开通会员卡支付', duration: 1000 })
         else this.$router.push({ path: '/order/payPassword', query: { updateFlag: 'isUpdate' } })
-      } else if (actionRow.path === '/mcard/updateBindPhone') this.$router.push({ path: '/mcard/updateBindPhone', query: { pageFlag: 'updateBindPhone' } })
+      } else if (actionRow.path === '/mcard/updateBindPhone') this.$router.push({ path: '/order/payPassword', query: { pageFlag: 'updateBindPhone' } })
       else { this.$router.push({ path: actionRow.path }) }
     },
     /* 加载个人信息 */

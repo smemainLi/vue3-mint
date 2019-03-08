@@ -38,8 +38,10 @@ export default {
     }
   },
   created () {
+    this.$indicator.open({ text: '加载中...', spinnerType: 'fading-circle' })
     this.getConsumptionList().then((res) => {
       console.log(res)
+      this.$indicator.close()
       res.data.list.forEach(listItem => {
         this.consumptionList.push(
           {

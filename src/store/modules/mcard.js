@@ -57,7 +57,11 @@ const mcard = {
     /* 钱包-付款码 */
     getPayQrcode: ({ commit }, data) => { return $axios.post('/wx/member/wealth/getPayQrCode', data) },
     /* 钱包-付款码状态 */
-    getPayStatusByCode: ({ commit }, data) => { return $axios.post('/wx/member/wealth/getPayStatusByCode', data) }
+    getPayStatusByCode: ({ commit }, data) => { return $axios.post('/wx/member/wealth/getPayStatusByCode', data) },
+    /* 钱包-帐单明细 */
+    getBillDetails: ({ commit }, data) => { return $axios.post('/wx/member/wealth/list', data) },
+    /* 提现 */
+    withdraw: ({ commit }, data) => { return $axios.post('/wx/member/wealth/withdraw', data) }
   }
 }
 

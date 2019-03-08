@@ -67,6 +67,16 @@ export default {
         this.$indicator.close()
         if (res.status === 200) {
           if (res.data.register.qrcode) this.qrcodeImg = res.data.register.qrcode
+          let orderTimeBlockList = res.data.register.appointment.split(' ')[0].split('-')// 预约日期---年月日时间块
+          let currentTimeBlockList = timeFormat(new Date()).split(' ')[0].split('-')// 当前日期---年月日时间块
+          console.log(currentTimeBlockList)
+          console.log(`${parseInt(orderTimeBlockList[0])} === ${parseInt(currentTimeBlockList[0])}`)
+          console.log(`${parseInt(orderTimeBlockList[1])} === ${parseInt(currentTimeBlockList[1])}`)
+          console.log(`${parseInt(orderTimeBlockList[2])} === ${parseInt(currentTimeBlockList[2])}`)
+          if (parseInt(orderTimeBlockList[0]) === parseInt(currentTimeBlockList[0]) &&
+            parseInt(orderTimeBlockList[1]) === parseInt(currentTimeBlockList[1]) &&
+            parseInt(orderTimeBlockList[2]) === parseInt(currentTimeBlockList[2])) this.isIntraday = true
+          console.log(this.isIntraday)
           this.subitemStatus = res.data.register.status === '预约成功' ? '已预约' : res.data.register.status
           this.statusList = [
             { label: '状态', value: res.data.register.status === this.success ? '预约成功' : res.data.register.status, hasBr: true, isStatus: res.data.register.status === this.success },
@@ -81,17 +91,10 @@ export default {
             { label: '就诊人', value: res.data.register.relationshipName, hasBr: true },
             { label: '服务项目', value: res.data.register.categoryName, hasBr: true },
             { label: '情况说明', value: res.data.register.remarks, hasBr: true },
-            { label: '挂号费', value: `￥${res.data.register.money}`, hasBr: !!res.data.register.payLable },
+            { label: '挂号费', value: res.data.register.status === '已取消' && !this.isIntraday && res.data.register.money !== 0 && !this.$route.query.cancelFlag ? `￥${res.data.register.money}（已退款）` : `￥${res.data.register.money}`, hasBr: !!res.data.register.payLable },
             { label: '支付方式', value: res.data.register.payLable, hasBr: !!res.data.register.staffName },
             { label: '收银员', value: res.data.register.staffName, hasBr: false }
           ]
-          let orderTimeBlockList = res.data.register.appointment.split(' ')[0].split('-')// 预约日期---年月日时间块
-          let currentTimeBlockList = timeFormat(new Date()).split(' ')[0].split('-')// 当前日期---年月日时间块
-          console.log(currentTimeBlockList)
-          if (parseInt(orderTimeBlockList[0]) === parseInt(currentTimeBlockList[0]) &&
-            parseInt(orderTimeBlockList[1]) === parseInt(currentTimeBlockList[1]) &&
-            parseInt(orderTimeBlockList[2]) === parseInt(currentTimeBlockList[2])) this.isIntraday = true
-          console.log(this.isIntraday)
         } else {
           this.$toast(res.message)
         }

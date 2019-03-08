@@ -8,10 +8,12 @@
         :($route.query.updateFlag&&updateNum===2)||($route.query.forgetPayPwdFlag&&forgetNum===1)?setNewPassword
         :($route.query.updateFlag&&updateNum===3)||($route.query.forgetPayPwdFlag&&forgetNum===2)?confirmNewPassword
         :memberTip}}
+        <!-- :$route.query.pageFlag?validateIdentity -->
       </div>
       <!-- 密码输入框 -->
       <van-password-input :value="password" @focus="showKeyboard=true" />
       <div class="forget-tip" v-show="!$route.query.isSetPayPassword&&!$route.query.updateFlag&&!$route.query.forgetPayPwdFlag" @click="$router.push({path:'/mcard/forgetPayPwd',query:{pageFlag:'forgetPayPwd'}})" v-cloak>{{forgetTip}}</div>
+      <!-- <div class="forget-tip" v-show="!$route.query.isSetPayPassword&&!$route.query.updateFlag&&!$route.query.forgetPayPwdFlag&&!$route.query.pageFlag" @click="$router.push({path:'/mcard/forgetPayPwd',query:{pageFlag:'forgetPayPwd'}})" v-cloak>{{forgetTip}}</div> -->
     </div>
     <!-- 数字键盘 -->
     <van-number-keyboard :show="showKeyboard" @input="onInput" @delete="onDelete" @blur="showKeyboard=false" />
@@ -32,6 +34,8 @@ export default {
       setNewPassword: '请输入新支付密码',
       confirmNewPassword: '请再次输入新支付密码',
 
+      validateIdentity: '请输入支付密码验证身份',
+
       forgetTip: '忘记密码？',
       password: '',
       showKeyboard: true,
@@ -50,40 +54,16 @@ export default {
 
       if (this.password.length === 6) {
         console.log(this.$route.query)
-        if (this.$route.query.payType) { /* ##########################如果参数存在参数payType，表示本页为支付页面########################## */
+        if (this.$route.query.payType /* || this.$route.query.pageFlag */) { /* ##########################如果参数存在参数payType，表示本页为支付页面或修改绑定手机需要支付密码验证身份########################## */
           console.log(this.$route.query.payType)
-          // console.log(JSON.parse(localStorage.getItem('bookingData')))// 反序列化，JSON.parse()将JSON字符串转成JSON对象
-          // let data = JSON.parse(localStorage.getItem('bookingData'))
-          // data.payPass = this.password// 给对象添加新属性
-          // console.log(data)
-          // this.appointmentPay(data).then((res) => {
-          //   console.log(res)
-          //   if (res.data.registerId) {
-          //     /* 模拟成功跳转预约详情页面 */
-          //     this.$router.push({ path: '/order/orderSuccess', query: { registerId: res.data.registerId } })
-          //   }
-          // }).catch((err) => {
-          //   this.$toast('数据错误')
-          //   throw err
-          // })
+          console.log(this.$route.query.pageFlag)
           this.verifyPassword({ payId: localStorage.getItem('payId'), payPassword: this.password }).then((res) => {
             console.log(res)
             if (res.status === 200) {
-              // this.backEndSaveStatus({ payType: this.$route.query.payType, registerId: localStorage.getItem('registerId') }).then((res) => {
-              //   console.log(res)
-              //   if (res.status === 200) {
-              //     this.$toast({ message: res.message, duration: 1000 })
-              //     setTimeout(() => {
-              //       this.$router.push({ path: '/order/orderSuccess' })
-              //     }, 1000)
-              //   }
-              // }).catch((err) => {
-              //   this.$toast('数据错误')
-              //   throw err
-              // })
               this.$toast({ message: res.message, duration: 1000 })
               setTimeout(() => {
-                this.$router.push({ path: '/order/orderSuccess' })
+                if (this.$route.query.payType) this.$router.push({ path: '/order/orderSuccess' })
+                /* else this.$router.push({ path: '/mcard/updateBindPhone', query: { pageFlag: 'updateBindPhone' } }) */
               }, 1000)
             } else {
               this.$toast({ message: '密码错误', duration: 1000 })
@@ -106,18 +86,6 @@ export default {
               this.password = ''
               return
             }
-            // this.updatePayPassword({ payPass: this.password }).then((res) => {
-            //   console.log(res)
-            //   if (res.status === 200) {
-            //     this.$toast({ message: '密码设置成功', duration: 1000 })
-            //     setTimeout(() => {
-            //       this.$router.push({ path: '/order/payment' })
-            //     }, 1000)
-            //   }
-            // }).catch((err) => {
-            //   this.$toast('数据错误')
-            //   throw err
-            // })
             this.openPayPassword({ payPassword: this.password }).then((res) => {
               console.log(res)
               if (res.status === 200) {
@@ -135,15 +103,6 @@ export default {
           }
         } else if (this.$route.query.updateFlag) { /* ##########################如果参数存在参数updateFlag且为isUpdate，表示本页为修改支付密码页面########################## */
           if (this.updateNum === 1) {
-            // this.verifyPassword({ number: this.password }).then((res) => {
-            //   console.log(res)
-            //   if (res.status === 200) this.updateNum = 2// 修改状态
-            //   else this.$toast({ message: '密码错误', duration: 1000 })
-            //   this.password = ''
-            // }).catch((err) => {
-            //   this.$toast('数据错误')
-            //   throw err
-            // })
             this.updateNum = 2// 修改状态
             this.oldPassword = this.password
             console.log(this.oldPassword, 'oldPassword')
@@ -159,19 +118,6 @@ export default {
               return
             }
             console.log(this.password)
-            // this.updatePayPassword({ payPass: this.password }).then((res) => {
-            //   console.log(res)
-            //   console.log(typeof res.status)
-            //   if (res.status === 200) {
-            //     this.$toast({ message: res.message, duration: 1000 })
-            //     setTimeout(() => {
-            //       this.$router.push({ path: '/mcard/index' })
-            //     }, 1000)
-            //   }
-            // }).catch((err) => {
-            //   this.$toast('数据错误')
-            //   throw err
-            // })
             this.updatePayPassword({ newPayPassword: this.password, payPassword: this.oldPassword }).then((res) => {
               console.log(res)
               if (res.status === 200) {

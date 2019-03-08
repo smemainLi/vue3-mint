@@ -20,7 +20,7 @@ export default {
       btnName: '我还没想好，想先咨询一下',
       latitude: 0, // 经度
       longitude: 0, // 纬度
-      placeholderImg: require('../../assets/images/order/tdkqLogo.png')
+      placeholderImg: require('../../assets/images/order/storeDefault.png')
     }
   },
   components: {
@@ -64,6 +64,9 @@ export default {
             _this.latitude = res.latitude
             _this.longitude = res.longitude
             _this.loadStoreList()
+          },
+          fail: function (err) {
+            console.log(err)
           }
         })
       })

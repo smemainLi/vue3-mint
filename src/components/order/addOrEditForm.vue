@@ -112,8 +112,8 @@ export default {
         { relation: '请选择' },
         { relation: '本人' },
         { relation: '父母' },
-        { relation: '子女' },
         { relation: '夫妻' },
+        { relation: '子女' },
         { relation: '其他' }
       ],
       relationshipVal: '',
@@ -172,7 +172,8 @@ export default {
     /* 提交表单 */
     confirmData () {
       if (this.nameVal === '') this.$toast('姓名不能为空')
-      else if (this.phoneVal === '' || this.phoneVal.length !== 11) this.$toast('手机号码有误')
+      else if (this.phoneVal === '') this.$toast('手机号码不能为空')
+      else if (this.phoneVal.length !== 11) this.$toast('手机号码有误')
       else if (this.birthdateVal === '') this.$toast('请选择出生日期')
       else if (this.relationshipVal === '请选择') this.$toast('请选择关系')
       else if (this.$route.query.patientId) {
@@ -189,7 +190,7 @@ export default {
           mobile: this.phoneVal,
           gender: this.sexVal === '男' ? 1 : 0,
           birthday: this.birthdateVal,
-          relationship: this.relationshipVal === '本人' ? 1 : this.relationshipVal === '父母' ? 2 : this.relationshipVal === '子女' ? 3 : this.relationshipVal === '夫妻' ? 4 : 5
+          relationship: this.relationshipVal === '本人' ? 1 : this.relationshipVal === '父母' ? 2 : this.relationshipVal === '夫妻' ? 3 : this.relationshipVal === '子女' ? 4 : 5
         }).then((res) => {
           console.log(res)
           if (res.status === 200) {
@@ -209,7 +210,7 @@ export default {
           mobile: this.phoneVal,
           gender: this.sexVal === '男' ? 1 : 0,
           birthday: this.birthdateVal,
-          relationship: this.relationshipVal === '本人' ? 1 : this.relationshipVal === '父母' ? 2 : this.relationshipVal === '子女' ? 3 : this.relationshipVal === '夫妻' ? 4 : 5
+          relationship: this.relationshipVal === '本人' ? 1 : this.relationshipVal === '父母' ? 2 : this.relationshipVal === '夫妻' ? 3 : this.relationshipVal === '子女' ? 4 : 5
         }).then((res) => {
           console.log(res)
           if (res.status === 200) {

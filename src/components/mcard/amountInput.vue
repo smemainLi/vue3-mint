@@ -45,6 +45,7 @@ export default {
       color: $color-008CA7;
     }
     .input-field {
+      width: 100%;
       font-size: 50px;
       color: $color-008CA7;
       margin-top: 24px;

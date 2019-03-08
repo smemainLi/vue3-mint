@@ -33,7 +33,7 @@ export default {
     },
     confirm () {
       this.$emit('getDialogStatusConfirm', false)
-      this.$router.push({ path: '/arecord/appointmentDetails' })
+      this.subitemStatus === '待支付' ? this.$router.push({ path: '/arecord/appointmentDetails', query: { cancelFlag: 'isToBePaid' } }) : this.$router.push({ path: '/arecord/appointmentDetails' })
       /* this.$router.push({ path: '/arecord/appointmentDetails', query: { redirect: '/arecord/appointmentDetails' } }) */
     }
   }

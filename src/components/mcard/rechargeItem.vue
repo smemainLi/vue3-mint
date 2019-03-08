@@ -13,7 +13,7 @@
 export default {
   data () {
     return {
-      getZeroYuan: '得0元'
+      getZeroYuan: '送0元'
     }
   },
   props: ['rechargeItem']

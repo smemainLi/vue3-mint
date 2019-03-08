@@ -2,9 +2,9 @@
   <div class="my-patients">
     <action-item :actionItem="item" v-for="(item,index) in patientList" @click.native="$router.push({path:'/order/editPatient',query:{patientId:item.remarkId}})" :key="index"></action-item>
 
-    <router-link class="add-button" tag="button" :to="{path:'/order/addPatient'}">
+    <button class="add-button" @click="addPatient">
       <span class="btn-name" v-cloak>{{btnName}}</span>
-    </router-link>
+    </button>
   </div>
 </template>
 
@@ -42,6 +42,13 @@ export default {
         this.$toast('数据错误')
         throw err
       })
+    },
+    addPatient () {
+      if (this.patientList.length === 5) {
+        this.$toast({ message: '最多只能添加5位就诊人', duration: 1000 })
+        return
+      }
+      this.$router.push({ path: '/order/addPatient' })
     }
   },
   created () {

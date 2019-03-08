@@ -63,7 +63,7 @@ export default {
                     setTimeout(() => {
                       if (_this.$route.query.openFlag && _this.$route.query.openFlag === 'orderPay') {
                         location.href = decodeURIComponent(`${location.origin}/order/payment`)
-                      }
+                      } else _this.$router.go(-1)
                     }, 1000)
                   },
                   // 支付取消回调函数
@@ -103,7 +103,7 @@ export default {
           currentItem.push({
             rechargeId: item.id,
             chargeInfo: `充${item.rechargeAmount}元`,
-            getInfo: `得${item.givenAmount}元`,
+            getInfo: `送${item.givenAmount}元`,
             rechargeSelected: false
           })
           n++

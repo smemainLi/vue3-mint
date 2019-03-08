@@ -25,39 +25,41 @@ export default {
       balanceTitle: '钱包余额：',
       balanceContent: '￥3000',
       code: '', // 用于查付款状态
-      isLoop: true,
-      btnName: '立即充值'
+      isLoop: false,
+      btnName: '立即充值',
+      loop: true
     }
   },
   components: { generalButton },
   methods: {
     ...mapActions({ getPayQrcode: 'getPayQrcode', getPayStatusByCode: 'getPayStatusByCode' }),
-    getQrCode () {
+    async getQrCode () {
       this.$indicator.open({ text: '加载中...', spinnerType: 'fading-circle' })
-      this.getPayQrcode().then((res) => {
-        console.log(res)
-        this.$indicator.close()
-        if (res.status === 200) {
-          this.balanceContent = `￥${res.data.balance}`
-          this.code = res.data.code
-          this.qrcodeImg = res.data.qrcode
+      const codeResult = await this.getPayQrcode()
+      this.$indicator.close()
+      if (codeResult.status === 200) {
+        this.balanceContent = `￥${codeResult.data.balance}`
+        this.code = codeResult.data.code
+        this.qrcodeImg = codeResult.data.qrcode
+
+        while (this.loop) {
+          const payStatusResult = await this.getPayStatusByCode({ code: this.code })
+          console.log(payStatusResult)
+          if (payStatusResult.data.status === '1') {
+            this.$messagebox({ title: '提示', message: '付款成功' })
+            this.loop = false
+          } else if (payStatusResult.data.status === '2') {
+            this.getQrCode()
+          }
         }
-      }).catch((err) => {
-        this.$toast('数据错误')
-        throw err
-      })
-    },
-    getPayStatus () {
-      this.getPayStatusByCode({ code: this.code }).then((res) => {
-        console.log(res)
-      }).catch((err) => {
-        this.$toast('数据错误')
-        throw err
-      })
+      }
     }
   },
   created () {
     this.getQrCode()
+  },
+  destroyed () {
+    this.loop = false
   }
 }
 </script>

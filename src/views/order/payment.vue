@@ -102,7 +102,7 @@ export default {
     }
   },
   created () {
-    this.$router.go(0)// 刷新一次页面，以防止对接微信支付接口存在缓存
+    // this.$router.go(0)// 刷新一次页面，以防止对接微信支付接口存在缓存，出现错误：当前页面的URL未注册：http://tdkq-wx.q-cloud.com/
     /* 获取支付渠道 */
     this.getPayChannel({ payId: localStorage.getItem('payId') }).then((res) => {
       console.log(res)

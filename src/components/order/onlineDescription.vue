@@ -5,7 +5,7 @@
       <div class="field-label">
         <span class="label-content" v-cloak>{{situation.label}}</span>
       </div>
-      <input class="field-input" type="text" :placeholder="situation.placeholder" v-model="situationVal">
+      <input class="field-input" type="text" maxlength="30" :placeholder="situation.placeholder" v-model="situationVal">
     </div>
     <div class="field-br">
       <hr class="br-style">

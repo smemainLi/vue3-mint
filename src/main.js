@@ -14,7 +14,7 @@ Vue.config.productionTip = false
 Vue.prototype.$axios = $axios
 Vue.use(MintUI)
 Vue.use(PasswordInput).use(NumberKeyboard).use(Popup).use(Picker).use(Area).use(Switch).use(Tab).use(Tabs)
-  /* Vue.use(new Vconsole()) */
+  // Vue.use(new Vconsole())
 
 new Vue({
   router,

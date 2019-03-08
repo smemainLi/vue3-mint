@@ -18,7 +18,7 @@
       <div class="field-label">
         <span class="label-content" v-cloak>{{bankNum}}</span>
       </div>
-      <input class="field-input" type="number" :placeholder="bankNumPlaceholder" v-model="bankNumVal">
+      <input class="field-input" type="text" maxlength="19" :placeholder="bankNumPlaceholder" v-model="bankNumVal" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^\d]/g, '').replace(/^0{1,}/g,'')}else{this.value=this.value.replace(/\D/g,'').replace(/^0{1,}/g,'')}" onblur="if(this.value.length==1){this.value=this.value.replace(/[^\d]/g, '').replace(/^0{1,}/g,'')}else{this.value=this.value.replace(/\D/g,'').replace(/^0{1,}/g,'')}">
     </div>
     <div class="field-br">
       <hr class="br-style">
@@ -29,7 +29,7 @@
       <div class="field-label">
         <span class="label-content" v-cloak>{{cardholder}}</span>
       </div>
-      <input class="field-input" type="text" :placeholder="cardholderPlaceholder" v-model="cardholderVal">
+      <input class="field-input" :readonly="$route.query.isBinding === 'hasCard'" type="text" :placeholder="cardholderPlaceholder" v-model="cardholderVal">
     </div>
 
     <div class="bank-card-btn">
@@ -69,7 +69,7 @@ export default {
       else if (!(/^([1-9]{1})(\d{14}|\d{18})$/.test(this.bankNumVal))) this.$toast('银行卡号填写有误')
       else if (this.cardholderVal === '') this.$toast('请填写持卡人')
       else if (this.$route.query.isBinding === 'hasCard') { // 已绑定了银行卡，调用修改银行卡接口
-        this.updateBankCard({ bankName: this.bankVal, cardNumber: this.bankNumVal, cardholder: this.cardholderVal }).then((res) => {
+        this.updateBankCard({ bankName: this.bankVal, cardNumber: this.bankNumVal }).then((res) => {
           console.log(res)
           if (res.status === 200) {
             this.$toast({ message: res.message, duration: 1000 })
