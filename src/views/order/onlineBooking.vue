@@ -176,7 +176,7 @@ export default {
       if (res.status === 200) {
         this.patientList.length = 0
         this.patientList = []
-        res.data.relationships.forEach((item) => {
+        res.data.list.forEach((item) => {
           this.patientList.push({
             patientId: item.relationshipId,
             patientName: item.relationshipName,

@@ -9,17 +9,28 @@
 
 <script>
 import addressItem from '../../components/mall/addressItem.vue'
+import { mapActions } from 'vuex'
 export default {
   data () {
     return {
       addressList: [
-        { nickname: '露玖小姐姐', phone: '18838868886', isDefault: true, address: '珠海市上冲14村里面4455号一般早上在家早上在家早上在家。', hasBr: true },
-        { nickname: '雅米儿', phone: '18838568886', isDefault: false, address: '广东省珠海市香洲区南方软件园', hasBr: false }
+        { nickname: '露玖小姐姐', phone: '18838868886', isDefault: true, operateFlag: 'chooseAddress', address: '珠海市上冲14村里面4455号一般早上在家早上在家早上在家。', hasBr: true },
+        { nickname: '雅米儿', phone: '18838568886', isDefault: false, operateFlag: 'chooseAddress', address: '广东省珠海市香洲区南方软件园', hasBr: false }
       ],
       btnName: '添加地址'
     }
   },
-  components: { addressItem }
+  components: { addressItem },
+  methods: {
+    ...mapActions({ getPersonalAddress: 'getPersonalAddress' }),
+    async loadPersonalAddress () {
+      const result = await this.getPersonalAddress()
+      console.log(result)
+    }
+  },
+  created () {
+    this.loadPersonalAddress()
+  }
 }
 </script>
 

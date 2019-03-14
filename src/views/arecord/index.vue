@@ -30,7 +30,7 @@ export default {
         console.log(res)
         this.$indicator.close()
         if (res.status === 200) {
-          res.data.registers.forEach(item => {
+          res.data.list.forEach(item => {
             this.subitemList.push({
               subitemId: item.id,
               clinicName: item.shopName,

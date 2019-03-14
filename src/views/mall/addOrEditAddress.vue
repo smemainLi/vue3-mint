@@ -54,7 +54,7 @@
 
     <!-- 地址新增按钮 -->
     <div class="address-add-btn">
-      <general-button :btnName="btnName"></general-button>
+      <general-button :btnName="btnName" @click.native="handleAddress"></general-button>
     </div>
     <!-- 地址编辑按钮 -->
     <div class="address-edit-btn" v-show="false">
@@ -63,16 +63,25 @@
     </div>
 
     <!-- 地区选择 -->
-    <van-popup v-model="areaSelect" position="bottom">
+    <!-- <van-popup v-model="areaSelect" position="bottom">
       <van-area :area-list="areaList" v-show="true" @cancel="closeArea" @confirm="confirmArea" />
+    </van-popup> -->
+
+    <van-popup v-model="areaSelect" position="bottom">
+      <div class="addres-select">
+        <div @click.stop="cancel">取消</div>
+        <div @click.stop="confirm">确定</div>
+      </div>
+      <mt-picker :slots="slots" @change="onValuesChange" valueKey="name" class="picker-class"></mt-picker>
     </van-popup>
 
   </div>
 </template>
 
 <script>
-import areaList from '../../lang/areaList'
 import generalButton from '../../components/common/generalButton.vue'
+import { mapActions } from 'vuex'
+
 export default {
   data () {
     return {
@@ -83,35 +92,141 @@ export default {
       phoneVal: '',
       phonePlaceholder: '请输入收货人手机号码',
       area: '所在地区',
-      areaVal: '',
+      areaVal: '', // 地区信息展示
+      province: '', // 省
+      provinceCode: '', // 省编号
+      city: '', // 市
+      cityCode: '', // 市编号
+      county: '', // 区
+      countyCode: '', // 区编号
       areaPlaceholder: '请选择',
       areaSelect: false,
-      areaList: areaList,
       detailedAddr: '详细地址',
       detailedAddrVal: '',
       detailedAddrPlaceholder: '街道、小区门牌等详细地址',
       setting: '设为默认',
       checked: false,
       deleteButton: '删除',
-      btnName: '提交'
+      btnName: '提交',
+      slots: [
+        {
+          flex: 1,
+          values: [],
+          className: 'slot1',
+          textAlign: 'right'
+        }, {
+          flex: 1,
+          values: [],
+          className: 'slot2'
+        }, {
+          flex: 1,
+          values: [],
+          className: 'slot3',
+          textAlign: 'left'
+        }
+      ],
+      addressSelect: {}, // 选中的地址,
+      addressMsg: [] // 获取到的全部地址信息
     }
   },
   components: { generalButton },
   methods: {
-    /* 取消地区选择 */
-    closeArea () {
+    ...mapActions({ getAreaList: 'getAreaList', addAddress: 'addAddress' }),
+    /* 地址提交 */
+    handleAddress () {
+      this.addAddress({
+        address: this.detailedAddrVal, // 详细地址
+        city: this.city, // 市
+        citycode: this.cityCode, // 市编号
+        district: this.county, // 区
+        districtcode: this.countyCode, // 区编号
+        isdefault: this.checked ? 1 : 0, // 0 不是 1是 设置默认
+        mobile: this.phoneVal, // 电话
+        name: this.receiverVal, // 收货人
+        province: this.province, // 省
+        provincecode: this.provinceCode // 省编号
+      }).then((res) => {
+        // console.log(res)
+        if (res.status === 200) {
+          this.$toast({ message: '添加成功', duration: 1000 })
+          setTimeout(() => {
+            this.$router.push('/mall/chooseAddress')
+          }, 1000)
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
+    // 取消
+    cancel () {
       this.areaSelect = false
     },
-    /* 确定地区选择 */
-    confirmArea (areaItem) {
-      this.areaVal = ''
+    // 地址确认
+    confirm () {
+      console.log(this.addressSelect.provinceCode)
+      console.log(this.addressSelect.cityCode)
+      console.log(this.addressSelect.countyCode)
+      this.province = this.addressSelect.province // 省
+      this.provinceCode = this.addressSelect.provinceCode // 省编号
+      this.city = this.addressSelect.city // 市
+      this.cityCode = this.addressSelect.cityCode // 市编号
+      this.county = this.addressSelect.county // 区
+      this.countyCode = this.addressSelect.countyCode // 区编号
+      this.areaVal = `${this.addressSelect.province} ${this.addressSelect.city} ${this.addressSelect.county}`
       this.areaSelect = false
-      console.log(areaItem)
-      areaItem.map((item) => {
-        // if (this.areaVal !== item.name) { this.areaVal = `${this.areaVal} ${item.name}`.trim() }
-        this.areaVal = `${this.areaVal} ${item.name}`.trim()
+    },
+    // 地址选择
+    onValuesChange (picker, values) {
+      let getValueOne = picker.getSlotValue(0)
+      let getValueTwo = picker.getSlotValue(1)
+      this.$nextTick(() => {
+        picker.setSlotValues(1, getValueOne ? (getValueOne.children) : values[0].children[0].children)
+        if (getValueTwo) {
+          picker.setSlotValues(2, getValueTwo.children)
+          values.forEach((item, index) => {
+            if (!item) return
+            switch (index) {
+              case 0:
+                this.addressSelect.province = item.name
+                this.addressSelect.provinceCode = item.value
+                break
+              case 1:
+                this.addressSelect.city = item.name
+                this.addressSelect.cityCode = item.value
+                break
+              case 2:
+                this.addressSelect.county = item.name
+                this.addressSelect.countyCode = item.value
+                break
+            }
+          })
+        }
+      })
+    },
+    /* 获取地域信息 */
+    loadAreaList () {
+      this.getAreaList().then((res) => {
+        console.log(res)
+        if (res.msg === 'success') {
+          if (res.data.length === 0) return
+          this.$nextTick(() => {
+            this.addressMsg = res.data
+            this.$set(this.slots, 0, {
+              flex: 1,
+              values: this.addressMsg,
+              className: 'slot1',
+              textAlign: 'right'
+            })
+          })
+        }
+      }).catch((err) => {
+        console.log(err)
       })
     }
+  },
+
+  created () {
+    this.loadAreaList()
   }
 }
 </script>
@@ -199,6 +314,20 @@ export default {
       color: $color-ff;
       background: $color-gradient;
     }
+  }
+  .addres-select {
+    padding: 32px;
+    display: flex;
+    justify-content: space-between;
+    div {
+      color: #0168b7;
+    }
+  }
+  /* .picker-class /deep/ .picker-item{
+  font-size: 30px
+} */
+  .picker-class /deep/ .picker-item {
+    font-size: 28px;
   }
 }
 </style>

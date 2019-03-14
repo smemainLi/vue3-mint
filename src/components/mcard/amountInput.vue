@@ -16,12 +16,12 @@ export default {
     return {
       amountUnit: '￥',
       amountMoney: '',
-      amountMoneyPlaceholder: '请输入提现金额',
-      tipsTitle: '可提现金额：'
+      amountMoneyPlaceholder: '请输入提现金额'
+      // tipsTitle: '可提现金额：'
       // tipsContent: '￥100'
     }
   },
-  props: ['tipsContent'],
+  props: ['tipsTitle', 'tipsContent'],
   watch: {
     amountMoney: function (newVal) {
       // console.log(newVal)

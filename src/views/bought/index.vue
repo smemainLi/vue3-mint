@@ -25,20 +25,20 @@ export default {
           goodsList: [
             {
               goodsImg: require('../../assets/images/bought/consumeImg1.png'),
-              goodsImfo: '3件装 | MEDIHEAL 美迪惠尔N.M.F针剂水库保湿面膜 10片/盒',
+              goodsInfo: '3件装 | MEDIHEAL 美迪惠尔N.M.F针剂水库保湿面膜 10片/盒',
               goodsPrice: '￥168.00',
               goodsNumber: 'x2',
               hasBr: true
             },
             {
               goodsImg: require('../../assets/images/bought/consumeImg1.png'),
-              goodsImfo: '3件装 | MEDIHEAL 美迪惠尔N.M.F针剂水库保湿面膜 10片/盒',
+              goodsInfo: '3件装 | MEDIHEAL 美迪惠尔N.M.F针剂水库保湿面膜 10片/盒',
               goodsPrice: '￥168.00',
               goodsNumber: 'x2',
               hasBr: false
             }
           ],
-          smallBtnList: [{ smallBtnName: '查看详情', isDeep: false }],
+          smallBtnList: [{ smallBtnName: '查看详情', path: '/bought/orderDetailCopy', isDeep: false }],
           /* ['已完成', '已消费', '待发货'].includes(this.shoppingStatus) ? [{ smallBtnName: '查看详情', isDeep: false }]
             : this.shoppingStatus === '待消费' ? [{ smallBtnName: '查看详情', isDeep: false }, { smallBtnName: '查看劵码', isDeep: true }]
               : this.shoppingStatus === '待付款' ? [{ smallBtnName: '取消订单', isDeep: false }, { smallBtnName: '查看详情', isDeep: false }, { smallBtnName: '立即支付', isDeep: true }]
@@ -53,13 +53,13 @@ export default {
           goodsList: [
             {
               goodsImg: require('../../assets/images/bought/consumeImg2.png'),
-              goodsImfo: '隐适美隐形正畸牙齿矫正成人牙齿整形优雅套餐',
+              goodsInfo: '隐适美隐形正畸牙齿矫正成人牙齿整形优雅套餐',
               goodsPrice: '￥168.00',
               goodsNumber: 'x2',
               hasBr: false
             }
           ],
-          smallBtnList: [{ smallBtnName: '查看详情', isDeep: false }, { smallBtnName: '查看劵码', isDeep: true }],
+          smallBtnList: [{ smallBtnName: '查看详情', path: '/bought/orderDetail', isDeep: false }, { smallBtnName: '查看劵码', path: '/bought/orderDetail', isDeep: true }],
           /* ['已完成', '已消费', '待发货'].includes(this.shoppingStatus) ? [{ smallBtnName: '查看详情', isDeep: false }]
             : this.shoppingStatus === '待消费' ? [{ smallBtnName: '查看详情', isDeep: false }, { smallBtnName: '查看劵码', isDeep: true }]
               : this.shoppingStatus === '待付款' ? [{ smallBtnName: '取消订单', isDeep: false }, { smallBtnName: '查看详情', isDeep: false }, { smallBtnName: '立即支付', isDeep: true }]
@@ -74,7 +74,7 @@ export default {
           goodsList: [
             {
               goodsImg: require('../../assets/images/bought/consumeImg1.png'),
-              goodsImfo: '3件装 | MEDIHEAL 美迪惠尔N.M.F针剂水库保湿面膜 10片/盒',
+              goodsInfo: '3件装 | MEDIHEAL 美迪惠尔N.M.F针剂水库保湿面膜 10片/盒',
               goodsPrice: '￥168.00',
               goodsNumber: 'x2',
               hasBr: false
@@ -95,7 +95,7 @@ export default {
           goodsList: [
             {
               goodsImg: require('../../assets/images/bought/consumeImg1.png'),
-              goodsImfo: '3件装 | MEDIHEAL 美迪惠尔N.M.F针剂水库保湿面膜 10片/盒',
+              goodsInfo: '3件装 | MEDIHEAL 美迪惠尔N.M.F针剂水库保湿面膜 10片/盒',
               goodsPrice: '￥168.00',
               goodsNumber: 'x2',
               hasBr: false
@@ -116,7 +116,7 @@ export default {
           goodsList: [
             {
               goodsImg: require('../../assets/images/bought/consumeImg1.png'),
-              goodsImfo: '3件装 | MEDIHEAL 美迪惠尔N.M.F针剂水库保湿面膜 10片/盒',
+              goodsInfo: '3件装 | MEDIHEAL 美迪惠尔N.M.F针剂水库保湿面膜 10片/盒',
               goodsPrice: '￥168.00',
               goodsNumber: 'x2',
               hasBr: false
@@ -137,7 +137,7 @@ export default {
           goodsList: [
             {
               goodsImg: require('../../assets/images/bought/consumeImg1.png'),
-              goodsImfo: '3件装 | MEDIHEAL 美迪惠尔N.M.F针剂水库保湿面膜 10片/盒',
+              goodsInfo: '3件装 | MEDIHEAL 美迪惠尔N.M.F针剂水库保湿面膜 10片/盒',
               goodsPrice: '￥168.00',
               goodsNumber: 'x2',
               hasBr: false
@@ -158,7 +158,7 @@ export default {
           goodsList: [
             {
               goodsImg: require('../../assets/images/bought/consumeImg2.png'),
-              goodsImfo: '3件装 | MEDIHEAL 美迪惠尔N.M.F针剂水库保湿面膜 10片/盒',
+              goodsInfo: '3件装 | MEDIHEAL 美迪惠尔N.M.F针剂水库保湿面膜 10片/盒',
               goodsPrice: '￥168.00',
               goodsNumber: 'x2',
               hasBr: false

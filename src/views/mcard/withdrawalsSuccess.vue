@@ -11,15 +11,15 @@
       <div class="withdrawals-info">
         <div class="withdrawals-amount">
           <div class="withdrawals-amount-title" v-cloak>{{withdrawalsAmountTitle}}</div>
-          <div class="withdrawals-amount-content" v-cloak>{{withdrawalsAmountContent}}</div>
+          <div class="withdrawals-amount-content" v-cloak>{{`￥${$route.query.withdrawAmount}`}}</div>
         </div>
         <div class="withdrawals-way">
           <div class="withdrawals-way-title" v-cloak>{{withdrawalsWayTitle}}</div>
-          <div class="withdrawals-way-content" v-cloak>{{withdrawalsWayContent}}</div>
+          <div class="withdrawals-way-content" v-cloak>{{`${$route.query.bankName}(${$route.query.cardNumber.slice(-4)})`}}</div>
         </div>
       </div>
     </div>
-    <general-button :btnName="btnName"></general-button>
+    <general-button @click.native="$router.go(-2)" :btnName="btnName"></general-button>
   </div>
 </template>
 
@@ -38,7 +38,10 @@ export default {
       btnName: '返回'
     }
   },
-  components: { generalButton }
+  components: { generalButton },
+  mounted () {
+    console.log(this.$route.query)
+  }
 }
 </script>
 

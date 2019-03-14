@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="date-shopping-btn">
-      <small-button :smallBtnItem="item" v-for="(item,index) in dateShoppingItem.smallBtnList" :key="'smallBtnList'+index"></small-button>
+      <small-button :smallBtnItem="item" v-for="(item,index) in dateShoppingItem.smallBtnList" @click.native="operateAction(item)" :key="'smallBtnList'+index"></small-button>
     </div>
   </div>
 </template>
@@ -33,7 +33,14 @@ export default {
     }
   },
   props: ['dateShoppingItem'],
-  components: { goodsRow, smallButton }
+  components: { goodsRow, smallButton },
+  methods: {
+    /* 点击执行按钮事件 */
+    operateAction (smallBtn) {
+      console.log(smallBtn)
+      this.$router.push({ path: smallBtn.path })
+    }
+  }
 }
 </script>
 

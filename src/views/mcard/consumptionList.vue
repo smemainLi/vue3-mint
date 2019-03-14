@@ -1,5 +1,9 @@
 <template>
   <div class="consumption-list">
+    <div class="placeholder-img" v-if="consumptionList.length===0">
+      <img class="img-content" :src="placeholderImg" alt="">
+      <div class="tips-content" v-cloak>{{tipsContent}}</div>
+    </div>
     <consumption-item :consumptionItem="item" v-for="(item,index) in consumptionList" @click.native="selectConsumption(item)" :key="index"></consumption-item>
   </div>
 </template>
@@ -10,6 +14,8 @@ import { mapActions } from 'vuex'
 export default {
   data () {
     return {
+      placeholderImg: require('../../assets/images/order/placeholderImg.png'),
+      tipsContent: '暂无数据哦~',
       consumptionList: [
         // {
         //   storeName: '上冲诊所',
@@ -65,5 +71,21 @@ export default {
 <style lang="scss" scoped>
 .consumption-list {
   padding-bottom: 120px;
+  .placeholder-img {
+    width: 223px;
+    height: 214px;
+    margin: 0 auto;
+    padding-top: 433px;
+    text-align: center;
+    .img-content {
+      width: 100%;
+      height: 100%;
+    }
+    .tips-content {
+      font-size: 32px;
+      color: $color-88;
+      margin-top: 30px;
+    }
+  }
 }
 </style>

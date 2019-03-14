@@ -51,7 +51,7 @@ export default {
     font-size: 28px;
     color: $color-35;
     line-height: 88px;
-    /deep/ .vtab-span {
+    .vtab-span {
       position: absolute;
       top: 10px;
       right: 30px;

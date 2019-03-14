@@ -66,8 +66,8 @@ export default {
         console.log(res)
         this.$indicator.close()
         if (res.status === 200) {
-          if (res.data.register.qrcode) this.qrcodeImg = res.data.register.qrcode
-          let orderTimeBlockList = res.data.register.appointment.split(' ')[0].split('-')// 预约日期---年月日时间块
+          if (res.data.qrcode) this.qrcodeImg = res.data.qrcode
+          let orderTimeBlockList = res.data.appointment.split(' ')[0].split('-')// 预约日期---年月日时间块
           let currentTimeBlockList = timeFormat(new Date()).split(' ')[0].split('-')// 当前日期---年月日时间块
           console.log(currentTimeBlockList)
           console.log(`${parseInt(orderTimeBlockList[0])} === ${parseInt(currentTimeBlockList[0])}`)
@@ -77,23 +77,23 @@ export default {
             parseInt(orderTimeBlockList[1]) === parseInt(currentTimeBlockList[1]) &&
             parseInt(orderTimeBlockList[2]) === parseInt(currentTimeBlockList[2])) this.isIntraday = true
           console.log(this.isIntraday)
-          this.subitemStatus = res.data.register.status === '预约成功' ? '已预约' : res.data.register.status
+          this.subitemStatus = res.data.status === '预约成功' ? '已预约' : res.data.status
           this.statusList = [
-            { label: '状态', value: res.data.register.status === this.success ? '预约成功' : res.data.register.status, hasBr: true, isStatus: res.data.register.status === this.success },
-            { label: '预约方式', value: res.data.register.type, hasBr: res.data.register.status === this.cancel || res.data.register.status === this.used, isStatus: false },
-            { label: res.data.register.status === this.cancel ? '取消时间' : '到店时间', value: res.data.register.updateDate, hasBr: false, isStatus: false }
+            { label: '状态', value: res.data.status === this.success ? '预约成功' : res.data.status, hasBr: true, isStatus: res.data.status === this.success },
+            { label: '预约方式', value: res.data.type, hasBr: res.data.status === this.cancel || res.data.status === this.used, isStatus: false },
+            { label: res.data.status === this.cancel ? '取消时间' : '到店时间', value: res.data.updateDate, hasBr: false, isStatus: false }
           ]
           this.serviceList = [
-            { label: '门店', value: res.data.register.shopName, hasBr: true },
-            { label: '联系电话', value: res.data.register.mobile, hasBr: true },
-            { label: '预约日期', value: res.data.register.appointment, hasBr: true },
-            { label: '下单时间', value: res.data.register.createDate, hasBr: true },
-            { label: '就诊人', value: res.data.register.relationshipName, hasBr: true },
-            { label: '服务项目', value: res.data.register.categoryName, hasBr: true },
-            { label: '情况说明', value: res.data.register.remarks, hasBr: true },
-            { label: '挂号费', value: res.data.register.status === '已取消' && !this.isIntraday && res.data.register.money !== 0 && !this.$route.query.cancelFlag ? `￥${res.data.register.money}（已退款）` : `￥${res.data.register.money}`, hasBr: !!res.data.register.payLable },
-            { label: '支付方式', value: res.data.register.payLable, hasBr: !!res.data.register.staffName },
-            { label: '收银员', value: res.data.register.staffName, hasBr: false }
+            { label: '门店', value: res.data.shopName, hasBr: true },
+            { label: '联系电话', value: res.data.mobile, hasBr: true },
+            { label: '预约日期', value: res.data.appointment, hasBr: true },
+            { label: '下单时间', value: res.data.createDate, hasBr: true },
+            { label: '就诊人', value: res.data.relationshipName, hasBr: true },
+            { label: '服务项目', value: res.data.categoryName, hasBr: true },
+            { label: '情况说明', value: res.data.remarks, hasBr: true },
+            { label: '挂号费', value: res.data.status === '已取消' && !this.isIntraday && res.data.money !== 0 && !this.$route.query.cancelFlag ? `￥${res.data.money}（已退款）` : `￥${res.data.money}`, hasBr: !!res.data.payLable },
+            { label: '支付方式', value: res.data.payLable, hasBr: !!res.data.staffName },
+            { label: '收银员', value: res.data.staffName, hasBr: false }
           ]
         } else {
           this.$toast(res.message)

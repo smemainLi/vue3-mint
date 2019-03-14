@@ -47,32 +47,48 @@ export default {
     }
   },
   methods: {
-    ...mapActions({ openPayPassword: 'openPayPassword', verifyPassword: 'verifyPassword', updatePayPassword: 'updatePayPassword', forgetPayPassword: 'forgetPayPassword' }),
+    ...mapActions({ openPayPassword: 'openPayPassword', verifyPassword: 'verifyPassword', updatePayPassword: 'updatePayPassword', forgetPayPassword: 'forgetPayPassword', withdraw: 'withdraw' }),
     onInput (key) {
       // 截取字符串'this.password+key'从下标0到6不包含下标为6的一串字符串
       this.password = (this.password + key).slice(0, 6)
 
       if (this.password.length === 6) {
         console.log(this.$route.query)
-        if (this.$route.query.payType /* || this.$route.query.pageFlag */) { /* ##########################如果参数存在参数payType，表示本页为支付页面或修改绑定手机需要支付密码验证身份########################## */
+        if (this.$route.query.payType || this.$route.query.withdrawAmount/* || this.$route.query.pageFlag */) { /* ##########################如果参数存在参数payType，表示本页为支付页面或修改绑定手机需要支付密码验证身份或体现支付页面########################## */
           console.log(this.$route.query.payType)
           console.log(this.$route.query.pageFlag)
-          this.verifyPassword({ payId: localStorage.getItem('payId'), payPassword: this.password }).then((res) => {
-            console.log(res)
-            if (res.status === 200) {
-              this.$toast({ message: res.message, duration: 1000 })
-              setTimeout(() => {
-                if (this.$route.query.payType) this.$router.push({ path: '/order/orderSuccess' })
-                /* else this.$router.push({ path: '/mcard/updateBindPhone', query: { pageFlag: 'updateBindPhone' } }) */
-              }, 1000)
-            } else {
-              this.$toast({ message: '密码错误', duration: 1000 })
-              this.password = ''
-            }
-          }).catch((err) => {
-            this.$toast('数据错误')
-            throw err
-          })
+          console.log(this.$route.query.withdrawAmount)
+          if (this.$route.query.payType) { // 预约支付
+            this.verifyPassword({ payId: localStorage.getItem('payId'), payPassword: this.password }).then((res) => {
+              console.log(res)
+              if (res.status === 200) {
+                this.$toast({ message: res.message, duration: 1000 })
+                setTimeout(() => {
+                  if (this.$route.query.payType) this.$router.push({ path: '/order/orderSuccess' })
+                  /* else this.$router.push({ path: '/mcard/updateBindPhone', query: { pageFlag: 'updateBindPhone' } }) */
+                }, 1000)
+              } else {
+                this.$toast({ message: '密码错误', duration: 1000 })
+                this.password = ''
+              }
+            }).catch((err) => {
+              this.$toast('数据错误')
+              throw err
+            })
+          } else if (this.$route.query.withdrawAmount) { // 提现支付
+            this.withdraw({ payPassword: this.password, withdrawAmount: Number(this.$route.query.withdrawAmount) }).then((res) => {
+              console.log(res)
+              if (res.status === 200) {
+                this.$toast({ message: '提现成功', duration: 1000 })
+                setTimeout(() => {
+                  this.$router.push({ path: '/mcard/withdrawalsSuccess', query: { bankName: res.data.bankName, cardNumber: res.data.cardNumber, withdrawAmount: res.data.withdrawAmount } })
+                }, 1000)
+              }
+            }).catch((err) => {
+              this.$toast('数据错误')
+              throw err
+            })
+          }
         } else if (this.$route.query.isSetPayPassword) { /* ##########################如果参数存在参数isSetPayPassword且为1，表示本页为设置支付密码页面########################## */
           console.log(typeof this.$route.query.isSetPayPassword)
 

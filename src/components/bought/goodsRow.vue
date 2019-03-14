@@ -4,7 +4,7 @@
       <div class="goods-img">
         <img class="img-content" :src="goodsItem.goodsImg" alt="">
       </div>
-      <div class="goods-info" v-cloak>{{goodsItem.goodsImfo}}</div>
+      <div class="goods-info" v-cloak>{{goodsItem.goodsInfo}}</div>
       <div class="number-info">
         <div class="goods-price" v-cloak>{{goodsItem.goodsPrice}}</div>
         <div class="goods-number" v-cloak>{{goodsItem.goodsNumber}}</div>
@@ -18,7 +18,7 @@ export default {
   data () {
     return {
       goodsImg: require('../../assets/images/bought/consumeImg2.png'),
-      goodsImfo: '3件装 | MEDIHEAL 美迪惠尔N.M.F针剂水库保湿面膜 10片/盒',
+      goodsInfo: '3件装 | MEDIHEAL 美迪惠尔N.M.F针剂水库保湿面膜 10片/盒',
       goodsPrice: '￥168.00',
       goodsNumber: 'x2',
       hasBr: true

@@ -1,5 +1,6 @@
 /* 首页 */
 export const Index = r => require.ensure([], () => r(require('../views/index.vue')), e => console.log(e), 'Index')
+export const temporaryIndex = r => require.ensure([], () => r(require('../views/temporaryIndex.vue')), e => console.log(e), 'temporaryIndex')
 
 /* 预约 */
 export const order = r => require.ensure([], () => r(require('../views/order/index.vue')), e => console.log(e), 'order')
@@ -21,6 +22,11 @@ export const addOrEditAddress = r => require.ensure([], () => r(require('../view
 export const paymentSuccess = r => require.ensure([], () => r(require('../views/mall/paymentSuccess.vue')), e => console.log(e), 'paymentSuccess')
 export const chooseAddress = r => require.ensure([], () => r(require('../views/mall/chooseAddress.vue')), e => console.log(e), 'chooseAddress')
 export const shoppingCart = r => require.ensure([], () => r(require('../views/mall/shoppingCart.vue')), e => console.log(e), 'shoppingCart')
+export const coupon = r => require.ensure([], () => r(require('../views/mall/coupon.vue')), e => console.log(e), 'coupon')
+export const placeOrder = r => require.ensure([], () => r(require('../views/mall/placeOrder.vue')), e => console.log(e), 'placeOrder')
+export const classify = r => require.ensure([], () => r(require('../views/mall/classify.vue')), e => console.log(e), 'classify')
+export const search = r => require.ensure([], () => r(require('../views/mall/search.vue')), e => console.log(e), 'search')
+export const goodsDetail = r => require.ensure([], () => r(require('../views/mall/goodsDetail.vue')), e => console.log(e), 'goodsDetail')
 
 /* 在线咨询 */
 export const consult = r => require.ensure([], () => r(require('../views/consult/index.vue')), e => console.log(e), 'consult')
@@ -34,6 +40,8 @@ export const precord = r => require.ensure([], () => r(require('../views/precord
 
 /* 我买的商品 */
 export const bought = r => require.ensure([], () => r(require('../views/bought/index.vue')), e => console.log(e), 'bought')
+export const orderDetail = r => require.ensure([], () => r(require('../views/bought/orderDetail.vue')), e => console.log(e), 'orderDetail')
+export const orderDetailCopy = r => require.ensure([], () => r(require('../views/bought/orderDetail.copy.vue')), e => console.log(e), 'orderDetailCopy') //测试
 
 /* 会员卡 */
 export const mcard = r => require.ensure([], () => r(require('../views/mcard/index.vue')), e => console.log(e), 'mcard')

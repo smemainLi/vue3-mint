@@ -24,8 +24,14 @@ export default {
     hasUnpaid: function (newVal, oldVal) {
       console.log(newVal, oldVal)
       this.disabled = !this.isAgree || this.hasUnpaid
+    },
+    isAgree: function (newVal, oldVal) {
+      console.log(newVal, oldVal)
+      console.log(!this.isAgree || this.hasUnpaid)
+      this.disabled = !this.isAgree || this.hasUnpaid
     }
   }
+
 }
 </script>
 

@@ -78,7 +78,7 @@ export default {
         console.log(res)
         this.$indicator.close()
         if (res.status === 200) {
-          res.data.shops.map(shop => {
+          res.data.list.map(shop => {
             console.log(shop)
             this.storeList.push({
               storeId: shop.id,

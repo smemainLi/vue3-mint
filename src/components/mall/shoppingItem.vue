@@ -31,7 +31,7 @@
 export default {
   data () {
     return {
-      goodsImg: require('../../assets/images/bought/consumeImg1.png'),
+      goodsImg: require('../../assets/images/bought/consumeImg2.png'),
       goodsIntroduce: '3件装 | MEDIHEAL 美迪惠尔N.M.F针剂水库保湿面膜 10片/盒',
       goodsPrice: '￥150',
       decrease: '-',
@@ -84,11 +84,11 @@ export default {
           font-size: 28px;
           .goods-introduce {
             color: $color-35;
-            margin-top: 6px;
+            margin-top: 12px;
           }
           .goods-price {
             color: $color-008CA7;
-            padding-top: 6px;
+            padding-top: 12px;
           }
         }
       }
@@ -106,7 +106,7 @@ export default {
       text-align: center;
       color: $color-008CA7;
       right: 0;
-      top: 153px;
+      top: 158px;
       .decrease {
         float: left;
       }

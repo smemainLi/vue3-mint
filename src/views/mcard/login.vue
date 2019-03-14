@@ -54,7 +54,7 @@ export default {
       // phone: '13765432190',/* 13426213521 */
       // phone: '13192297496',
       // phone: '13426213521',
-      phone: '13725864895',
+      phone: '13426213521',
       phonePlaceholder: '请输入您的手机号码',
       gvCode: '', // 图形验证码
       gvCodePlaceholder: '请输入图形验证码',
@@ -213,7 +213,7 @@ export default {
   beforeRouteLeave (to, from, next) {
     console.log(to)
     console.log(from)
-    if (to.path !== '/mcard/userProtocol') this.$router.go(0)
+    // if (to.path !== '/mcard/userProtocol') this.$router.go(0)
     from.meta.keepAlive = false
     next()
   }

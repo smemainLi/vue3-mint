@@ -12,7 +12,7 @@
       <div class="bottom-info-left">
         <span class="total" v-cloak>{{total}}</span>
         <span class="total-money" v-cloak>{{totalMoney}}</span>
-        <button class="btn-content" v-cloak>{{btnContent}}</button>
+        <button class="btn-content" @click="$router.push('/mall/placeOrder')" v-cloak>{{btnContent}}</button>
       </div>
     </div>
   </div>
@@ -33,10 +33,10 @@ export default {
         increase: '+'
       */
       shoppingList: [
-        { isSelected: true, goodsImg: require('../../assets/images/bought/consumeImg1.png'), goodsIntroduce: '3件装 | MEDIHEAL 美迪惠尔N.M.F针剂水库保湿面膜 10片/盒', goodsPrice: '￥150', number: '18', hasBr: true },
-        { isSelected: true, goodsImg: require('../../assets/images/bought/consumeImg1.png'), goodsIntroduce: '3件装 | MEDIHEAL 美迪惠尔N.M.F针剂水库保湿面膜 10片/盒', goodsPrice: '￥150', number: '18', hasBr: true },
-        { isSelected: true, goodsImg: require('../../assets/images/bought/consumeImg1.png'), goodsIntroduce: '3件装 | MEDIHEAL 美迪惠尔N.M.F针剂水库保湿面膜 10片/盒', goodsPrice: '￥150', number: '18', hasBr: true },
-        { isSelected: true, goodsImg: require('../../assets/images/bought/consumeImg1.png'), goodsIntroduce: '3件装 | MEDIHEAL 美迪惠尔N.M.F针剂水库保湿面膜 10片/盒', goodsPrice: '￥150', number: '18', hasBr: false }
+        { isSelected: true, goodsImg: require('../../assets/images/bought/consumeImg2.png'), goodsIntroduce: '3件装 | MEDIHEAL 美迪惠尔N.M.F针剂水库保湿面膜 10片/盒', goodsPrice: '￥150', number: '18', hasBr: true },
+        { isSelected: true, goodsImg: require('../../assets/images/bought/consumeImg2.png'), goodsIntroduce: '3件装 | MEDIHEAL 美迪惠尔N.M.F针剂水库保湿面膜 10片/盒', goodsPrice: '￥150', number: '18', hasBr: true },
+        { isSelected: true, goodsImg: require('../../assets/images/bought/consumeImg2.png'), goodsIntroduce: '3件装 | MEDIHEAL 美迪惠尔N.M.F针剂水库保湿面膜 10片/盒', goodsPrice: '￥150', number: '18', hasBr: true },
+        { isSelected: true, goodsImg: require('../../assets/images/bought/consumeImg2.png'), goodsIntroduce: '3件装 | MEDIHEAL 美迪惠尔N.M.F针剂水库保湿面膜 10片/盒', goodsPrice: '￥150', number: '18', hasBr: false }
       ],
       checkAllContent: '全选',
       total: '总计：',

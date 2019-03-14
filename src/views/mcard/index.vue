@@ -49,6 +49,12 @@ export default {
           imgContent: require('../../assets/images/mcard/goods.png'),
           remarkContent: '我买过的商品',
           path: '/bought/index',
+          hasBr: true
+        },
+        {
+          imgContent: require('../../assets/images/mcard/coupon.png'),
+          remarkContent: '我的商城优惠券',
+          path: '/mcard/myCoupon',
           hasBr: false
         }
       ],
@@ -93,6 +99,7 @@ export default {
         if (!this.walletStatus) this.$toast({ message: '请先开通会员卡支付', duration: 1000 })
         else this.$router.push({ path: '/order/payPassword', query: { updateFlag: 'isUpdate' } })
       } else if (actionRow.path === '/mcard/updateBindPhone') this.$router.push({ path: '/order/payPassword', query: { pageFlag: 'updateBindPhone' } })
+      else if (actionRow.path === '/mcard/myCoupon') this.$router.push({ path: '/mcard/myCoupon', query: { pageFlag: 'myCoupon' } })
       else { this.$router.push({ path: actionRow.path }) }
     },
     /* 加载个人信息 */

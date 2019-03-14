@@ -4,7 +4,7 @@
       <div class="amount-rule" v-cloak>{{amountRule}}</div>
       <div class="balance-title" v-cloak>{{balanceTitle}}</div>
       <div class="balance-money">
-        <span class="balance-money-content" v-cloak>{{balanceMoneyContent}}</span><span class="balance-money-unit" v-cloak>{{balanceMoneyUnit}}</span>
+        <span class="balance-money-unit" v-cloak>{{balanceMoneyUnit}}</span><span class="balance-money-content" v-cloak>{{balanceMoneyContent}}</span>
       </div>
       <div class="cashable-balance" v-cloak>{{cashableBalance}}</div>
     </div>
@@ -32,7 +32,7 @@ export default {
       amountRule: '会员卡金额规则>>',
       balanceTitle: '卡内余额',
       // balanceMoneyContent: '8690.50',
-      balanceMoneyUnit: '元',
+      balanceMoneyUnit: '￥',
       // cashableBalance: '可提现余额：￥280',
       amountRecharge: '充值',
       amountPayment: '付款',

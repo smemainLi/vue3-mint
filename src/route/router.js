@@ -12,7 +12,17 @@ const router = new Router({
   base: process.env.BASE_URL,
   routes: [
     /* 首页 */
-    { path: '/', name: 'index', meta: { title: '首页' }, component: routerPath.Index },
+    { path: '/', name: 'temporaryIndex', meta: { title: '首页' }, component: routerPath.temporaryIndex },
+    {
+      path: '/mall/index',
+      name: 'Index',
+      meta: { title: '同道商城' },
+      component: routerPath.Index,
+      children: [
+        { path: '/mall/index', meta: { title: '同道商城' }, name: 'mall', component: routerPath.mall },
+        { path: '/mall/classify', meta: { title: '分类' }, name: 'classify', component: routerPath.classify }
+      ]
+    },
     /* 预约 */
     { path: '/order/index', meta: { title: '在线预约', sdkConfig: true, jsApiList: ['getLocation', 'openLocation'] }, name: 'order', component: routerPath.order },
     { path: '/order/onceProtocol', meta: { title: '预约须知' }, name: 'onceProtocol', component: routerPath.onceProtocol },
@@ -28,12 +38,15 @@ const router = new Router({
     /* 精选项目 */
     { path: '/choice/index', meta: { title: '服务项目' }, name: 'choice', component: routerPath.choice },
     /* 同道商城 */
-    { path: '/mall/index', meta: { title: '同道商城' }, name: 'mall', component: routerPath.mall },
     { path: '/mall/addAddress', meta: { title: '收货地址' }, name: 'addAddress', component: routerPath.addOrEditAddress },
     { path: '/mall/editAddress', meta: { title: '收货地址' }, name: 'editAddress', component: routerPath.addOrEditAddress },
     { path: '/mall/paymentSuccess', meta: { title: '付款成功' }, name: 'paymentSuccess', component: routerPath.paymentSuccess },
     { path: '/mall/chooseAddress', meta: { title: '下单' }, name: 'chooseAddress', component: routerPath.chooseAddress },
     { path: '/mall/shoppingCart', meta: { title: '购物车' }, name: 'shoppingCart', component: routerPath.shoppingCart },
+    { path: '/mall/coupon', meta: { title: '优惠券' }, name: 'coupon', component: routerPath.coupon },
+    { path: '/mall/placeOrder', meta: { title: '下单' }, name: 'placeOrder', component: routerPath.placeOrder },
+    { path: '/mall/search', meta: { title: '搜索' }, name: 'search', component: routerPath.search },
+    { path: '/mall/goodsDetail', meta: { title: '商品详情' }, name: 'goodsDetail', component: routerPath.goodsDetail },
     /* 在线咨询 */
     { path: '/consult/index', meta: { title: '在线客服' }, name: 'consult', component: routerPath.consult },
     /* 预约记录 */
@@ -43,6 +56,8 @@ const router = new Router({
     { path: '/precord/index', meta: { title: '我的门店消费' }, name: 'precord', component: routerPath.precord },
     /* 我买的商品 */
     { path: '/bought/index', meta: { title: '我买的商品' }, name: 'bought', component: routerPath.bought },
+    { path: '/bought/orderDetail', meta: { title: '我买的商品' }, name: 'bought', component: routerPath.orderDetail },
+    { path: '/bought/orderDetailCopy', meta: { title: '我买的商品' }, name: 'bought', component: routerPath.orderDetailCopy },
     /* 会员卡 */
     { path: '/mcard/index', meta: { title: '会员卡' }, name: 'mcard', component: routerPath.mcard },
     { path: '/mcard/login', meta: { title: '登录', keepAlive: true }, name: 'login', component: routerPath.login },
@@ -59,6 +74,7 @@ const router = new Router({
     { path: '/mcard/walletPayment', meta: { title: '付款' }, name: 'walletPayment', component: routerPath.walletPayment },
     { path: '/mcard/myBankCard', meta: { title: '我的银行卡' }, name: 'myBankCard', component: routerPath.myBankCard },
     { path: '/mcard/recharge', meta: { title: '充值', sdkConfig: true, jsApiList: ['chooseWXPay'] }, name: 'recharge', component: routerPath.recharge },
+    { path: '/mcard/myCoupon', meta: { title: '我的优惠券' }, name: 'myCoupon', component: routerPath.coupon },
   ]
 })
 

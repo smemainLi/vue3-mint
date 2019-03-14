@@ -29,7 +29,7 @@ export default {
         this.patientList = []
         this.patientList.length = 0
         if (res.status === 200) {
-          res.data.relationships.forEach(item => {
+          res.data.list.forEach(item => {
             this.patientList.push({
               remarkId: item.relationshipId,
               remarkContent: item.relationshipName,
@@ -37,7 +37,7 @@ export default {
             })
           })
         }
-        if (res.data.relationships.length !== 0) this.patientList[this.patientList.length - 1].hasBr = false
+        if (res.data.list.length !== 0) this.patientList[this.patientList.length - 1].hasBr = false
       }).catch((err) => {
         this.$toast('数据错误')
         throw err

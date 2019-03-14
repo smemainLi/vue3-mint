@@ -1,7 +1,7 @@
 <template>
   <div class="mcard-balance">
     <mcb-amount :balanceMoneyContent="balanceMoneyContent" :cashableBalance="cashableBalance"></mcb-amount>
-    <div class="mcard-investment"></div>
+    <!-- <div class="mcard-investment"></div> -->
     <div class="mcard-balance-action">
       <action-item :actionItem="item" v-for="(item,index) in balanceActionList" @click.native="selectAction(item)" :key="'shop'+index"></action-item>
     </div>
