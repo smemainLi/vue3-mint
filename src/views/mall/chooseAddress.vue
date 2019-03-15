@@ -1,7 +1,7 @@
 <template>
   <div class="choose-address">
     <address-item :addressItem="item" v-for="(item,index) in addressList" :key="index"></address-item>
-    <button class="add-address-button" @click="$router.push('/mall/addAddress')">
+    <button class="add-address-button" @click="$router.push({path:'/mall/addAddress',query:{pageFlag:'addAddress'}})">
       <span class="btn-name" v-cloak>{{btnName}}</span>
     </button>
   </div>
@@ -26,6 +26,29 @@ export default {
     async loadPersonalAddress () {
       const result = await this.getPersonalAddress()
       console.log(result)
+      if (result.status === 200) {
+        this.addressList.length = 0
+        this.addressList = []
+        if (result.data.address.length === 0) return
+        result.data.address.forEach(address => {
+          this.addressList.push({
+            addressId: address.id,
+            nickname: address.name,
+            phone: address.mobile,
+            isDefault: !!address.isdefault, // 0 不是默认 1默认
+            operateFlag: 'chooseAddress',
+            province: address.province, // 省
+            provinceCode: address.provincecode, // 省编号
+            city: address.city, // 市
+            cityCode: address.cityCode, // 市编号
+            district: address.district, // 区
+            districtCode: address.districtcode, // 区编号
+            address: `${address.province}${address.city}${address.district}${address.address}`,
+            hasBr: true
+          })
+        })
+        this.addressList[this.addressList.length - 1].hasBr = false
+      }
     }
   },
   created () {

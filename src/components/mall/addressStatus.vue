@@ -1,6 +1,6 @@
 <template>
   <div class="address-status">
-    <div class="no-add-address" @click="$router.push('/mall/addAddress')" v-show="testStatus">
+    <div class="no-add-address" @click="$router.push({path:'/mall/addAddress',query:{pageFlag:'addAddress'}})" v-show="testStatus">
       <div class="address-add-img">
         <img class="img-content" :src="addressStatusImg" alt="">
       </div>

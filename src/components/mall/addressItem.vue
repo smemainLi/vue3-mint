@@ -12,7 +12,7 @@
           <div class="address-info" v-cloak>{{addressItem.address}}</div>
         </div>
       </div>
-      <div class="edit-address" v-show="addressItem.operateFlag==='chooseAddress'" @click="$router.push('/mall/editAddress')" v-cloak>{{edit}}</div>
+      <div class="edit-address" v-show="addressItem.operateFlag==='chooseAddress'" @click="editAddress(addressItem)" v-cloak>{{edit}}</div>
       <div class="right-arrow" v-show="addressItem.operateFlag==='placeOrder'">
         <img class="arrow-img" :src="rightArrow" alt="">
       </div>
@@ -34,7 +34,14 @@ export default {
       rightArrow: require('../../assets/images/mcard/arrow.png')
     }
   },
-  props: ['addressItem']
+  props: ['addressItem'],
+  methods: {
+    editAddress (address) {
+      console.log(JSON.stringify(address))
+      // console.log(JSON.parse(JSON.stringify(address)))
+      this.$router.push({ path: '/mall/editAddress', query: { pageFlag: 'editAddress', addressDetail: JSON.stringify(address) } })
+    }
+  }
 }
 </script>
 
