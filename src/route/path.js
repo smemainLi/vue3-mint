@@ -27,6 +27,7 @@ export const placeOrder = r => require.ensure([], () => r(require('../views/mall
 export const classify = r => require.ensure([], () => r(require('../views/mall/classify.vue')), e => console.log(e), 'classify')
 export const search = r => require.ensure([], () => r(require('../views/mall/search.vue')), e => console.log(e), 'search')
 export const goodsDetail = r => require.ensure([], () => r(require('../views/mall/goodsDetail.vue')), e => console.log(e), 'goodsDetail')
+export const downloadPage = r => require.ensure([], () => r(require('../views/mall/downloadPage.vue')), e => console.log(e), 'downloadPage')
 
 /* 在线咨询 */
 export const consult = r => require.ensure([], () => r(require('../views/consult/index.vue')), e => console.log(e), 'consult')
@@ -41,7 +42,7 @@ export const precord = r => require.ensure([], () => r(require('../views/precord
 /* 我买的商品 */
 export const bought = r => require.ensure([], () => r(require('../views/bought/index.vue')), e => console.log(e), 'bought')
 export const orderDetail = r => require.ensure([], () => r(require('../views/bought/orderDetail.vue')), e => console.log(e), 'orderDetail')
-export const orderDetailCopy = r => require.ensure([], () => r(require('../views/bought/orderDetail.copy.vue')), e => console.log(e), 'orderDetailCopy') //测试
+export const logistics = r => require.ensure([], () => r(require('../views/bought/logistics.vue')), e => console.log(e), 'logistics')
 
 /* 会员卡 */
 export const mcard = r => require.ensure([], () => r(require('../views/mcard/index.vue')), e => console.log(e), 'mcard')
@@ -58,3 +59,10 @@ export const withdrawalsSuccess = r => require.ensure([], () => r(require('../vi
 export const walletPayment = r => require.ensure([], () => r(require('../views/mcard/walletPayment.vue')), e => console.log(e), 'walletPayment')
 export const myBankCard = r => require.ensure([], () => r(require('../views/mcard/myBankCard.vue')), e => console.log(e), 'myBankCard')
 export const recharge = r => require.ensure([], () => r(require('../views/mcard/recharge.vue')), e => console.log(e), 'recharge')
+export const upgradeSuccess = r => require.ensure([], () => r(require('../views/mcard/upgradeSuccess.vue')), e => console.log(e), 'upgradeSuccess')
+export const offlineCouponSuccess = r => require.ensure([], () => r(require('../views/mcard/offlineCouponSuccess.vue')), e => console.log(e), 'offlineCouponSuccess')
+export const memberUpgrade = r => require.ensure([], () => r(require('../views/mcard/memberUpgrade.vue')), e => console.log(e), 'memberUpgrade')
+export const membershipInterests = r => require.ensure([], () => r(require('../views/mcard/membershipInterests.vue')), e => console.log(e), 'membershipInterests')
+export const inviteFriendsOne = r => require.ensure([], () => r(require('../views/mcard/inviteFriends.one.vue')), e => console.log(e), 'inviteFriendsOne')
+export const inviteFriendsResult = r => require.ensure([], () => r(require('../views/mcard/inviteFriendsResult.vue')), e => console.log(e), 'inviteFriendsResult')
+export const appInvite = r => require.ensure([], () => r(require('../views/mcard/appInvite.vue')), e => console.log(e), 'appInvite')

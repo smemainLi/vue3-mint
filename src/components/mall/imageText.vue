@@ -8,7 +8,7 @@
       <div class="right-line"></div>
     </div>
     <div class="image-text-content">
-      <img class="img-content" :src="imageTextContent" alt="">
+      <div class="image-text-detail" v-html="imageTextContent"></div>
     </div>
   </div>
 </template>
@@ -17,10 +17,10 @@
 export default {
   data () {
     return {
-      imageTextContent: require('../../assets/images/mall/goodsIntroductImg.png'),
       imageTextTitle: '图文详情'
     }
-  }
+  },
+  props: ['imageTextContent']
 }
 </script>
 
@@ -59,11 +59,13 @@ export default {
     }
   }
   .image-text-content {
-    width: 750px;
-    height: 761px;
-    .img-content {
+    width: 100%;
+    .image-text-detail {
       width: 100%;
-      height: 100%;
+      /deep/ img {
+        width: 100%;
+        height: auto;
+      }
     }
   }
 }

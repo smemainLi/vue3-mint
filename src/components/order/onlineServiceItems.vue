@@ -28,14 +28,12 @@ export default {
   methods: {
     // 服务项目只能选中其中一项
     selectService (serviceItem) {
-      console.log(serviceItem)
       this.serviceList.map((listItem) => {
         listItem.map((item) => {
           item.serviceSelected = false
         })
       })
       serviceItem.serviceSelected = true
-      console.log(serviceItem.serviceId)
 
       this.$emit('getServiceItemId', serviceItem.serviceId)
     }
@@ -57,6 +55,7 @@ export default {
     .service-label {
       color: $color-35;
       width: 200px;
+      margin-top: 8px;
     }
     .service-list {
       .service-options {

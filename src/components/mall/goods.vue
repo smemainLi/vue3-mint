@@ -1,14 +1,16 @@
 <template>
   <div class="goods">
     <div class="goods-img">
-      <img class="img-content" :src="goodsItem.goodsImg" alt="">
+      <img class="img-content" v-lazy="goodsItem.goodsImg||goodsImgPlaceholder" alt="">
     </div>
-    <div class="goods-introduce" v-cloak>{{goodsItem.goodsIntroduce}}</div>
+    <div class="goods-introduce" v-html="goodsItem.goodsIntroduce"></div>
     <div class="last-row">
       <div class="goods-price" v-cloak>{{goodsItem.goodsPrice}}</div>
       <div class="goods-num" v-cloak>{{goodsItem.goodsNum}}</div>
     </div>
-    <div class="goods-star" v-cloak>{{starProducts}}</div>
+    <div class="goods-star" v-show="goodsItem.note" v-cloak>
+      <img class="star-img" :src="goodsItem.note" alt="">
+    </div>
   </div>
 </template>
 
@@ -16,7 +18,8 @@
 export default {
   data () {
     return {
-      starProducts: '明星产品'
+      starProducts: '明星产品',
+      goodsImgPlaceholder: require('../../assets/images/order/tdkqLogo.png')
     }
   },
   props: ['goodsItem']
@@ -58,13 +61,19 @@ export default {
     }
   }
   .goods-star {
-    display: inline-block;
-    font-size: 24px;
-    color: $color-E08282;
-    border-radius: 4px;
-    margin-top: 10px;
-    padding: 0 6px;
-    border: 1px solid $color-E08282;
+    // display: inline-block;
+    // font-size: 24px;
+    // color: $color-E08282;
+    // border-radius: 4px;
+    // margin-top: 10px;
+    // padding: 0 6px;
+    // border: 1px solid $color-E08282;
+    width: 105px;
+    height: 36px;
+    .star-img {
+      width: 100%;
+      height: 100%;
+    }
   }
 }
 </style>

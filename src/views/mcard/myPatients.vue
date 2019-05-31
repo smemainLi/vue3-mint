@@ -24,7 +24,6 @@ export default {
     loadPatientList () {
       this.$indicator.open({ text: '加载中...', spinnerType: 'fading-circle' })
       this.getPatientList().then((res) => {
-        console.log(res)
         this.$indicator.close()
         this.patientList = []
         this.patientList.length = 0

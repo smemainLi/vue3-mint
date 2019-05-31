@@ -22,7 +22,6 @@ export default {
     ...mapMutations({ setRechargeInfo: 'setRechargeInfo' }),
     // 充值项目只能选中其中一项
     selectRecharge (rechargeItem) {
-      console.log(rechargeItem)
       this.setRechargeInfo(rechargeItem)// 存储到state中
       this.rechargeList.forEach((listItem) => {
         listItem.forEach((item) => {
@@ -30,7 +29,6 @@ export default {
         })
       })
       rechargeItem.rechargeSelected = true
-      console.log(rechargeItem.rechargeId)
       this.$emit('getRechargeMess', { rechargeId: rechargeItem.rechargeId, chargeInfo: rechargeItem.chargeInfo })
     }
   }

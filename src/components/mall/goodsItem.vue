@@ -80,6 +80,8 @@ export default {
               padding-top: 12px;
             }
             .goods-num {
+              position: absolute;
+              right: 0;
               color: $color-88;
               padding-right: 16px;
             }

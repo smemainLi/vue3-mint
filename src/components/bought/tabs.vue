@@ -1,38 +1,69 @@
 <template>
   <div class="bought-tabs">
-    <van-tabs v-model="active">
+    <van-tabs v-model="active" @click="switchTabs">
       <van-tab :title="item.tabName" v-for="(item,index) in tabList" :key="index"></van-tab>
     </van-tabs>
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
   data () {
     return {
-      active: 2
+      active: 0,
+      /* 待付款：0    待发货：2    待收货：3    已完成：4    已取消：5    待消费：6    已消费：7 */
+      tabList: [
+        { status: -1, tabName: '全部' },
+        { status: 0, tabName: '待付款' },
+        { status: 2, tabName: '待发货' },
+        { status: 3, tabName: '待收货' }
+      ],
+      tabStatus: []// 存储个状态下对应订单的数量
     }
   },
-  props: ['tabList'],
+  props: [],
   methods: {
+    ...mapActions({ getOrderStatusNum: 'getOrderStatusNum' }),
     /* 给tab标签添加上标 */
     addBadge () {
       let vanTabs = document.getElementsByClassName('van-tab')
-      // console.log(vanTabs)
       for (let i = 0; i < vanTabs.length; i++) {
-        const vanTab = vanTabs[i]
-        var vtabSpan = document.createElement('span')
-        var vtabText = document.createTextNode('8')
-        vtabSpan.appendChild(vtabText)
-        vtabSpan.className = 'vtab-span'
-        vanTab.appendChild(vtabSpan)
+        this.tabStatus.forEach(statusItem => {
+          if (statusItem.status === this.tabList[i].status /* && statusItem.num */) {
+            const vanTab = vanTabs[i]
+            var vtabSpan = document.createElement('span')
+            var vtabText = document.createTextNode(`${statusItem.num}`)
+            vtabSpan.appendChild(vtabText)
+            statusItem.num ? vtabSpan.className = 'vtab-span' : vtabSpan.className = 'vtab-span vtab-span-other'
+            vanTab.appendChild(vtabSpan)
+          }
+        })
       }
+    },
+    /* 订单状态对应的数字提醒 */
+    async loadOrderStatusNum () {
+      this.tabStatus.length = 0
+      this.tabStatus = []
+      const result = await this.getOrderStatusNum()
+      if (result.status === 200) {
+        /* 待付款：0    待发货：2    待收货：3  */
+        result.data.list.length && result.data.list.forEach(listItem => {
+          this.tabStatus.push({
+            status: listItem.status,
+            num: listItem.num
+          })
+        })
+        this.addBadge()
+      }
+    },
+    /* 切换tab选项 */
+    switchTabs (index) {
+      this.$emit('getCurrentTab', this.tabList[index].status)
     }
   },
   mounted () {
-    this.$nextTick(function () {
-      this.addBadge()
-    })
+    this.loadOrderStatusNum()
   }
 }
 </script>
@@ -65,6 +96,9 @@ export default {
       height: 32px;
       padding: 0 10px;
       color: $color-ff;
+    }
+    .vtab-span-other {
+      display: none;
     }
   }
   /deep/ .van-tab--active {

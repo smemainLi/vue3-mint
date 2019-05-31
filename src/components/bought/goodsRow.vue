@@ -40,11 +40,12 @@ export default {
       width: 98px;
       height: 98px;
       .img-content {
-        // width: 100%;
+        width: 100%;
         height: 100%;
       }
     }
     .goods-info {
+      width: 400px;
       font-size: 24px;
       color: $color-35;
       margin-left: 20px;

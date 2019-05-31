@@ -1,11 +1,15 @@
 <template>
   <div class="mcard">
-    <top :headImg="headImg" :userName="userName" :cardBalance="cardBalance" :walletStatus="walletStatus" @showQrcode="showQrcode"></top>
+    <top :headImg="headImg" :userName="userName" :cardBalance="cardBalance" :walletStatus="walletStatus" :memberGrade="memberGrade" @showQrcode="showQrcode"></top>
     <div class="my-shop-action">
       <action-item :actionItem="item" v-for="(item,index) in shopActionList" @click.native="selectAction(item)" :key="'shop'+index"></action-item>
     </div>
     <div class="my-account-action">
       <action-item :actionItem="item" v-for="(item,index) in shopAccountList" @click.native="selectAction(item)" :key="'account'+index"></action-item>
+    </div>
+    <!-- position:fixed，顺序越靠后，所处的层越高  -->
+    <div class="invite-friend-icon" v-show="inviteIcon" @click="$router.push('/mcard/inviteFriendsOne')">
+      <img class="icon-img" :src="inviteIcon" alt="">
     </div>
     <div class="qrcode-mask" v-show="qrcodeDisplay">
       <qrcode-show :qrcodeImg="qrcodeImg" @closeQrcode="closeQrcode"></qrcode-show>
@@ -32,6 +36,7 @@ export default {
       cardBalance: '',
       qrcodeImg: '',
       walletStatus: false, // 钱包开通状态 false 表示未开通 true 表示已开通
+      memberGrade: {}, // 会员等级信息
       shopActionList: [
         {
           imgContent: require('../../assets/images/mcard/alarmClock.png'),
@@ -47,7 +52,7 @@ export default {
         },
         {
           imgContent: require('../../assets/images/mcard/goods.png'),
-          remarkContent: '我买过的商品',
+          remarkContent: '我的商城订单',
           path: '/bought/index',
           hasBr: true
         },
@@ -77,14 +82,15 @@ export default {
           path: '/order/payPassword',
           hasBr: false
         }
-      ]
+      ],
+      inviteIcon: ''
     }
   },
   components: {
     top, actionItem, qrcodeShow
   },
   methods: {
-    ...mapActions({ getPersonalInfo: 'getPersonalInfo', getPersonalQrCode: 'getPersonalQrCode', userLogout: 'userLogout' }),
+    ...mapActions({ getPersonalInfo: 'getPersonalInfo', getPersonalQrCode: 'getPersonalQrCode', userLogout: 'userLogout', getInviteConfig: 'getInviteConfig', getMyInviteConfig: 'getMyInviteConfig' }),
     /* 显示二维码 */
     showQrcode (flag) {
       this.qrcodeDisplay = flag
@@ -94,12 +100,13 @@ export default {
       this.qrcodeDisplay = flag
     },
     selectAction (actionRow) {
-      console.log(actionRow)
       if (actionRow.path === '/order/payPassword') {
         if (!this.walletStatus) this.$toast({ message: '请先开通会员卡支付', duration: 1000 })
         else this.$router.push({ path: '/order/payPassword', query: { updateFlag: 'isUpdate' } })
-      } else if (actionRow.path === '/mcard/updateBindPhone') this.$router.push({ path: '/order/payPassword', query: { pageFlag: 'updateBindPhone' } })
-      else if (actionRow.path === '/mcard/myCoupon') this.$router.push({ path: '/mcard/myCoupon', query: { pageFlag: 'myCoupon' } })
+      } else if (actionRow.path === '/mcard/updateBindPhone') {
+        this.walletStatus && this.$router.push({ path: '/order/payPassword', query: { pageFlag: 'updateBindPhone' } })/* 已开通钱包 */
+        !this.walletStatus && this.$router.push({ path: '/mcard/updateBindPhone', query: { pageFlag: 'updateBindPhone' } })/* 未开通钱包 */
+      } else if (actionRow.path === '/mcard/myCoupon') this.$router.push({ path: '/mcard/myCoupon', query: { pageFlag: 'myCoupon' } })
       else { this.$router.push({ path: actionRow.path }) }
     },
     /* 加载个人信息 */
@@ -107,12 +114,16 @@ export default {
       this.$indicator.open({ text: '加载中...', spinnerType: 'fading-circle' })
       this.getPersonalInfo().then((res) => {
         this.$indicator.close()
-        console.log(res)
         if (res.status === 200) {
           this.headImg = res.data.headimgurl
           this.userName = res.data.name
           this.cardBalance = `￥${res.data.balance}`
           this.walletStatus = !!res.data.walletStatus
+          this.memberGrade = {
+            gradeStatus: !!res.data.gradeStatus, // 是否有会员升级这个活动  0：未开启，1：开启
+            gradeUpgradeAble: res.data.gradeUpgradeAble, // 等级能否升级 false：已升级，true：可以升级
+            memberTitle: res.data.gradeName// 超级会员
+          }
         }
       }).catch((err) => {
         this.$toast('数据错误')
@@ -122,7 +133,6 @@ export default {
     /* 加载个人二维码 */
     loadPersonalQrCode () {
       this.getPersonalQrCode().then((res) => {
-        console.log(res)
         if (res.status === 200) {
           this.qrcodeImg = res.data.qrcode
         }
@@ -130,6 +140,12 @@ export default {
         this.$toast('数据错误')
         throw err
       })
+    },
+    /* 加载分享配置信息 */
+    async loadInviteConfig () {
+      const result = await this.getInviteConfig()
+      if (result.status !== 200) return
+      if (result.data.status === '0') this.inviteIcon = result.data.img
     },
     /* 用户退出登录 */
     logout () {
@@ -140,11 +156,9 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(action => {
-        console.log(action)
         if (action === 'confirm') {
           this.$indicator.open({ text: '加载中...', spinnerType: 'fading-circle' })
           this.userLogout().then((res) => {
-            console.log(res)
             this.$indicator.close()
             this.$toast({ message: res.message, duration: 1000 })
             if (res.status === 200) {
@@ -163,6 +177,8 @@ export default {
   created () {
     this.loadPersonalInfo()
     this.loadPersonalQrCode()
+    this.loadInviteConfig()
+    sessionStorage.removeItem('loopFlag')// 移除修改绑定手机留下来的跳转
   }
 }
 </script>
@@ -190,6 +206,17 @@ export default {
     .btn-name {
       margin-left: 14px;
       letter-spacing: 2px;
+    }
+  }
+  .invite-friend-icon {
+    width: 120px;
+    height: 124px;
+    position: fixed;
+    right: 0;
+    bottom: 120px;
+    .icon-img {
+      width: 100%;
+      height: 100%;
     }
   }
 }

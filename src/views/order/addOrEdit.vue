@@ -20,9 +20,6 @@ export default {
     addOrEditForm
   },
   beforeRouteLeave (to, from, next) {
-    console.log(to)
-    console.log(from)
-    console.log(next)
     if (to.path === '/order/onlineBooking') {
       to.meta.keepAlive = true
     } else {

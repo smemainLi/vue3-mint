@@ -29,14 +29,15 @@ module.exports = {
       '/wx': {
         target: 'http://10.10.21.61:8081',
         // target: 'http://10.10.100.189:8080',
-        ws: true,
+        // target: 'http://10.10.100.169:8080',
+        ws: false,
         changeOrigin: true
       }
     }
   }
 }
 
-function addStyleResource(rule) {
+function addStyleResource (rule) {
   rule.use('style-resource')
     .loader('style-resources-loader')
     .options({

@@ -1,4 +1,5 @@
 src/utils/*.js
 src/route/*.js
+src/store/modules/*.js
 src/*.js
 /*.js

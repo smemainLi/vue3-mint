@@ -48,15 +48,6 @@ export default {
     ...mapActions({ getRegisterData: 'getRegisterData', getPatientList: 'getPatientList', submitAppointment: 'submitAppointment' }),
     ...mapMutations({ changeFeeVal: 'changeFeeVal', changeTimeList: 'changeTimeList' }),
     makeAnAppointment () {
-      console.log(this.$refs.onlineBasicInfo.appointmentDateVal)
-      console.log(this.$refs.onlineBasicInfo.timeSlotVal)
-      // console.log(this.serviceId)
-      // console.log(this.patientId)
-      /* 获取子组件中的参数 */
-      // console.log(this.$refs.onlineBasicInfo)
-      // console.log(this.$refs.onlineServiceItems)
-      // console.log(this.$refs.onlineDescription)
-      // console.log(this.$refs.onlineChoosePatient)
       /* 表单判断 */
       if (this.$refs.onlineBasicInfo.appointmentDateVal === '') this.$toast({ message: '请选择预约日期', duration: 1000 })
       else if (this.$refs.onlineBasicInfo.timeSlotVal === '') this.$toast({ message: '请选择就诊时间', duration: 1000 })
@@ -70,16 +61,12 @@ export default {
           categoryId: this.serviceId,
           money: parseInt(this.$refs.onlineDescription.feeVal),
           remarks: this.$refs.onlineDescription.situationVal,
-          relationshipId: this.patientId
+          relationshipId: this.patientId,
+          orderId: this.$route.query.orderId || ''
         }
-        // localStorage.setItem('bookingData', JSON.stringify(this.bookingData))// 序列化，JSON.stringify() 方法可以将任意的 JavaScript 值序列化成 JSON 字符串
-        // console.log(JSON.parse(localStorage.getItem('bookingData')))// 反序列化，JSON.parse()将JSON字符串转成JSON对象
-        // this.$router.push('/order/payment')
         this.$indicator.open({ text: '加载中...', spinnerType: 'fading-circle' })
         this.submitAppointment(this.bookingData).then((res) => {
           this.$indicator.close()
-          console.log(res)
-          console.log(typeof res.status)
           if (res.status === 200) {
             localStorage.setItem('registerId', res.data.registerId)// 存储预约id
             localStorage.setItem('payId', res.data.payId)// 存储支付id
@@ -104,55 +91,56 @@ export default {
     loadRegisterData () {
       this.$indicator.open({ text: '加载中...', spinnerType: 'fading-circle' })
       this.getRegisterData({ shopId: this.$route.query.storeId }).then((res) => {
-        console.log(res)
         this.$indicator.close()
-        if (res.status === 200) {
-          if (res.data.erro) { // 如果存在erro，表示存在未支付订单
-            this.hasUnpaid = res.data.erro
-            localStorage.setItem('registerId', res.data.registerId)
-          }
-          // this.times = res.data.times
-          res.data.dayList.map((item) => {
-            this.dataList.push(item.day)// 日期列表
-            this.times.push({
-              day: item.day,
-              times: item.timeList
-            })
-          })
-
-          /* 在serviceList中存储多个数组，每个数组的元素最多3个 */
-          let n = 0// 辅助
-          let currentItem = []// 辅助
-          res.data.categories.map((item) => {
-            currentItem.push({
-              serviceId: item.categoryId,
-              serviceName: item.categoryName,
-              serviceSelected: false
-            })
-            n++
-            if (n % 3 === 0) {
-              this.serviceList.push(currentItem)
-              currentItem = []
-              currentItem.length = 0
-            }
-          })
-          if (currentItem.length !== 0) this.serviceList.push(currentItem)
-          console.log(this.serviceList)
-
-          this.changeFeeVal(res.data.money)
-          /* 清空数组 */
-          this.patientList.length = 0
-          this.patientList = []
-          res.data.relationships.map((item) => {
-            this.patientList.push({
-              patientId: item.relationshipId,
-              patientName: item.relationshipName,
-              patientSelected: false,
-              hasBr: true// 样式设置，是否有下划线
-            })
-          })
-          if (res.data.relationships.length !== 0) this.patientList[this.patientList.length - 1].hasBr = false// 样式设置，是否有下划线
+        if (res.status === -400) return
+        if (res.status !== 200) {
+          this.$toast({ message: res.message, duration: 1000 })
+          return
         }
+        if (res.data.erro) { // 如果存在erro，表示存在未支付订单
+          this.hasUnpaid = res.data.erro
+          localStorage.setItem('registerId', res.data.registerId)
+        }
+        // this.times = res.data.times
+        res.data.dayList.map((item) => {
+          this.dataList.push(item.day)// 日期列表
+          this.times.push({
+            day: item.day,
+            times: item.timeList
+          })
+        })
+
+        /* 在serviceList中存储多个数组，每个数组的元素最多3个 */
+        let n = 0// 辅助
+        let currentItem = []// 辅助
+        res.data.categories.map((item) => {
+          currentItem.push({
+            serviceId: item.categoryId,
+            serviceName: item.categoryName,
+            serviceSelected: false
+          })
+          n++
+          if (n % 3 === 0) {
+            this.serviceList.push(currentItem)
+            currentItem = []
+            currentItem.length = 0
+          }
+        })
+        if (currentItem.length !== 0) this.serviceList.push(currentItem)
+
+        this.changeFeeVal(res.data.money)
+        /* 清空数组 */
+        this.patientList.length = 0
+        this.patientList = []
+        res.data.relationships.map((item) => {
+          this.patientList.push({
+            patientId: item.relationshipId,
+            patientName: item.relationshipName,
+            patientSelected: false,
+            hasBr: true// 样式设置，是否有下划线
+          })
+        })
+        if (res.data.relationships.length !== 0) this.patientList[this.patientList.length - 1].hasBr = false// 样式设置，是否有下划线
       }).catch((err) => {
         this.$toast('数据错误')
         throw err
@@ -160,29 +148,27 @@ export default {
     },
     /* 获取服务项目的id */
     getServiceItemId (id) {
-      console.log(id)
       this.serviceId = id
     },
     /* 获取就诊人的id */
     getPatientItemId (id) {
-      console.log(id)
       this.patientId = id
     }
   },
   /* keep-alive 组件激活时调用 */
   activated () {
     this.getPatientList().then((res) => {
-      console.log(res)
       if (res.status === 200) {
         this.patientList.length = 0
         this.patientList = []
-        res.data.list.forEach((item) => {
+        res.data.list.forEach((item, index) => {
           this.patientList.push({
             patientId: item.relationshipId,
             patientName: item.relationshipName,
             patientSelected: false,
             hasBr: true// 样式设置，是否有下划线
           })
+          item.relationshipId === this.patientId && (this.patientList[index].patientSelected = true)// 默认选中之前选中的就诊人
         })
         if (this.patientList.length !== 0) this.patientList[this.patientList.length - 1].hasBr = false// 样式设置，是否有下划线
       }
@@ -191,9 +177,9 @@ export default {
       throw err
     })
   },
+  deactivated () {
+  },
   beforeRouteLeave (to, from, next) {
-    console.log(to)
-    console.log(from)
     from.meta.keepAlive = false
     next()
   }

@@ -37,8 +37,8 @@ export default {
   margin: 48px 0 114px 32px;
   .notice-row {
     display: flex;
-    justify-content: flex-start;
     align-items: center;
+    justify-content: flex-start;
     .notice-icon {
       font-size: 26px;
       margin-right: 12px;

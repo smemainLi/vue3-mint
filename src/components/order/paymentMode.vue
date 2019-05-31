@@ -6,8 +6,8 @@
           <img class="image-style" :src="mode.payImg" alt="">
         </div>
         <div class="mode-name" v-cloak>{{mode.modeName}}</div>
-        <div class="mode-tip" v-show="isSetPayPassword===1?false:!mode.enough" @click="$router.push({ path: '/mcard/recharge', query: { openFlag: 'orderPay' } })" v-cloak>
-          {{modeTip}}
+        <div class="mode-tip" v-show="mode.id===1 && (isSetPayPassword===1 || !mode.enough)" @click="modeRecharge" v-cloak>
+          {{isSetPayPassword===1 ? modeTipO : !mode.enough ? modeTipT : ''}}
           <span class="right-arrow" v-cloak>{{rightArrow}}</span>
         </div>
       </div>
@@ -26,11 +26,27 @@
 export default {
   data () {
     return {
-      modeTip: '余额不足，充值省超多',
+      modeTipO: '开通会员卡，更多优惠',
+      modeTipT: '余额不足，充值省超多',
       rightArrow: '>>'
     }
   },
-  props: ['mode', 'isSetPayPassword']
+  props: ['mode', 'isSetPayPassword', 'orderType', 'balanceMoneyContent'],
+  methods: {
+    modeRecharge () {
+      if (this.isSetPayPassword === 1) {
+        if (this.orderType === 'mallOrder') {
+          this.$router.replace({ path: '/order/payPassword', query: { isSetPayPassword: this.isSetPayPassword, openFlag: 'mallOrder', balanceMoneyContent: this.balanceMoneyContent } })/* 未设置钱包支付密码也同样处理 */
+        } else if (this.orderType === 'upgradeOrder') {
+          this.$router.replace({ path: '/order/payPassword', query: { isSetPayPassword: this.isSetPayPassword, openFlag: 'upgradeOrder', balanceMoneyContent: this.balanceMoneyContent } })/* 未设置钱包支付密码也同样处理 */
+        } else {
+          this.$router.replace({ path: '/order/payPassword', query: { isSetPayPassword: this.isSetPayPassword, openFlag: 'orderPay', balanceMoneyContent: this.balanceMoneyContent } })/* 未设置钱包支付密码也同样处理 */
+        }
+      } else {
+        this.$router.push({ path: '/mcard/recharge', query: { openFlag: 'orderPay', balanceMoneyContent: this.balanceMoneyContent } })
+      }
+    }
+  }
 }
 </script>
 

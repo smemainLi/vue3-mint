@@ -12,7 +12,7 @@
           <div class="address-info" v-cloak>{{addressItem.address}}</div>
         </div>
       </div>
-      <div class="edit-address" v-show="addressItem.operateFlag==='chooseAddress'" @click="editAddress(addressItem)" v-cloak>{{edit}}</div>
+      <div class="edit-address" v-show="addressItem.operateFlag==='chooseAddress'" @click.stop="editAddress(addressItem)" v-cloak>{{edit}}</div>
       <div class="right-arrow" v-show="addressItem.operateFlag==='placeOrder'">
         <img class="arrow-img" :src="rightArrow" alt="">
       </div>
@@ -37,8 +37,6 @@ export default {
   props: ['addressItem'],
   methods: {
     editAddress (address) {
-      console.log(JSON.stringify(address))
-      // console.log(JSON.parse(JSON.stringify(address)))
       this.$router.push({ path: '/mall/editAddress', query: { pageFlag: 'editAddress', addressDetail: JSON.stringify(address) } })
     }
   }
@@ -51,15 +49,21 @@ export default {
   background-color: $color-ff;
   .address-block {
     display: flex;
+    align-items: center;
     justify-content: space-between;
     .address-left-info {
       display: flex;
+      // align-items: center;
       justify-content: flex-start;
+      position: relative;
       padding: 26px 0 30px 0;
       .address-item-icon {
         font-size: 24px;
         color: $color-008CA7;
         margin-right: 8px;
+        // margin-top: -88px;
+        // position: relative;
+        // top: 0;
       }
       .address-detail {
         .user-info {
@@ -91,12 +95,12 @@ export default {
     .edit-address {
       font-size: 28px;
       color: $color-008CA7;
-      margin-top: 52px;
+      // margin-top: 52px;
     }
     .right-arrow {
       width: 40px;
       height: 40px;
-      margin-top: 72px;
+      // margin-top: 72px;
       .arrow-img {
         width: 100%;
         height: 100%;

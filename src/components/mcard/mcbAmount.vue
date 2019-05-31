@@ -1,7 +1,7 @@
 <template>
   <div class="mcb-amount">
     <div class="amount-info">
-      <div class="amount-rule" v-cloak>{{amountRule}}</div>
+      <div class="amount-rule" @click="$router.push({path:'/mcard/membershipAmountProtocol',query:{flag:'membershipAmount'}})" v-cloak>{{amountRule}}</div>
       <div class="balance-title" v-cloak>{{balanceTitle}}</div>
       <div class="balance-money">
         <span class="balance-money-unit" v-cloak>{{balanceMoneyUnit}}</span><span class="balance-money-content" v-cloak>{{balanceMoneyContent}}</span>

@@ -1,5 +1,5 @@
 <template>
-  <div class="situation-row">
+  <div class="situation-row" v-show="situationItem.rowContent">
     <div class="row-info">
       <div class="row-title" v-cloak>{{situationItem.rowTitle}}</div>
       <div :class="['row-content',situationItem.isLight?'row-light-color':'']" v-cloak>{{situationItem.rowContent}}</div>
@@ -30,12 +30,14 @@ export default {
     padding: 24px 32px;
     font-size: 28px;
     display: flex;
+    align-items: center;
     justify-content: flex-start;
     .row-title {
       width: 124px;
       color: $color-35;
     }
     .row-content {
+      width: 538px;
       color: $color-008CA7;
       margin-left: 20px;
     }

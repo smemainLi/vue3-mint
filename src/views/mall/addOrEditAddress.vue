@@ -16,7 +16,7 @@
       <div class="field-label">
         <span class="label-content" v-cloak>{{phone}}</span>
       </div>
-      <input class="field-input" type="text" :placeholder="phonePlaceholder" v-model="phoneVal">
+      <input class="field-input" type="text" maxlength="11" oninput="value=value.replace(/[^\d]/g,'')" :placeholder="phonePlaceholder" v-model="phoneVal">
     </div>
     <div class="field-br">
       <hr class="br-style">
@@ -54,12 +54,12 @@
 
     <!-- 地址新增按钮 -->
     <div class="address-add-btn" v-show="$route.query.pageFlag==='addAddress'">
-      <general-button :btnName="btnName" @click.native="handleAddress"></general-button>
+      <general-button :btnName="btnName" :isAgree="!noAllowClick" @click.native="handleAddress"></general-button>
     </div>
     <!-- 地址编辑按钮 -->
     <div class="address-edit-btn" v-show="$route.query.pageFlag==='editAddress'">
-      <button class="com-button delete-button" @click="addressDelete" v-cloak>{{deleteButton}}</button>
-      <button class="com-button confirm-button" v-cloak>{{btnName}}</button>
+      <button class="com-button delete-button" :disabled="noAllowClick" @click="addressDelete" v-cloak>{{deleteButton}}</button>
+      <button class="com-button confirm-button" :disabled="noAllowClick" @click="handleAddress" v-cloak>{{btnName}}</button>
     </div>
 
     <van-popup v-model="areaSelect" position="bottom">
@@ -75,6 +75,7 @@
 
 <script>
 import generalButton from '../../components/common/generalButton.vue'
+import { Toast } from 'vant'
 import { mapActions } from 'vuex'
 
 export default {
@@ -103,6 +104,7 @@ export default {
       checked: false,
       deleteButton: '删除',
       btnName: '提交',
+      noAllowClick: false,
       slots: [
         {
           flex: 1,
@@ -136,43 +138,45 @@ export default {
     ...mapActions({ getAreaList: 'getAreaList', addAddress: 'addAddress', updateAddress: 'updateAddress', deleteAddress: 'deleteAddress' }),
     /* 地址提交 */
     handleAddress () {
-      let data = {
-        address: this.detailedAddrVal, // 详细地址
-        city: this.city, // 市
-        citycode: this.cityCode, // 市编号
-        district: this.county, // 区
-        districtcode: this.countyCode, // 区编号
-        isdefault: this.checked ? 1 : 0, // 0 不是 1是 设置默认
-        mobile: this.phoneVal, // 电话
-        name: this.receiverVal, // 收货人
-        province: this.province, // 省
-        provincecode: this.provinceCode // 省编号
-      }
-      if (this.$route.query.pageFlag === 'addAddress') {
-        this.addAddress(data).then((res) => {
-          // console.log(res)
-          if (res.status === 200) {
-            this.$toast({ message: '添加成功', duration: 1000 })
-            setTimeout(() => {
-              this.$router.push('/mall/chooseAddress')
-            }, 1000)
-          }
-        }).catch((err) => {
-          console.log(err)
-        })
-      } else {
-        data.id = this.$route.query.addressDetail.addressId // 地址id
-        this.updateAddress(data).then((res) => {
-          console.log(res)
-          if (res.status === 200) {
-            this.$toast({ message: '修改成功', duration: 1000 })
-            setTimeout(() => {
-              this.$router.go(-1)
-            }, 1000)
-          }
-        }).catch((err) => {
-          console.log(err)
-        })
+      if (this.receiverVal === '') this.$toast({ message: '请填写收货人', duration: 1000 })
+      else if (this.phoneVal === '') this.$toast({ message: '请填写手机号码', duration: 1000 })
+      else if (this.phoneVal.length !== 11) this.$toast({ message: '手机号码填写有误', duration: 1000 })
+      else if (this.addressSelect.province === '') this.$toast({ message: '请选择所在地区', duration: 1000 })
+      else if (this.detailedAddrVal === '') this.$toast({ message: '请填写详细地址', duration: 1000 })
+      else {
+        this.noAllowClick = true
+        Toast.loading({ mask: true, duration: 0, message: '加载中...' })
+        let data = {
+          address: this.detailedAddrVal, // 详细地址
+          city: this.addressSelect.city || this.city, // 市
+          citycode: this.addressSelect.cityCode || this.cityCode, // 市编号
+          district: this.addressSelect.county || this.county, // 区
+          districtcode: this.addressSelect.countyCode || this.countyCode, // 区编号
+          isdefault: this.checked ? 1 : 0, // 0 不是 1是 设置默认
+          mobile: this.phoneVal, // 电话
+          name: this.receiverVal, // 收货人
+          province: this.addressSelect.province || this.province, // 省
+          provincecode: this.addressSelect.provinceCode || this.provinceCode// 省编号
+        }
+        if (this.$route.query.pageFlag === 'addAddress') { // 添加地址
+          this.addAddress(data).then((res) => {
+            Toast.clear()
+            if (res.status === 200) {
+              this.$toast({ message: '添加成功', duration: 1000 })
+              this.$route.query.actionFlag && setTimeout(() => { this.$router.go(-1) }, 1000)// 表明是从下单页面跳转过来的，添加地址
+              !this.$route.query.actionFlag && setTimeout(() => { this.$router.replace('/mall/chooseAddress') }, 1000)
+            }
+          }).catch(() => { })
+        } else { // 修改地址
+          data.id = JSON.parse(this.$route.query.addressDetail).addressId // 地址id
+          this.updateAddress(data).then((res) => {
+            Toast.clear()
+            if (res.status === 200) {
+              this.$toast({ message: '修改成功', duration: 1000 })
+              setTimeout(() => { this.$router.go(-1) }, 1000)
+            }
+          }).catch(() => { })
+        }
       }
     },
     // 取消
@@ -181,15 +185,6 @@ export default {
     },
     // 地址确认
     confirm () {
-      console.log(this.addressSelect.provinceCode)
-      console.log(this.addressSelect.cityCode)
-      console.log(this.addressSelect.countyCode)
-      this.province = this.addressSelect.province // 省
-      this.provinceCode = this.addressSelect.provinceCode // 省编号
-      this.city = this.addressSelect.city // 市
-      this.cityCode = this.addressSelect.cityCode // 市编号
-      this.county = this.addressSelect.county // 区
-      this.countyCode = this.addressSelect.countyCode // 区编号
       this.areaVal = `${this.addressSelect.province} ${this.addressSelect.city} ${this.addressSelect.county}`
       this.areaSelect = false
     },
@@ -238,60 +233,19 @@ export default {
               className: 'slot1',
               textAlign: 'right'
             })
-            if (this.$route.query.addressDetail) {
-              this.addressMsg.forEach((province, index) => {
-                if (province.name === JSON.parse(this.$route.query.addressDetail).province) {
-                  console.log(this.addressMsg)
-                  console.log(index)
-                  this.slots[0].values = this.addressMsg
-                  this.slots[0].defaultIndex = index
-                  this.currentProvinceIndex = index
-                  this.currentProvince = province
-                  province.children.forEach((city, index) => {
-                    if (city.name === JSON.parse(this.$route.query.addressDetail).city) {
-                      console.log(province.children)
-                      console.log(index)
-                      // this.slots[1].values = province.children
-                      // this.slots[1].defaultIndex = index
-                      this.$set(this.slots, 1, {
-                        flex: 1,
-                        defaultIndex: index,
-                        values: province.children,
-                        className: 'slot2'
-                      })
-                      this.currentCity = city
-                      city.children.forEach((county, index) => {
-                        if (county.name === JSON.parse(this.$route.query.addressDetail).district) {
-                          // console.log(city.children)
-                          // console.log(index)
-                          this.$set(this.slots, 2, {
-                            flex: 1,
-                            defaultIndex: index,
-                            values: city.children,
-                            className: 'slot3',
-                            textAlign: 'left'
-                          })
-                          this.slots[2].values = city.children
-                          this.slots[2].defaultIndex = index
-                          this.currentCounty = index
-                          this.currentCounty = county
-                        }
-                      })
-                    }
-                  })
-                }
-              })
-            }
           })
         }
       }).catch((err) => {
         console.log(err)
       })
     },
+    /* 删除地址 */
     addressDelete () {
-      console.log('sdfhsdklfj')
-      console.log(this.$route.query.addressDetail)
-      this.deleteAddress({ id: this.$route.query.addressDetail.addressId }).then((res) => {
+      this.noAllowClick = true
+      Toast.loading({ mask: true, duration: 0, message: '加载中...' })
+      console.log(JSON.parse(this.$route.query.addressDetail))
+      this.deleteAddress({ id: JSON.parse(this.$route.query.addressDetail).addressId }).then((res) => {
+        Toast.clear()
         if (res.status === 200) {
           console.log(res)
           this.$toast({ message: '删除成功', duration: 1000 })
@@ -313,28 +267,18 @@ export default {
     if (this.$route.query.addressDetail) {
       let addressDetail = JSON.parse(this.$route.query.addressDetail)
       console.log(addressDetail)
+      this.province = addressDetail.province // 省
+      this.provinceCode = addressDetail.provinceCode // 省编号
+      this.city = addressDetail.city // 市
+      this.cityCode = addressDetail.cityCode // 市编号
+      this.county = addressDetail.district // 区
+      this.countyCode = addressDetail.districtCode // 区编号
+      this.receiverVal = addressDetail.nickname
+      this.phoneVal = addressDetail.phone
       this.areaVal = `${addressDetail.province} ${addressDetail.city} ${addressDetail.district}`
+      this.detailedAddrVal = addressDetail.detailAddress
+      this.checked = addressDetail.isDefault
     }
-    // if (this.$route.query.addressDetail) {
-    //   this.$nextTick(() => {
-    //     // this.addressInitForEdit()
-    //     this.addressSelect.province = this.$route.query.addressDetail.province
-    //     this.addressSelect.provinceCode = this.$route.query.addressDetail.provinceCode
-    //     this.addressSelect.city = this.$route.query.addressDetail.city
-    //     this.addressSelect.cityCode = this.$route.query.addressDetail.cityCode
-    //     this.addressSelect.county = this.$route.query.addressDetail.district
-    //     this.addressSelect.countyCode = this.$route.query.addressDetail.districtCode
-    //     this.checked = this.$route.query.addressDetail.isDefault
-
-    //     this.province = this.$route.query.addressDetail.province
-    //     this.provinceCode = this.$route.query.addressDetail.provinceCode
-    //     this.city = this.$route.query.addressDetail.city
-    //     this.cityCode = this.$route.query.addressDetail.cityCode
-    //     this.county = this.$route.query.addressDetail.district
-    //     this.countyCode = this.$route.query.addressDetail.districtCode
-    //     this.areaVal = `${this.$route.query.addressDetail.province} ${this.$route.query.addressDetail.city} ${this.$route.query.addressDetail.district}`
-    //   })
-    // }
   }
 }
 </script>
@@ -356,13 +300,13 @@ export default {
       width: 120px;
     }
     .field-input {
-      color: $color-88;
+      color: $color-35;
       margin-left: 56px;
       width: 64%;
       font-size: 28px;
     }
     .field-option {
-      color: $color-88;
+      color: $color-35;
       margin-left: 56px;
       width: 74%;
       font-size: 28px;

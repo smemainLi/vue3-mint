@@ -17,7 +17,7 @@
     </div>
     <div class="success-buttons">
       <router-link class="com-button detail-button" :to="{path:'/arecord/appointmentDetails'}" tag="button" v-cloak>{{detailButton}}</router-link>
-      <router-link class="com-button get-more-button" :to="{path:'/mall/index'}" tag="button" v-cloak>{{getMoreButton}}</router-link>
+      <router-link class="com-button get-more-button" :to="{path:'/mall/index/0'}" tag="button" v-cloak>{{getMoreButton}}</router-link>
     </div>
   </div>
 </template>
@@ -38,18 +38,15 @@ export default {
     }
   },
   created () {
-    // this.aboveTip = `请在${this.tipDate} ${this.tipTime}前来就诊，`
     this.followingTip = '如不按时，则需要您额外等候'
-    this.getAppointmentDetail({ registerId: localStorage.getItem('registerId') }).then((res) => {
-      console.log(res)
-      if (res.status === 200) this.aboveTip = `请在${res.data.appointment}前来就诊`
-    }).catch((err) => {
-      this.$toast('数据错误')
-      throw err
-    })
+    this.paySuccessData({ payId: localStorage.getItem('payId') }).then((res) => {
+      if (res.status === 200) {
+        this.aboveTip = `请在${res.data.appointmentDateStr}前来就诊`
+      }
+    }).catch(() => { })
   },
   methods: {
-    ...mapActions({ getAppointmentDetail: 'getAppointmentDetail' })
+    ...mapActions({ paySuccessData: 'paySuccessData' })
   }
 }
 </script>

@@ -40,12 +40,9 @@ export default {
   },
   watch: {
     chargeContent: function (newVal) {
-      console.log(this.chargeContent.replace(/[^0-9]/ig, ''))
       this.finalFinally = `￥${parseInt(this.chargeContent.replace(/[^0-9]/ig, '')) + parseInt(this.sendContent.replace(/[^0-9]/ig, ''))}`
       this.finalCharge = `￥${this.chargeContent.replace(/[^0-9]/ig, '')}`
-      console.log(this.finalCharge)
       this.finalSend = `￥${this.sendContent.replace(/[^0-9]/ig, '')}`
-      console.log(this.finalSend)
     }
   }
 }

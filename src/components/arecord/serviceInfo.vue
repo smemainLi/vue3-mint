@@ -1,6 +1,6 @@
 <template>
   <div class="service-info">
-    <div class="navigation" @click.stop="consultAMap" v-if="subitemStatus===success||subitemStatus===toBePaid">
+    <div class="navigation" @click.stop="consultAMap">
       <i class="icon-navigation"></i>
       <div class="nav-content" v-cloak>{{navContent}}</div>
     </div>
@@ -28,7 +28,6 @@ export default {
   components: { field },
   methods: {
     call (callNum) {
-      console.log(callNum)
       window.location.href = `tel:${callNum}`
     },
     /* 查看地图接口 */

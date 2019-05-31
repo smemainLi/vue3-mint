@@ -30,32 +30,15 @@
       <input class="field-input" type="text" readonly="readonly" :placeholder="timeSlot.placeholder" v-model="timeSlotVal" @click="selectTime">
     </div>
 
-    <!-- 获取预约日期 -->
-    <!-- <mt-datetime-picker ref="pickerDate" :startDate="startDate" v-model="pickerDate" @confirm="handleConfirm" type="date" year-format="{value} 年" month-format="{value} 月" date-format="{value} 日">
-    </mt-datetime-picker> -->
-
     <!-- 选择预约日期 -->
     <van-popup v-model="dateSelect" position="bottom">
       <van-picker show-toolbar :columns="dataList" @cancel="closeDateSelect" @confirm="confirmDateSelect" />
     </van-popup>
 
     <!-- 获取时间段 -->
-    <!-- <mt-popup v-model="popupVisible" position="bottom" popup-transition="popup-fade">
-      <mt-picker :slots="slots" :showToolbar="showToolBar" @change="getSlotValue"></mt-picker>
-    </mt-popup> -->
-
-    <!-- <mt-datetime-picker ref="picker" type="time" v-model="pickerValue">
-    </mt-datetime-picker> -->
-
-    <!-- 获取时间段 -->
     <van-popup v-model="timeSelect" position="bottom">
       <van-picker show-toolbar :columns="timeList" @cancel="closeTimeSelect" @confirm="confirmTimeSelect" />
     </van-popup>
-
-    <!-- 获取时间段 -->
-    <!-- <mt-actionsheet :actions="actions" v-model="sheetVisible">
-    </mt-actionsheet> -->
-
   </div>
 </template>
 
@@ -101,7 +84,6 @@ export default {
   },
   methods: {
     test1 (msg) {
-      console.log(msg)
     },
     openPicker () {
       // this.$refs.pickerDate.open()// datetime-picker 提供了两个供外部调用的方法：open 和 close，分别用于打开和关闭选择器
@@ -109,7 +91,6 @@ export default {
     },
     // handleConfirm (val) { // 点击确认按钮时的回调函数，回调的参数是目前选择的值
     //   this.appointmentDateVal = timeFormat(val)
-    //   console.log(this.appointmentDateVal)
     // },
     /* 取消日期选择 */
     closeDateSelect () {
@@ -128,16 +109,16 @@ export default {
     confirmTimeSelect (value, index) {
       this.timeSelect = false
       this.timeSlotVal = value
-      console.log(value)
     },
     selectTime () {
       // this.actions = []
       // this.actions.length = 0
-      console.log(this.times)
       if (this.appointmentDateVal === '') {
         this.$toast({ message: '请先选择预约日期', duration: 1500 })
       } else {
         this.timeSelect = true
+        this.timeList = []
+        this.timeList.length = 0
         this.times.forEach(item => {
           if (item.day === this.appointmentDateVal) {
             item.times.forEach(timeItem => {
@@ -152,7 +133,6 @@ export default {
       //     name: item,
       //     method: (time) => { // 回调函数，携带值和方法
       //       this.timeSlotVal = item
-      //       console.log(time)
       //     }
       //   })
       // })
@@ -181,7 +161,7 @@ export default {
       width: 120px;
     }
     .field-input {
-      color: $color-88;
+      color: $color-35;
       margin-left: 56px;
       width: 64%;
       font-size: 28px;

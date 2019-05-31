@@ -12,10 +12,11 @@
 export default {
   data () {
     return {
-      rightArrow: require('../../assets/images/mcard/arrow.png'),
-      logisticsInfo: '【珠海市】快件正从珠海集散中心发出，准备发往珠海高新一部'
+      rightArrow: require('../../assets/images/mcard/arrow.png')
+      // logisticsInfo: '【珠海市】快件正从珠海集散中心发出，准备发往珠海高新一部'
     }
-  }
+  },
+  props: ['logisticsInfo']
 }
 </script>
 

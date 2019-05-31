@@ -2,9 +2,9 @@
   <div class="qrcode-consumption">
     <div class="consumption-info">
       <div class="consumption-tips" v-cloak>{{consumptionTips}}</div>
-      <div class="consumption-numcode" v-cloak>{{consumptionNumcode}}</div>
+      <div class="consumption-numcode" v-cloak>{{qrcodeInfo.consumptionNumcode}}</div>
       <div class="consumption-qrcode">
-        <img class="img-content" :src="qrcodeImg" alt="">
+        <img class="img-content" :src="`data:image/png;base64,${qrcodeImg}`" alt="">
       </div>
     </div>
   </div>
@@ -14,11 +14,12 @@
 export default {
   data () {
     return {
-      consumptionTips: '请到同道门店消费时，出示该二维码进行消费',
-      consumptionNumcode: '消费码：4558778878877878',
-      qrcodeImg: require('../../assets/images/mcard/qrCode.png')
+      consumptionTips: '请到同道门店消费时，出示该二维码进行消费'
+      // consumptionNumcode: '消费码：4558778878877878',
+      // qrcodeImg: this.qrcodeInfo.qrcodeImg
     }
-  }
+  },
+  props: ['qrcodeInfo', 'qrcodeImg']
 }
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="system-row">
+  <div class="system-row" v-show="systemItem.systemContent">
     <span class="system-title" v-cloak>{{systemItem.systemTitle}}</span><span class="system-content" v-cloak>{{systemItem.systemContent}}</span>
   </div>
 </template>

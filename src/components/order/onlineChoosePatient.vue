@@ -1,7 +1,7 @@
 <template>
   <div class="online-choose-patient">
     <div class="choose-patient-list">
-      <div class="choose-title">
+      <div :class="['choose-title',patientList.length?'':'no-patients']">
         <span class="title-content" v-cloak>{{titleContent}}</span>
       </div>
       <div class="choose-list">
@@ -31,13 +31,10 @@ export default {
   methods: {
     /* 选择就诊人 */
     selectPatient (patientItem) {
-      console.log(patientItem)
-
       this.patientList.map((item) => {
         item.patientSelected = false
       })
       patientItem.patientSelected = true
-      console.log(patientItem.patientId)
       this.$emit('getPatientItemId', patientItem.patientId)
     },
     addPatient () {
@@ -67,6 +64,9 @@ export default {
         color: $color-88;
         font-size: 28px;
       }
+    }
+    .no-patients {
+      border: 0;
     }
   }
   .add-patient {

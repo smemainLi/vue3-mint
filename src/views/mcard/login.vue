@@ -8,7 +8,7 @@
         <i class="icon-phone">
           <span class="path1"></span><span class="path2"></span>
         </i>
-        <input class="login-field" type="number" onkeyup="value=value.replace(/[^\d]/g,'')" :placeholder="phonePlaceholder" v-model="phone">
+        <input class="login-field" type="text" :readonly="inputReadonly" maxlength="11" oninput="value=value.replace(/[^\d]/g,'')" :placeholder="phonePlaceholder" v-model="phone">
       </div>
       <div class="login-gv-code">
         <div class="login-gv-input">
@@ -29,7 +29,7 @@
           <input class="login-field" type="number" :placeholder="mvCodePlaceholder" v-model="mvCode">
         </div>
         <button :class="['mv-code-button',noClick?'button-no-click':'']" :disabled="noClick" @click="getMvCode">
-          <span class="button-content" v-cloak>{{buttonContent}}</span>
+          <span :class="['button-content',noClick?'count-down-content':'']" v-cloak>{{buttonContent}}</span>
         </button>
       </div>
     </div>
@@ -46,82 +46,78 @@ import { mapActions } from 'vuex'
 export default {
   data () {
     return {
-      // btnName: '登录',
       loginBtn: '登录',
       updateBindPhoneBtn: '提交',
       forgetPayPwdBtn: '下一步',
-      // phone: '13654789641',
-      // phone: '13765432190',/* 13426213521 */
-      // phone: '13192297496',
-      // phone: '13426213521',
-      phone: '13426213521',
+      phone: '',
       phonePlaceholder: '请输入您的手机号码',
-      gvCode: '', // 图形验证码
-      gvCodePlaceholder: '请输入图形验证码',
+      gvCode: '', // 图形码
+      gvCodePlaceholder: '请输入图形码',
       gvCodeImg: '',
       mvCode: '', // 短信验证码
-      mvCodePlaceholder: '请输入短信验证码',
-      buttonContent: '发送验证码',
+      mvCodePlaceholder: '请输入短信中的验证码',
+      buttonContent: '获取验证码',
       count: 60,
       timer: '', // 计时器
       noClick: false, // 禁止按钮点击
       isAgree: true,
       protocolName: '会员卡协议',
       flag: 'login',
-      tipContent: '修改后需用新手机登录'
+      tipContent: '修改后需用新手机登录',
+      inputReadonly: false
     }
   },
   components: { generalButton, agreeNotice },
   created () {
     this.getGvCode()
+    if (this.$route.query.pageFlag === 'forgetPayPwd') {
+      this.inputReadonly = true
+      this.phone = localStorage.getItem('currentPhone')
+    }
   },
   methods: {
-    // ...mapActions(['getCodePic', 'mcardAgreement']),
     ...mapActions({ getCodePic: 'getCodePic', getPhoneCode: 'getPhoneCode', userLogin: 'userLogin', sendCodeByForgetPayPassword: 'sendCodeByForgetPayPassword', validateSmsCode: 'validateSmsCode', updateMobile: 'updateMobile', userLogout: 'userLogout' }),
-    getGvCode () {
-      this.getCodePic().then((res) => {
-        console.log(res)
-        if (res.status === 200) this.gvCodeImg = res.data.vcodeImage
-      }).catch((err) => {
-        this.$toast('数据错误')
-        throw err
-      })
+    /* 获取图形码 */
+    async getGvCode () {
+      const picCodeRes = await this.getCodePic()
+      if (picCodeRes.status !== 200) return
+      this.gvCodeImg = picCodeRes.data.vcodeImage
     },
     /* 发送短信验证码 */
-    getMvCode () {
-      if (this.phone === '' || this.phone.length !== 11) {
-        this.$toast({ message: '手机号码有误', duration: 1000 })
+    async getMvCode () {
+      if (this.phone === '') {
+        this.$toast({ message: '请输入手机号码', duration: 1000 })
         return
       }
+      if (this.phone.length !== 11) {
+        this.$toast({ message: '手机号码填写有误', duration: 1000 })
+        return
+      }
+      this.$indicator.open({ text: '加载中...', spinnerType: 'fading-circle' })
       this.noClick = true
       if (this.$route.query.pageFlag === 'forgetPayPwd') { /* 忘记支付密码 */
-        this.sendCodeByForgetPayPassword({ mobile: this.phone, picCode: this.gvCode }).then((res) => {
-          console.log(res)
-          this.$toast(res.message)
-          if (res.status === 200) {
-            this.buttonContent = `倒计时 ${this.count}s`
-            this.countDown()
-          } else {
-            this.noClick = false
-          }
-        }).catch((err) => {
-          this.$toast('数据错误')
-          throw err
-        })
+        const codeByForgPwdRes = await this.sendCodeByForgetPayPassword({ mobile: this.phone, picCode: this.gvCode })
+        this.$indicator.close()
+        this.$toast({ message: codeByForgPwdRes.message, duration: 1000 })
+        if (codeByForgPwdRes.status !== 200) {
+          this.gvCode = ''
+          this.noClick = false
+          return
+        }
+        this.buttonContent = `倒计时 ${this.count}s`
+        this.countDown()
       } else { /* 登录&修改手机号码 */
-        this.getPhoneCode({ mobile: this.phone, picCode: this.gvCode }).then((res) => {
-          console.log(res)
-          this.$toast(res.message)
-          if (res.status === 200) {
-            this.buttonContent = `倒计时 ${this.count}s`
-            this.countDown()
-          } else {
-            this.noClick = false
-          }
-        }).catch((err) => {
-          this.$toast('数据错误')
-          throw err
-        })
+        const phoneCodeRes = await this.getPhoneCode({ mobile: this.phone, picCode: this.gvCode })
+        this.$indicator.close()
+        this.$toast({ message: phoneCodeRes.message, duration: 1000 })
+        if (phoneCodeRes.status !== 200) {
+          this.gvCode = ''
+          this.noClick = false
+          this.getGvCode()
+          return
+        }
+        this.buttonContent = `倒计时 ${this.count}s`
+        this.countDown()
       }
     },
     /* 计时器 */
@@ -132,77 +128,65 @@ export default {
           clearInterval(_this.timer)
           _this.count = 60
           _this.noClick = false
-          _this.buttonContent = '发送验证码'
+          _this.buttonContent = '获取验证码'
           return
         }
         _this.count--
         _this.buttonContent = `倒计时 ${_this.count}s`
       }, 1000)
     },
-    confirmInfo () {
-      if (this.phone === '') this.$toast({ message: '请输入手机号码', duration: 1000 })
-      else if (this.gvCode === '') this.$toast({ message: '请填写图形验证码', duration: 1000 })
-      else if (this.mvCode === '') this.$toast({ message: '请填写短信验证码', duration: 1000 })
+    async confirmInfo () {
+      if (!this.phone) this.$toast({ message: '请输入手机号码', duration: 1000 })
+      else if (this.phone.length !== 11) this.$toast({ message: '手机号码填写有误', duration: 1000 })
+      else if (!this.gvCode) this.$toast({ message: '请填写图形码', duration: 1000 })
+      else if (!this.mvCode) this.$toast({ message: '请填写短信验证码', duration: 1000 })
       else {
         if (this.$route.query.pageFlag === 'updateBindPhone') { /* 修改绑定手机 */
-          this.updateMobile({ mobile: this.phone, smsCode: this.mvCode }).then((res) => {
-            console.log(res)
-            if (res.status === 200) {
-              /* 退出账号重新登录 */
-              this.userLogout().then((res) => {
-                console.log(res)
-                this.$toast({ message: res.message, duration: 1000 })
-                if (res.status === 200) {
-                  setTimeout(() => {
-                    this.phone = ''// 手机号码
-                    this.gvCode = ''// 图形验证码
-                    this.mvCode = ''// 短信验证码
-                    this.$router.push({ path: '/mcard/login' })
-                  }, 1000)
-                }
-              }).catch((err) => {
-                this.$toast('数据错误')
-                throw err
-              })
-            } else {
-              setTimeout(() => {
-                this.phone = ''// 手机号码
-                this.gvCode = ''// 图形验证码
-                this.mvCode = ''// 短信验证码
-              }, 1000)
-            }
-            this.$toast({ message: res.message, duration: 1000 })
-          }).catch((err) => {
-            this.$toast('数据错误')
-            throw err
-          })
+          const updateRes = await this.updateMobile({ mobile: this.phone, smsCode: this.mvCode })
+          this.$toast({ message: updateRes.message, duration: 1000 })
+          if (updateRes.status !== 200) {
+            setTimeout(() => {
+              this.phone = ''// 手机号码
+              this.gvCode = ''// 图形码
+              this.mvCode = ''// 短信验证码
+            }, 1000)
+            return
+          }
+          const logoutRes = await this.userLogout()
+          if (logoutRes.status !== 200) return
+          setTimeout(() => {
+            this.phone = ''
+            this.gvCode = ''
+            this.mvCode = ''
+            sessionStorage.setItem('loopFlag', 'updateBindPhone')
+            this.getGvCode()
+            this.$router.push({ path: '/mcard/login' })
+          }, 1000)
         } else if (this.$route.query.pageFlag === 'forgetPayPwd') { /* 忘记支付密码 */
-          this.validateSmsCode({ mobile: this.phone, smsCode: this.mvCode }).then((res) => {
-            console.log(res)
-            if (res.status === 200) {
-              localStorage.setItem('token', res.data.token)
-              // setTimeout(() => this.$router.go(-1), 1000)// 登录成功回退上一页
-              setTimeout(() => {
-                this.$router.push({ path: '/order/payPassword', query: { forgetPayPwdFlag: 'forgetPayPwd' } })
-              }, 1000)
-            }
-            this.$toast({ message: res.message, duration: 1000 })
-          }).catch((err) => {
-            this.$toast('数据错误')
-            throw err
-          })
+          const valiSmsRes = await this.validateSmsCode({ mobile: this.phone, smsCode: this.mvCode })
+          this.$toast({ message: valiSmsRes.message, duration: 1000 })
+          if (valiSmsRes.status !== 200) {
+            setTimeout(() => {
+              this.gvCode = ''
+              this.mvCode = ''
+            }, 1000)
+            return
+          }
+          localStorage.setItem('token', valiSmsRes.data.token)
+          setTimeout(() => {
+            this.$router.push({ path: '/order/payPassword', query: { forgetPayPwdFlag: 'forgetPayPwd' } })
+          }, 1000)
         } else { /* 登录 */
-          this.userLogin({ mobile: this.phone, smsCode: this.mvCode }).then((res) => {
-            console.log(res)
-            localStorage.setItem('agreement', res.data.agreement)// false：读取协议 true：无需读取协议
-            if (res.status === 200) {
-              setTimeout(() => this.$router.go(-1), 1000)// 登录成功回退上一页
-            }
-            this.$toast({ message: res.message, duration: 1000 })
-          }).catch((err) => {
-            this.$toast('数据错误')
-            throw err
-          })
+          const loginRes = await this.userLogin({ mobile: this.phone, smsCode: this.mvCode })
+          this.$toast({ message: loginRes.message, duration: 1000 })
+          setTimeout(() => {
+            this.gvCode = ''
+            this.mvCode = ''
+          }, 1000)
+          if (loginRes.status !== 200) return
+          localStorage.setItem('currentPhone', this.phone)// 存储当前用户登录的手机号，以便忘记密码时候使用
+          if (sessionStorage.getItem('loopFlag') === 'updateBindPhone') setTimeout(() => this.$router.push('/mcard/index'), 1000)// 修改绑定手机成功之后跳转会员卡页面
+          else setTimeout(() => this.$router.go(-1), 1000)// 登录成功回退上一页
         }
       }
     },
@@ -211,9 +195,6 @@ export default {
     }
   },
   beforeRouteLeave (to, from, next) {
-    console.log(to)
-    console.log(from)
-    // if (to.path !== '/mcard/userProtocol') this.$router.go(0)
     from.meta.keepAlive = false
     next()
   }
@@ -241,7 +222,7 @@ export default {
     margin-bottom: 110px;
     .login-field {
       font-size: 28px;
-      color: $color-88;
+      color: $color-35;
       width: 72%;
     }
     .login-account {
@@ -315,8 +296,11 @@ export default {
         border: 1px solid $color-e5;
         .button-content {
           font-size: 28px;
-          color: $color-88;
+          color: $color-008CA7;
           white-space: nowrap; //文本强制不换行
+        }
+        .count-down-content {
+          color: $color-88;
         }
       }
       .button-no-click {

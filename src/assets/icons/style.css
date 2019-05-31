@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?c6r99q');
-  src:  url('fonts/icomoon.eot?c6r99q#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?c6r99q') format('truetype'),
-    url('fonts/icomoon.woff?c6r99q') format('woff'),
-    url('fonts/icomoon.svg?c6r99q#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?gsgxue');
+  src:  url('fonts/icomoon.eot?gsgxue#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?gsgxue') format('truetype'),
+    url('fonts/icomoon.woff?gsgxue') format('woff'),
+    url('fonts/icomoon.svg?gsgxue#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,6 +24,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-enter:before {
+  content: "\e91b";
+}
 .icon-shopping-cart-operation:before {
   content: "\e91a";
 }
@@ -39,7 +42,7 @@
   color: #008ca4;
 }
 .icon-shopping-cart-color:before {
-  content: "\e917";
+  content: "\e904";
   color: #008ca4;
 }
 .icon-personal-color:before {
@@ -59,7 +62,7 @@
   content: "\e903";
 }
 .icon-shopping-cart:before {
-  content: "\e904";
+  content: "\e917";
 }
 .icon-personal:before {
   content: "\e905";

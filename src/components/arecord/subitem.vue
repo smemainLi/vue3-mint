@@ -18,7 +18,7 @@
           {{subitem.orderTime}}
         </div>
       </div>
-      <div class="subitem-nav" @click.stop="consultAMap">
+      <div class="subitem-nav" v-show="subitem.subitemStatus===successStatus" @click.stop="consultAMap">
         <i class="icon-guidepost"></i>
         <span class="nav-content" v-cloak>{{navContent}}</span>
       </div>
@@ -40,15 +40,15 @@ export default {
       successStatus: '预约成功'
     }
   },
-  props: ['subitem', 'latitude', 'longitude'],
+  props: ['subitem'],
   methods: {
     /* 查看地图接口 */
     consultAMap () {
       let _this = this
       wx.ready(function () {
         wx.openLocation({
-          latitude: _this.latitude, // 纬度，浮点数，范围为90 ~ -90
-          longitude: _this.longitude, // 经度，浮点数，范围为180 ~ -180。
+          latitude: _this.subitem.latitude, // 纬度，浮点数，范围为90 ~ -90
+          longitude: _this.subitem.longitude, // 经度，浮点数，范围为180 ~ -180。
           name: _this.subitem.clinicName, // 位置名
           address: _this.subitem.clinicAddress, // 地址详情说明
           scale: 12, // 地图缩放级别,整形值,范围从1~28。默认为最大
@@ -81,6 +81,7 @@ export default {
       }
       .clinic-name {
         font-size: 32px;
+        margin-left: 6px;
       }
     }
     .amount-spent {

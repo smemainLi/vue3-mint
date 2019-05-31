@@ -19,7 +19,7 @@
         </div>
       </div>
     </div>
-    <general-button @click.native="$router.go(-2)" :btnName="btnName"></general-button>
+    <general-button @click.native="$router.go(-3)" :btnName="btnName"></general-button>
   </div>
 </template>
 
@@ -40,7 +40,6 @@ export default {
   },
   components: { generalButton },
   mounted () {
-    console.log(this.$route.query)
   }
 }
 </script>

@@ -40,13 +40,12 @@ export default {
   methods: {
     ...mapActions({ getMyWalletInfo: 'getMyWalletInfo' }),
     selectAction (actionRow) {
-      console.log(actionRow)
       this.$router.push({ path: actionRow.path })
     },
+    /* 加载我的钱包信息 */
     loadMyWalletInfo () {
       this.$indicator.open({ text: '加载中...', spinnerType: 'fading-circle' })
       this.getMyWalletInfo().then((res) => {
-        console.log(res)
         this.$indicator.close()
         if (res.status === 200) {
           this.balanceMoneyContent = res.data.balance
@@ -58,7 +57,6 @@ export default {
           }
         }
       }).catch((err) => {
-        console.log(err)
         throw err
       })
     }

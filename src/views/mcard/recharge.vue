@@ -29,60 +29,93 @@ export default {
       balanceNum: '0',
       btnName: '微信充值0元',
       rechargeList: [], // 充值方案
-      rechargeId: ''// 充值方案id
+      rechargeId: '' // 充值方案id
     }
   },
   components: { rechargeInfo, rechargeTips, generalButton },
   methods: {
     ...mapActions({ getRechargeWays: 'getRechargeWays', walletRecharge: 'walletRecharge', getWechatPayConfig: 'getWechatPayConfig' }),
     rechargeMess (recharge) { /* 获取子组件传递过来的值 */
-      console.log(recharge)
       this.btnName = `微信充值${recharge.chargeInfo.replace(/[^0-9]/ig, '')}元`
       this.rechargeId = recharge.rechargeId
     },
     confirmRecharge () {
+      if (!this.rechargeId) {
+        this.$toast({ message: '请选择充值方案', duration: 1000 })
+        return
+      }
+      this.$indicator.open({ text: '加载中...', spinnerType: 'fading-circle' })
       this.walletRecharge({ parameterId: this.rechargeId }).then((res) => {
-        console.log(res)
-        if (res.status === 200) {
-          // localStorage.setItem('payId', res.data.payId)// 存储支付id
-          console.log(res.data.payId)
-          this.getWechatPayConfig({ payId: res.data.payId }).then((res) => {
-            console.log(res)
-            if (res.status === 200) {
-              let _this = this
-              wx.ready(function () {
-                wx.chooseWXPay({
-                  timestamp: res.data.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
-                  nonceStr: res.data.nonceStr, // 支付签名随机串，不长于 32 位
-                  package: res.data.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=\*\*\*）
-                  signType: res.data.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
-                  paySign: res.data.paySign, // 支付签名
-                  success: function (res) {
-                    // 支付成功后的回调函数
-                    _this.$toast({ message: '充值成功', duration: 1000 })
-                    setTimeout(() => {
-                      if (_this.$route.query.openFlag && _this.$route.query.openFlag === 'orderPay') {
-                        location.href = decodeURIComponent(`${location.origin}/order/payment`)
-                      } else _this.$router.go(-1)
-                    }, 1000)
-                  },
-                  // 支付取消回调函数
-                  cencel: function (res) {
-                    console.log(res)
-                    console.log('用户取消支付~')
-                  },
-                  // 支付失败回调函数
-                  fail: function (res) {
-                    console.log(res)
-                    console.log('支付失败~')
-                  }
-                })
-              })
-            }
-          }).catch((err) => {
-            console.log('数据错误')
-            throw err
+        if (res.status !== 200) return
+        // localStorage.setItem('payId', res.data.payId)// 存储支付id
+        this.getWechatPayConfig({ payId: res.data.payId }).then((res) => {
+          this.$indicator.close()
+          if (res.status !== 200) return
+          let _this = this
+          wx.ready(function () {
+            wx.chooseWXPay({
+              timestamp: res.data.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+              nonceStr: res.data.nonceStr, // 支付签名随机串，不长于 32 位
+              package: res.data.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=\*\*\*）
+              signType: res.data.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+              paySign: res.data.paySign, // 支付签名
+              success: function (res) {
+                _this.$indicator.close()
+                // 支付成功后的回调函数
+                _this.$toast({ message: '充值成功', duration: 1000 })
+                setTimeout(() => {
+                  if (_this.$route.query.openFlag) {
+                    // location.href = decodeURIComponent(`${location.origin}/order/payment?openFlag=${_this.$route.query.openFlag}`)
+                    if (_this.$route.query.openFlag === 'walletPay') {
+                      _this.$router.replace('/mcard/walletPayment')
+                    } else {
+                      _this.$router.replace({ path: '/order/payment', query: { openFlag: _this.$route.query.openFlag } })
+                    }
+                  } else _this.$router.go(-1)
+                }, 1000)
+              },
+              // 支付取消回调函数
+              cencel: function (res) {
+                _this.$indicator.close()
+              },
+              // 支付失败回调函数
+              fail: function (res) {
+                _this.$indicator.close()
+              },
+              complete: function (res) {
+                _this.$indicator.close()
+              }
+            })
           })
+        }).catch((err) => {
+          throw err
+        })
+      }).catch((err) => {
+        this.$toast('数据错误')
+        throw err
+      })
+    },
+    loadRechargeWays () {
+      this.getRechargeWays().then((res) => {
+        this.$indicator.close()
+        if (res.status === 200) {
+          let n = 0// 辅助
+          let currentItem = []// 辅助
+          res.data.list.map((item) => {
+            currentItem.push({
+              rechargeId: item.id,
+              chargeInfo: `充${item.rechargeAmount}元`,
+              getInfo: `送${item.givenAmount}元`,
+              rechargeSelected: false
+            })
+            n++
+            if (n % 3 === 0) {
+              this.rechargeList.push(currentItem)
+              currentItem = []
+              currentItem.length = 0
+            }
+          })
+          if (currentItem.length !== 0) this.rechargeList.push(currentItem)
         }
       }).catch((err) => {
         this.$toast('数据错误')
@@ -91,35 +124,15 @@ export default {
     }
   },
   created () {
-    console.log(this.$route.query)
-    console.log(this.$route.query.openFlag)
-    this.balanceNum = this.$route.query.balanceMoneyContent
-    this.getRechargeWays().then((res) => {
-      console.log(res)
-      if (res.status === 200) {
-        let n = 0// 辅助
-        let currentItem = []// 辅助
-        res.data.list.map((item) => {
-          currentItem.push({
-            rechargeId: item.id,
-            chargeInfo: `充${item.rechargeAmount}元`,
-            getInfo: `送${item.givenAmount}元`,
-            rechargeSelected: false
-          })
-          n++
-          if (n % 3 === 0) {
-            this.rechargeList.push(currentItem)
-            currentItem = []
-            currentItem.length = 0
-          }
-        })
-        if (currentItem.length !== 0) this.rechargeList.push(currentItem)
-        console.log(this.rechargeList)
-      }
-    }).catch((err) => {
-      this.$toast('数据错误')
-      throw err
-    })
+    if (!sessionStorage.getItem('rechargeFirst')) {
+      sessionStorage.setItem('rechargeFirst', '1')
+      this.$router.go(0)// 强制首次进入页面刷新一次
+    } else {
+      document.title = '充值'
+      this.$indicator.open({ text: '加载中...', spinnerType: 'fading-circle' })
+      this.balanceNum = this.$route.query.balanceMoneyContent
+      this.loadRechargeWays()
+    }
   }
 }
 </script>

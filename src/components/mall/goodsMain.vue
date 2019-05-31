@@ -1,26 +1,30 @@
 <template>
   <div class="goods-main">
-    <div class="goods-main-img">
+    <!-- <div class="goods-main-img">
       <img class="img-content" :src="mainImg" alt="">
-    </div>
+    </div> -->
+    <swipe-image :totalLoopImages="totalLoopImages" :loopImageFlag="loopImageFlag"></swipe-image>
     <div class="goods-main-info">
       <div class="main-price-flag">
-        <span class="current-price" v-cloak>{{currentPrice}}</span>
-        <span class="old-price" v-cloak>{{oldPrice}}</span>
-        <span class="star-product" v-cloak>{{starProduct}}</span>
+        <span class="current-price" v-cloak>{{goodsMainInfo.currentPrice}}</span>
+        <span class="old-price" v-cloak>{{goodsMainInfo.oldPrice}}</span>
+        <span class="star-product" v-show="goodsMainInfo.starProduct" v-cloak>
+          <img class="star-img" :src="goodsMainInfo.starProduct" alt="">
+        </span>
       </div>
-      <div class="main-name" v-cloak>{{mainName}}</div>
-      <div class="main-introduct" v-cloak>{{mainIntroduct}}</div>
+      <div class="main-name" v-cloak>{{goodsMainInfo.mainName}}</div>
+      <div class="main-introduct" v-cloak>{{goodsMainInfo.mainIntroduct}}</div>
       <div class="main-num">
-        <span class="sales-volume" v-cloak>{{salesVolume}}</span>
-        <span class="full-discount" v-cloak>{{fullDiscount}}</span>
-        <span class="stock-balance" v-cloak>{{stockBalance}}</span>
+        <span class="sales-volume" v-cloak>{{goodsMainInfo.salesVolume}}</span>
+        <span class="full-discount" v-cloak>{{goodsMainInfo.fullDiscount}}</span>
+        <span class="stock-balance" v-cloak>{{goodsMainInfo.stockBalance}}</span>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import swipeImage from '../../components/mall/swipeImage.vue'
 export default {
   data () {
     return {
@@ -34,7 +38,9 @@ export default {
       fullDiscount: '全场满99起送',
       stockBalance: '库存：4566'
     }
-  }
+  },
+  props: ['totalLoopImages', 'loopImageFlag', 'goodsMainInfo'],
+  components: { swipeImage }
 }
 </script>
 
@@ -66,13 +72,19 @@ export default {
         text-decoration: line-through;
       }
       .star-product {
-        display: inline-block;
-        font-size: 24px;
-        color: $color-E08282;
-        border-radius: 4px;
-        margin-top: 10px;
-        padding: 0 6px;
-        border: 1px solid $color-E08282;
+        // display: inline-block;
+        // font-size: 24px;
+        // color: $color-E08282;
+        // border-radius: 4px;
+        // margin-top: 10px;
+        // padding: 0 6px;
+        // border: 1px solid $color-E08282;
+        width: 105px;
+        height: 36px;
+        .star-img {
+          width: 100%;
+          height: 100%;
+        }
       }
     }
     .main-name {

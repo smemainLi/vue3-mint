@@ -1,5 +1,8 @@
 <template>
   <div class="my-bank-card">
+    <div class="tip-message">
+      <span class="tip-content" v-cloak>{{tipContent}}</span>
+    </div>
     <!-- 银行 -->
     <div class="field-row field-select">
       <div class="field-label">
@@ -18,7 +21,7 @@
       <div class="field-label">
         <span class="label-content" v-cloak>{{bankNum}}</span>
       </div>
-      <input class="field-input" type="text" maxlength="19" :placeholder="bankNumPlaceholder" v-model="bankNumVal" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^\d]/g, '').replace(/^0{1,}/g,'')}else{this.value=this.value.replace(/\D/g,'').replace(/^0{1,}/g,'')}" onblur="if(this.value.length==1){this.value=this.value.replace(/[^\d]/g, '').replace(/^0{1,}/g,'')}else{this.value=this.value.replace(/\D/g,'').replace(/^0{1,}/g,'')}">
+      <input class="field-input" type="text" maxlength="19" :placeholder="bankNumPlaceholder" v-model="bankNumVal" oninput="value=value.replace(/[^\d]/g,'')">
     </div>
     <div class="field-br">
       <hr class="br-style">
@@ -33,7 +36,7 @@
     </div>
 
     <div class="bank-card-btn">
-      <general-button :btnName="btnName" @click.native="confirmBankCard"></general-button>
+      <general-button :btnName="btnName" :isAgree="isAgree" @click.native="confirmBankCard"></general-button>
     </div>
   </div>
 </template>
@@ -55,7 +58,9 @@ export default {
       cardholder: '持卡人',
       cardholderVal: '', // 持卡人
       cardholderPlaceholder: '请填写持卡人姓名',
-      btnName: '提交'
+      btnName: '提交',
+      tipContent: '请谨慎填写信息，持卡人姓名一旦提交则不能修改',
+      isAgree: true
     }
   },
   components: { generalButton },
@@ -63,14 +68,15 @@ export default {
     ...mapActions({ getBankList: 'getBankList', addBankCard: 'addBankCard', updateBankCard: 'updateBankCard' }),
     /* 提交银行卡信息 */
     confirmBankCard () {
-      console.log(/^([1-9]{1})(\d{14}|\d{18})$/.test(this.bankNumVal))
       if (this.bankVal === '请选择') this.$toast('请选择银行')
-      else if (this.bankNumVal === '') this.$toast('请填写银行卡号')
-      else if (!(/^([1-9]{1})(\d{14}|\d{18})$/.test(this.bankNumVal))) this.$toast('银行卡号填写有误')
-      else if (this.cardholderVal === '') this.$toast('请填写持卡人')
+      else if (!this.bankNumVal) this.$toast('请填写银行卡号')
+      else if (this.bankNumVal && this.bankNumVal.length < 16) this.$toast('银行卡号填写有误')
+      else if (!this.cardholderVal) this.$toast('请填写持卡人')
       else if (this.$route.query.isBinding === 'hasCard') { // 已绑定了银行卡，调用修改银行卡接口
+        this.isAgree = false
+        this.$indicator.open({ text: '加载中...', spinnerType: 'fading-circle' })
         this.updateBankCard({ bankName: this.bankVal, cardNumber: this.bankNumVal }).then((res) => {
-          console.log(res)
+          this.$indicator.close()
           if (res.status === 200) {
             this.$toast({ message: res.message, duration: 1000 })
             setTimeout(() => {
@@ -78,12 +84,13 @@ export default {
             }, 1000)
           }
         }).catch((err) => {
-          console.log('数据错误')
           throw err
         })
       } else { // 未绑定银行卡，调用添加银行卡接口
+        this.isAgree = false
+        this.$indicator.open({ text: '加载中...', spinnerType: 'fading-circle' })
         this.addBankCard({ bankName: this.bankVal, cardNumber: this.bankNumVal, cardholder: this.cardholderVal }).then((res) => {
-          console.log(res)
+          this.$indicator.close()
           if (res.status === 200) {
             this.$toast({ message: res.message, duration: 1000 })
             setTimeout(() => {
@@ -91,7 +98,6 @@ export default {
             }, 1000)
           }
         }).catch((err) => {
-          console.log('数据错误')
           throw err
         })
       }
@@ -99,7 +105,6 @@ export default {
   },
   created () {
     this.getBankList().then((res) => {
-      console.log(res)
       if (res.status === 200) {
         res.data.list.forEach(bank => {
           this.bankList.push({ bankItem: bank })
@@ -115,7 +120,6 @@ export default {
         }
       }
     }).catch((err) => {
-      console.log('数据错误')
       throw err
     })
     // this.bankVal = this.$route.query.bankName// 银行名称
@@ -127,6 +131,17 @@ export default {
 
 <style lang="scss" scoped>
 .my-bank-card {
+  .tip-message {
+    height: 68px;
+    width: 100%;
+    line-height: 68px;
+    padding-left: 32px;
+    box-sizing: border-box;
+    .tip-content {
+      font-size: 24px;
+      color: $color-008CA7;
+    }
+  }
   .field-row {
     background-color: $color-ff;
     width: 100%;
@@ -142,13 +157,13 @@ export default {
       width: 120px;
     }
     .field-input {
-      color: $color-88;
+      color: $color-35;
       margin-left: 56px;
       width: 64%;
       font-size: 28px;
     }
     .field-option {
-      color: $color-88;
+      color: $color-35;
       margin-left: 56px;
       width: 74%;
       font-size: 28px;
@@ -163,7 +178,7 @@ export default {
     background-size: 48px 48px;
     position: absolute;
     right: 32px;
-    top: 24px;
+    top: 90px;
     /* //给自定义的图标实现点击下来功能 */
     pointer-events: none;
   }

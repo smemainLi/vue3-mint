@@ -1,6 +1,6 @@
 <template>
   <div class="product-list">
-    <div class="product-item" v-for="(item,index) in productList" @click="productAction" :key="index">
+    <div class="product-item" v-for="(item,index) in productList" @click="productAction(item)" :key="index">
       <div class="item-img">
         <img class="img-content" :src="item.productImg" alt="">
       </div>
@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import { typeJump } from '../../utils/tools'
 export default {
   data () {
     return {
@@ -17,8 +18,8 @@ export default {
   },
   props: ['productList'],
   methods: {
-    productAction () {
-      this.$router.push('/mall/classify')
+    productAction (product) {
+      typeJump(product)
     }
   }
 }
@@ -33,17 +34,21 @@ export default {
   .product-item {
     text-align: center;
     .item-img {
-      width: 68px;
-      height: 68px;
+      width: 98px;
+      height: 98px;
       margin: 0 auto;
       .img-content {
         width: 100%;
         height: 100%;
       }
     }
+    .other-img {
+      width: 82px;
+    }
     .item-title {
       font-size: 24px;
       color: $color-88;
+      margin-top: 6px;
     }
   }
 }

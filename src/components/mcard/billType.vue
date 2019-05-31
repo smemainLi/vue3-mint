@@ -2,7 +2,7 @@
   <div class="bill-type">
     <!-- 关系 -->
     <div class="field-row field-select">
-      <select class="field-option" name="billType" v-model="billTypeVal" @change="getBillType">
+      <select :class="['field-option',billList.length?'':'field-option-no-br']" name="billType" v-model="billTypeVal" @change="getBillType">
         <option v-for="(item,index) in billTypeList" :value="item.billType" :key="index">{{item.billType}}</option>
       </select>
     </div>
@@ -21,9 +21,9 @@ export default {
       ]
     }
   },
+  props: ['billList'],
   created () {
     this.billTypeVal = this.billTypeList[0].billType// 下拉框默认选中第一项
-    console.log(this.billTypeVal)
   },
   methods: {
     getBillType () {
@@ -50,6 +50,9 @@ export default {
       font-size: 28px;
       height: 100%;
       border-bottom: 1px solid $color-e5;
+    }
+    .field-option-no-br {
+      border: 0;
     }
   }
   .field-select:after {

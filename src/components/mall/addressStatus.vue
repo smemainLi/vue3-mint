@@ -1,12 +1,12 @@
 <template>
   <div class="address-status">
-    <div class="no-add-address" @click="$router.push({path:'/mall/addAddress',query:{pageFlag:'addAddress'}})" v-show="testStatus">
+    <div class="no-add-address" @click="$router.push({path:'/mall/addAddress',query:{pageFlag:'addAddress',actionFlag:'placeOrder'}})" v-show="JSON.stringify(addressItem)==='{}'">
       <div class="address-add-img">
         <img class="img-content" :src="addressStatusImg" alt="">
       </div>
       <div class="address-add-tips" v-cloak>{{addAddressTips}}</div>
     </div>
-    <div class="has-add-address" v-show="!testStatus">
+    <div class="has-add-address" @click="$router.push({path:'/mall/chooseAddress',query:{chooseFlag:'orderChoose'}})" v-show="JSON.stringify(addressItem)!=='{}'">
       <address-item :addressItem="addressItem"></address-item>
     </div>
   </div>
@@ -18,11 +18,11 @@ export default {
   data () {
     return {
       addressStatusImg: require('../../assets/images/mall/addGoodsImg.png'),
-      addAddressTips: '添加收货地址',
-      addressItem: { nickname: '露玖小姐姐', phone: '18838868886', isDefault: false, operateFlag: 'placeOrder', address: '珠海市上冲14村里面4455号一般早上在家早上在家早上在家。', hasBr: false }
+      addAddressTips: '添加收货地址'
+      // addressItem: { nickname: '露玖小姐姐', phone: '18838868886', isDefault: false, operateFlag: 'placeOrder', address: '珠海市上冲14村里面4455号一般早上在家早上在家早上在家。', hasBr: false }
     }
   },
-  props: ['testStatus'],
+  props: ['addressItem'],
   components: { addressItem }
 }
 </script>

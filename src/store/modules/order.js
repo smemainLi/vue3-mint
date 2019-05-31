@@ -39,7 +39,9 @@ const order = {
     /* 后端存储状态 */
     // backEndSaveStatus: ({ commit }, data) => { return $axios.post('/wx/register/pay', data) },
     /* 获取微信支付配置 */
-    getWechatPayConfig: ({ commit }, data) => { return $axios.post('/wx/pay/payOfWeiXin', data) }
+    getWechatPayConfig: ({ commit }, data) => { return $axios.post('/wx/pay/payOfWeiXin', data) },
+    /* 支付成功页面 */
+    paySuccessData: ({ commit }, data) => { return $axios.post('/wx/pay/paid', data) }
   }
 }
 

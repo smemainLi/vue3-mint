@@ -1,8 +1,8 @@
 <template>
   <div class="bottom-button">
-    <button class="button-content">
+    <button :class="['button-content',noClicks?'no-clicks':'']" :disabled="noClicks" v-cloak>
       <i class="icon-message" v-if="hasIcon"></i>
-      <span class="btn-name" v-cloak>{{btnName}}</span>
+      {{btnName}}
     </button>
   </div>
 </template>
@@ -13,7 +13,19 @@ export default {
     return {
     }
   },
-  props: ['btnName', 'hasIcon']
+  props: {
+    btnName: {
+
+    },
+    hasIcon: {
+
+    },
+    noClicks: {
+      default: false
+    }
+  },
+  created () {
+  }
 }
 </script>
 
@@ -29,11 +41,14 @@ export default {
     width: 100%;
     color: $color-ff;
     font-size: 36px;
+    letter-spacing: 2px;
     background: $color-gradient;
-    .btn-name {
-      margin-left: 14px;
-      letter-spacing: 2px;
+    .icon-message {
+      margin-right: 14px;
     }
+  }
+  .no-clicks {
+    background: $color-88;
   }
 }
 </style>

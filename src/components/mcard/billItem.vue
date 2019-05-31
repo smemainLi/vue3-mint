@@ -2,12 +2,12 @@
   <div class="bill-item">
     <div class="bill-info">
       <div class="bill-info-left">
-        <div :class="['bill-amount',billContent.isPlus?'bill-plus-amount':'']" v-cloak>{{billContent.billAmount}}</div>
+        <div :class="['bill-amount',billContent.isPlus?'bill-plus-amount':'',billContent.billOther === this.refused?'bill-is-refused':'']" v-cloak>{{billContent.billAmount}}</div>
         <div class="bill-time" v-cloak>{{billContent.billTime}}</div>
       </div>
       <div class="bill-info-right">
         <div class="bill-usage" v-cloak>{{billContent.billUsage}}</div>
-        <div :class="['bill-other',billContent.isExamine?'bill-examine':'']" v-show="billContent.billOther" v-cloak>{{billContent.billOther}}</div>
+        <div :class="['bill-other',billContent.isExamine?'bill-examine':'',billContent.billOther === this.refused?'bill-is-refused':'']" v-show="billContent.billOther" v-cloak>{{billContent.billOther}}</div>
       </div>
     </div>
     <div class="field-br" v-show="billContent.hasBr">
@@ -20,7 +20,7 @@
 export default {
   data () {
     return {
-
+      refused: '已拒绝'
     }
   },
   props: ['billContent']
@@ -62,6 +62,9 @@ export default {
       .bill-examine {
         color: $color-008CA7;
       }
+    }
+    .bill-is-refused {
+      color: $color-E08282;
     }
   }
   .field-br {

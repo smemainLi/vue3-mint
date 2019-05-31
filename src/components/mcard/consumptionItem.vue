@@ -42,6 +42,7 @@ export default {
       .store-name-content {
         font-size: 32px;
         color: $color-35;
+        margin-left: 6px;
       }
     }
     .pay-time {

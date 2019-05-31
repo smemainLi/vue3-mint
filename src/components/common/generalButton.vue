@@ -14,7 +14,7 @@ export default {
   props: {
     btnName: {},
     isAgree: {
-      default: true// true表示同意协议  false表示不同意协议
+      default: true// true表示同意协议  false表示不同意协议  true表示允许点击   false表示不允许点击
     },
     hasUnpaid: {
       default: false// 是否存在未支付订单 false 不存在 true 存在
@@ -22,12 +22,9 @@ export default {
   },
   watch: {
     hasUnpaid: function (newVal, oldVal) {
-      console.log(newVal, oldVal)
       this.disabled = !this.isAgree || this.hasUnpaid
     },
     isAgree: function (newVal, oldVal) {
-      console.log(newVal, oldVal)
-      console.log(!this.isAgree || this.hasUnpaid)
       this.disabled = !this.isAgree || this.hasUnpaid
     }
   }

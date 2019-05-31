@@ -5,7 +5,7 @@
       <div class="field-label">
         <span class="label-content" v-cloak>{{name.label}}</span>
       </div>
-      <input class="field-input" type="text" :placeholder="name.placeholder" v-model="nameVal">
+      <input class="field-input" type="text" maxlength="10" :placeholder="name.placeholder" v-model="nameVal">
     </div>
     <div class="field-br">
       <hr class="br-style">
@@ -16,7 +16,7 @@
       <div class="field-label">
         <span class="label-content" v-cloak>{{phone.label}}</span>
       </div>
-      <input class="field-input" type="number" onkeyup="value=value.replace(/[^\d]/g,'')" :placeholder="phone.placeholder" v-model="phoneVal">
+      <input class="field-input" type="text" maxlength="11" oninput="value=value.replace(/[^\d]/g,'')" :placeholder="phone.placeholder" v-model="phoneVal">
     </div>
     <div class="field-br">
       <hr class="br-style">
@@ -44,7 +44,7 @@
       <div class="field-label">
         <span class="label-content" v-cloak>{{birthdate.label}}</span>
       </div>
-      <input class="field-input" type="text" readonly="readonly" :placeholder="birthdate.placeholder" v-model="birthdateVal" @click="openPicker">
+      <input class="field-input" type="text" readonly="readonly" :placeholder="birthdate.placeholder" v-model="birthdateVal" @click="dateSelect = true">
     </div>
     <div class="field-br">
       <hr class="br-style">
@@ -61,25 +61,26 @@
     </div>
 
     <!-- 获取出生日期 -->
-    <mt-datetime-picker :startDate="startDate" ref="pickerDate" v-model="pickerDate" @confirm="handleConfirm" type="date" year-format="{value} 年" month-format="{value} 月" date-format="{value} 日">
-    </mt-datetime-picker>
+    <van-popup v-model="dateSelect" position="bottom">
+      <van-datetime-picker v-model="currentDate" type="date" :min-date="minDate" :max-date="maxDate" @cancel="onCancel" @confirm="onConfirm" />
+    </van-popup>
 
     <!-- 如果没有获取到就诊人id，表示进行添加操作 -->
-    <general-button :btnName="btnName" v-show="!$route.query.patientId" @click.native="confirmData"></general-button>
+    <general-button :btnName="btnName" :isAgree="isAgree" v-show="!$route.query.patientId" @click.native="confirmData"></general-button>
 
     <!-- 如果获取到就诊人id，表示进行编辑操作，编辑操作存在删除按钮 -->
     <div class="add-or-edit-buttons">
-      <button class="com-button delete-button" v-show="$route.query.patientId" @click="deleteData" v-cloak>{{deleteButton}}</button>
-      <button class="com-button confirm-button" v-show="$route.query.patientId" @click="confirmData" v-cloak>{{confirmButton}}</button>
+      <button class="com-button delete-button" :disabled="!isAgree" v-show="$route.query.patientId" @click="deleteData" v-cloak>{{deleteButton}}</button>
+      <button class="com-button confirm-button" :disabled="!isAgree" v-show="$route.query.patientId" @click="confirmData" v-cloak>{{confirmButton}}</button>
     </div>
 
   </div>
 </template>
 
 <script>
+import generalButton from '../../components/common/generalButton.vue'
 import { timeFormat } from '../../utils/tools'
 import { mapActions } from 'vuex'
-import generalButton from '../../components/common/generalButton.vue'
 
 export default {
   data () {
@@ -119,7 +120,12 @@ export default {
       relationshipVal: '',
       btnName: '提交',
       deleteButton: '删除',
-      confirmButton: '提交'
+      confirmButton: '提交',
+      isAgree: true,
+      dateSelect: false,
+      currentDate: new Date(),
+      minDate: new Date(1920, 0, 1),
+      maxDate: new Date()
     }
   },
   components: {
@@ -141,32 +147,36 @@ export default {
           this.relationshipVal = res.data.relationship === 1 ? this.relationshipList[1].relation : res.data.relationship === 2 ? this.relationshipList[2].relation : res.data.relationship === 3 ? this.relationshipList[3].relation : res.data.relationship === 4 ? this.relationshipList[4].relation : this.relationshipList[5].relation
         }
       }).catch((err) => {
-        this.$toast('数据错误')
+        // this.$toast('数据错误')
         throw err
       })
     }
   },
   methods: {
     ...mapActions({ addPatient: 'addPatient', getPatientInfo: 'getPatientInfo', deletePatient: 'deletePatient', updatePatient: 'updatePatient' }),
-    openPicker () {
-      this.$refs.pickerDate.open()// datetime-picker 提供了两个供外部调用的方法：open 和 close，分别用于打开和关闭选择器
-    },
-    handleConfirm (val) { // 点击确认按钮时的回调函数，回调的参数是目前选择的值
+    onConfirm (val) { // 点击确认按钮时的回调函数，回调的参数是目前选择的值
+      this.dateSelect = false
       this.birthdateVal = timeFormat(val)
+    },
+    onCancel () {
+      // console.log('取消')
+      this.dateSelect = false
     },
     /* 删除就诊人 */
     deleteData () {
-      this.deletePatient({ relationshipId: this.$route.query.patientId }).then((res) => {
-        console.log(res)
-        if (res.status === 200) {
-          this.$toast({ message: '删除成功', duration: 1000 })
-          setTimeout(() => {
-            this.$router.go(-1)
-          }, 1000)
+      this.$messagebox({ message: '确定删除就诊人', showCancelButton: true, showConfirmButton: true, confirmButtonText: '确定', cancelButtonText: '取消' }).then(action => {
+        console.log(action)
+        if (action === 'confirm') {
+          this.isAgree = false
+          this.deletePatient({ relationshipId: this.$route.query.patientId }).then((res) => {
+            console.log(res)
+            this.$toast({ message: res.message, duration: 1000 })
+            if (res.status !== 200) return
+            setTimeout(() => {
+              this.$router.go(-1)
+            }, 1000)
+          }).catch((err) => { throw err })
         }
-      }).catch((err) => {
-        this.$toast('数据错误')
-        throw err
       })
     },
     /* 提交表单 */
@@ -183,6 +193,8 @@ export default {
         console.log(this.sexVal)
         console.log(this.birthdateVal)
         console.log(this.relationshipVal)
+        this.$indicator.open({ text: '加载中...', spinnerType: 'fading-circle' })
+        this.isAgree = false
         /* 更新就诊人信息 */
         this.updatePatient({
           id: this.$route.query.patientId,
@@ -193,6 +205,7 @@ export default {
           relationship: this.relationshipVal === '本人' ? 1 : this.relationshipVal === '父母' ? 2 : this.relationshipVal === '夫妻' ? 3 : this.relationshipVal === '子女' ? 4 : 5
         }).then((res) => {
           console.log(res)
+          this.$indicator.close()
           if (res.status === 200) {
             this.$toast({ message: '更改成功', duration: 1000 })
             setTimeout(() => {
@@ -204,6 +217,8 @@ export default {
           throw err
         })
       } else {
+        this.$indicator.open({ text: '加载中...', spinnerType: 'fading-circle' })
+        this.isAgree = false
         /* 添加就诊人 */
         this.addPatient({
           name: this.nameVal,
@@ -213,6 +228,7 @@ export default {
           relationship: this.relationshipVal === '本人' ? 1 : this.relationshipVal === '父母' ? 2 : this.relationshipVal === '夫妻' ? 3 : this.relationshipVal === '子女' ? 4 : 5
         }).then((res) => {
           console.log(res)
+          this.$indicator.close()
           if (res.status === 200) {
             this.$toast({ message: '添加成功', duration: 1000 })
             setTimeout(() => {
@@ -220,7 +236,7 @@ export default {
             }, 1000)
           }
         }).catch((err) => {
-          this.$toast('数据错误')
+          // this.$toast('数据错误')
           throw err
         })
       }
@@ -246,13 +262,13 @@ export default {
       width: 120px;
     }
     .field-input {
-      color: $color-88;
+      color: $color-35;
       margin-left: 56px;
       width: 64%;
       font-size: 28px;
     }
     .field-option {
-      color: $color-88;
+      color: $color-35;
       margin-left: 56px;
       width: 70%;
       font-size: 28px;

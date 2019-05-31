@@ -1,7 +1,8 @@
 <template>
-  <div>
-    <div class="once-protocol" v-html="protocolContent"></div>
-    <bottom-button :btnName="btnName" @click.native="$router.push({path:'/order/onlineBooking',query: { storeId: $route.query.storeId,storeName: $route.query.storeName }})"></bottom-button>
+  <div class="once-protocol">
+    <div class="protocol-content" v-html="protocolContent"></div>
+    <bottom-button :btnName="btnName" @click.native="$router.push({path:'/order/onlineBooking',
+    query: { storeId: $route.query.storeId,storeName: $route.query.storeName,orderId: $route.query.orderId || ''  }})"></bottom-button>
   </div>
 </template>
 
@@ -12,7 +13,7 @@ export default {
   data () {
     return {
       protocolContent: '',
-      btnName: '同意协议并下一步'
+      btnName: '下一步'
     }
   },
   components: { bottomButton },
@@ -20,10 +21,8 @@ export default {
     ...mapActions({ protocolInfo: 'protocolInfo' })
   },
   created () {
-    console.log(this.$route.query)
     this.$indicator.open({ text: '加载中...', spinnerType: 'fading-circle' })
     this.protocolInfo({ code: 'reservation_protocol' }).then((res) => {
-      console.log(res)
       this.$indicator.close()
       if (res.status === 200) this.protocolContent = res.data.copywriting.value
     }).catch((err) => {
@@ -32,9 +31,6 @@ export default {
     })
   }
   // beforeRouteLeave (to, from, next) {
-  //   console.log(to)
-  //   console.log(from)
-  //   console.log(next)
   //   if (to.path === '/order/onlineBooking') {
   //     to.meta.keepAlive = true
   //   } else {
@@ -47,9 +43,13 @@ export default {
 
 <style lang="scss" scoped>
 .once-protocol {
-  width: 100%;
-  padding: 56px 32px 0 32px;
-  box-sizing: border-box;
+  height: 100%;
   background-color: $color-ff;
+  .protocol-content {
+    width: 100%;
+    padding: 0 32px;
+    box-sizing: border-box;
+    background-color: $color-ff;
+  }
 }
 </style>

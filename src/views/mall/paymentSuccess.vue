@@ -9,8 +9,8 @@
       <div class="delivery-tips" v-cloak>{{deliveryTips}}</div>
     </div>
     <div class="success-buttons">
-      <button class="com-button return-button" v-cloak>{{returnButton}}</button>
-      <button class="com-button order-list-button" v-cloak>{{orderListButton}}</button>
+      <button class="com-button return-button" @click="$router.push('/mall/index/0')" v-cloak>{{returnButton}}</button>
+      <button class="com-button order-list-button" @click="$router.push('/bought/index')" v-cloak>{{orderListButton}}</button>
     </div>
   </div>
 </template>
@@ -20,7 +20,7 @@ export default {
   data () {
     return {
       paySuccessImg: require('../../assets/images/bought/paySuccessImg.png'),
-      deliveryTips: '商品将配送至：广东省珠海市高新区南方软件园',
+      deliveryTips: '如购买了服务请到订单详情处预约使用',
       returnButton: '返回',
       orderListButton: '订单列表'
     }

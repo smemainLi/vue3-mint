@@ -4,7 +4,7 @@
     <div class="box-display">
       <div class="box-content">
         <div class="box-title" v-cloak>{{title}}</div>
-        <div class="box-message" v-cloak>{{subitemStatus==='已预约'&&isIntraday?message_c:subitemStatus==='已预约'&&!isIntraday?message_o:message_t}}</div>
+        <div class="box-message" v-cloak>{{messageShow()}}</div>
         <div class="box-buttons">
           <button class="com-button btn-cancel" @click="cancel" v-cloak>{{btnCancel}}</button>
           <button class="com-button btn-confirm" @click="confirm" v-cloak>{{btnConfirm}}</button>
@@ -20,13 +20,13 @@ export default {
     return {
       title: '取消预约',
       message_c: '当天取消则不退款，请谨慎操作。确定取消吗？',
-      message_o: '取消后，挂号费将退至会员红包',
+      message_o: '取消后，挂号费将退至会员钱包',
       message_t: '确定取消该预约吗？',
       btnCancel: '取消',
       btnConfirm: '确定'
     }
   },
-  props: ['subitemStatus', 'isIntraday'],
+  props: ['subitemStatus', 'isIntraday', 'registeredFee'], // isIntraday 是否是当天的预约  false 非当天 true 当天
   methods: {
     cancel () {
       this.$emit('getDialogStatusCancel', false)
@@ -35,6 +35,11 @@ export default {
       this.$emit('getDialogStatusConfirm', false)
       this.subitemStatus === '待支付' ? this.$router.push({ path: '/arecord/appointmentDetails', query: { cancelFlag: 'isToBePaid' } }) : this.$router.push({ path: '/arecord/appointmentDetails' })
       /* this.$router.push({ path: '/arecord/appointmentDetails', query: { redirect: '/arecord/appointmentDetails' } }) */
+    },
+    messageShow () {
+      if (this.subitemStatus !== '已预约' || this.registeredFee === 0) return this.message_t
+      else if (this.isIntraday) return this.message_c
+      else return this.message_o
     }
   }
 }

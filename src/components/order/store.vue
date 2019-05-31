@@ -15,7 +15,7 @@
         </div>
         <div class="store-nav">
           <i class="icon-guidepost"></i>
-          <span class="nav-content" @click.stop="consultAMap" v-cloak>{{storeNav}}</span>
+          <span class="nav-content" @click.stop="consultAMap()" v-cloak>{{storeNav}}</span>
         </div>
       </div>
     </div>
@@ -30,15 +30,15 @@ export default {
       storeNav: '导航'
     }
   },
-  props: ['store', 'latitude', 'longitude'],
+  props: ['store'],
   methods: {
     /* 查看地图接口 */
     consultAMap () {
       let _this = this
       wx.ready(function () {
         wx.openLocation({
-          latitude: _this.latitude, // 纬度，浮点数，范围为90 ~ -90
-          longitude: _this.longitude, // 经度，浮点数，范围为180 ~ -180。
+          latitude: _this.store.latitude, // 纬度，浮点数，范围为90 ~ -90
+          longitude: _this.store.longitude, // 经度，浮点数，范围为180 ~ -180。
           name: _this.store.storeName, // 位置名
           address: _this.store.storeLocation, // 地址详情说明
           scale: 12, // 地图缩放级别,整形值,范围从1~28。默认为最大
@@ -104,7 +104,7 @@ export default {
         line-height: 50px;
         text-align: center;
         position: absolute;
-        bottom: -6px;
+        bottom: -16px;
         right: 0;
       }
     }

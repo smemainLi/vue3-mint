@@ -2,7 +2,7 @@
   <div class="index">
     <router-view />
     <van-tabbar v-model="active">
-      <van-tabbar-item v-for="(item,index) in tabbarsList" :info="item.infoCount" @click="switchTab(item)" :key="index">
+      <van-tabbar-item :class="[index===3&&cartGoodsNum?'':'hide-van-info-inco']" v-show="item.iconEmpty||item.shareGif" v-for="(item,index) in tabbarsList" :info="index===3?(cartGoodsNum?cartGoodsNum:''):''" @click="switchTab(item)" :key="index">
         <i :class="active===index?item.iconColor:item.iconEmpty" v-show="item.iconEmpty" slot="icon"></i>
         <span class="tabbar-content" v-show="item.iconEmpty" v-cloak>{{item.tabbarContent}}</span>
         <div class="share-gif" v-show="!item.iconEmpty">
@@ -14,31 +14,45 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
 export default {
   data () {
     return {
       active: 0,
       tabbarsList: [
-        { iconEmpty: 'icon-home', iconColor: 'icon-home-color', infoCount: '6', tabbarContent: '首页', path: '/mall/index' },
-        { iconEmpty: 'icon-classify', iconColor: 'icon-classify-color', infoCount: '6', tabbarContent: '分类', path: '/mall/classify' },
-        { shareGif: require('../assets/images/mall/share.gif') },
-        { iconEmpty: 'icon-shopping-cart', iconColor: 'icon-shopping-cart-color', infoCount: '6', tabbarContent: '购物车', path: '/mall/shoppingCart' },
-        { iconEmpty: 'icon-personal', iconColor: 'icon-personal-color', infoCount: '6', tabbarContent: '个人中心', path: '/mcard/index' }
+        { iconEmpty: 'icon-home', iconColor: 'icon-home-color', tabbarContent: '首页', path: '/mall/index/0' },
+        { iconEmpty: 'icon-classify', iconColor: 'icon-classify-color', tabbarContent: '分类', path: '/mall/classify/1' },
+        { shareGif: '', path: '' },
+        { iconEmpty: 'icon-shopping-cart', iconColor: 'icon-shopping-cart-color', tabbarContent: '购物车', path: '/mall/shoppingCart' },
+        { iconEmpty: 'icon-personal', iconColor: 'icon-personal-color', tabbarContent: '个人中心', path: '/mcard/index' }
       ]
     }
   },
   methods: {
+    ...mapActions({ getCartGoodsNum: 'getCartGoodsNum', getInviteConfig: 'getInviteConfig', getMyInviteConfig: 'getMyInviteConfig' }),
     switchTab (tabbar) {
       this.$router.push({ path: tabbar.path })
-      // sessionStorage.setItem('active', this.active)
+    },
+    /* 加载分享配置信息 */
+    async loadInviteConfig () {
+      const result = await this.getInviteConfig()
+      if (result.status !== 200) return
+      if (result.data.status !== '0') return
+      this.tabbarsList[2].shareGif = result.data.img
+      this.tabbarsList[2].path = result.data.pageUrl
     }
   },
+  computed: {
+    ...mapGetters({ cartGoodsNum: 'cartGoodsNum' })
+  },
   created () {
-    // if (sessionStorage.getItem('active')) {
-    //   this.active = Number(sessionStorage.getItem('active'))
-    //   this.$router.push(this.tabbarsList[Number(sessionStorage.getItem('active'))].path)
-    // } else this.$router.push(this.tabbarsList[this.active].path)
-    this.$router.push(this.tabbarsList[this.active].path)
+    if (!this.$route.params.active) this.$router.replace(this.tabbarsList[0].path)
+    else this.active = Number(this.$route.params.active)
+    this.getCartGoodsNum()// 获取购物车商品件数
+    this.loadInviteConfig()
+  },
+  updated () {
+    this.active = Number(this.$route.params.active)
   }
 }
 </script>
@@ -63,10 +77,19 @@ export default {
           top: -10px;
           background-color: $color-F56E72;
         }
+        .icon-shopping-cart,
+        .icon-shopping-cart-color {
+          font-size: 46px !important;
+        }
       }
       .van-tabbar-item__text {
         color: $color-00;
         z-index: 999;
+      }
+    }
+    .hide-van-info-inco {
+      .van-info {
+        display: none;
       }
     }
     .van-tabbar-item--active {
@@ -78,9 +101,9 @@ export default {
       }
     }
     .share-gif {
-      width: 180px;
-      height: 180px;
-      margin-bottom: 70px;
+      width: 120px;
+      height: 124px;
+      margin-bottom: 66px;
       .gif-content {
         width: 100%;
         height: 100%;

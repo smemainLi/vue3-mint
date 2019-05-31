@@ -5,7 +5,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <!-- <meta name="viewport" content="width=device-width,initial-scale=1.0"> -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui">
   <meta name="screen-orientation" content="portrait" />
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="format-detection" content="telephone=no">
@@ -14,24 +15,60 @@
   <meta name="format-detection" content="telephone=yes" />
   <link rel="icon" href="<%= BASE_URL %>favicon.ico">
   <link rel="stylesheet" href="https://unpkg.com/mint-ui/lib/style.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@1.4/lib/index.css">
+  <link rel="stylesheet" href="https://unpkg.com/vant/lib/index.css">
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@1.4/lib/index.css"> -->
   <title>tdkq-wx</title>
   <!-- <title>
     <%= htmlWebpackPlugin.options.title %>
   </title> -->
+
+  <!-- <style type="text/css">
+    /* 修改美恰客服按钮样式 */
+
+    #MEIQIA-BTN-HOLDER {
+      z-index: 1999 !important;
+      width: 100% !important;
+    }
+
+    #MEIQIA-BTN {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 100% !important;
+      height: 11.733vw !important;
+      border: 0 !important;
+      border-radius: 0 !important;
+      background: linear-gradient(-32deg, rgb(0, 140, 167), rgb(47, 180, 206)) !important;
+      color: #ffffff !important;
+      font-size: 4.8vw !important;
+      letter-spacing: .267vw !important;
+    }
+
+    #MEIQIA-BTN-ICON {
+      display: none !important;
+    }
+
+    .icon-message {
+      font-size: 4.8vw !important;
+      margin-right: 1.867vw !important;
+    }
+  </style> -->
+
 </head>
 
 <body>
   <noscript>
-        <strong>We're sorry but tdkq-wx doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
+    <strong>We're sorry but tdkq-wx doesn't work properly without JavaScript enabled. Please enable it to
+      continue.</strong>
+  </noscript>
   <div id="app"></div>
   <!-- built files will be auto injected -->
 </body>
 
-<script src="//g.alicdn.com/fdilab/lib3rd/viewport-units-buggyfill/0.6.2/??viewport-units-buggyfill.hacks.min.js,viewport-units-buggyfill.min.js"></script>
+<script
+  src="//g.alicdn.com/fdilab/lib3rd/viewport-units-buggyfill/0.6.2/??viewport-units-buggyfill.hacks.min.js,viewport-units-buggyfill.min.js"></script>
 <script>
-  window.onload = function() {
+  window.onload = function () {
     window.viewportUnitsBuggyfill.init({
       hacks: window.viewportUnitsBuggyfillHacks
     });

@@ -30,7 +30,6 @@ export default {
   },
   created () {
     this.getConsumptionDetail({ consumptionId: this.$route.query.consumptionId }).then((res) => {
-      console.log(res)
       if (res.status === 200) {
         this.useInfoList.length = 0
         this.useInfoList = []
@@ -48,17 +47,16 @@ export default {
         if (this.useInfoList.length !== 0) this.useInfoList[this.useInfoList.length - 1].hasBr = false// 样式设置，是否有下划线
         this.storeInfoList = [
           { label: '门店', value: res.data.shopName, isMoney: false, hasBr: true },
-          { label: '消费金额', value: `￥${res.data.sum}`, isMoney: true, hasBr: !!res.data.relationshipName },
-          { label: '就诊人', value: res.data.relationshipName, isMoney: false, hasBr: !!res.data.doctorName },
-          { label: '医生', value: res.data.doctorName, isMoney: false, hasBr: !!res.data.staffName },
-          { label: '收银员', value: res.data.staffName, isMoney: false, hasBr: !!res.data.creatDate },
-          { label: '支付时间', value: res.data.creatDate, isMoney: false, hasBr: !!res.data.payType },
-          { label: '支付方式', value: res.data.payType, isMoney: false, hasBr: !!res.data.code },
+          { label: '消费金额', value: `￥${res.data.sum}`, isMoney: true, hasBr: true },
+          { label: '就诊人', value: res.data.relationshipName, isMoney: false, hasBr: true },
+          { label: '医生', value: res.data.doctorName, isMoney: false, hasBr: true },
+          { label: '收银员', value: res.data.staffName, isMoney: false, hasBr: true },
+          { label: '支付时间', value: res.data.createDate, isMoney: false, hasBr: true },
+          { label: '支付方式', value: res.data.payType, isMoney: false, hasBr: true },
           { label: '订单编号', value: res.data.code, isMoney: false, hasBr: false }
         ]
       }
     }).catch((err) => {
-      console.log('数据错误')
       throw err
     })
   }

@@ -2,7 +2,7 @@
   <div class="amount-input">
     <div class="input-row">
       <div class="input-unit" v-cloak>{{amountUnit}}</div>
-      <input class="input-field" type="number" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^\d]/g, '').replace(/^0{1,}/g,'')}else{this.value=this.value.replace(/\D/g,'').replace(/^0{1,}/g,'')}" onblur="if(this.value.length==1){this.value=this.value.replace(/[^\d]/g, '').replace(/^0{1,}/g,'')}else{this.value=this.value.replace(/\D/g,'').replace(/^0{1,}/g,'')}" v-model="amountMoney" :placeholder="amountMoneyPlaceholder">
+      <input class="input-field" type="number" onkeyup="value=value.replace(/[^\d.]/g,'')" v-model="amountMoney" :placeholder="moneyPlaceholder">
     </div>
     <div class="input-tips">
       <span class="tips-title" v-cloak>{{tipsTitle}}</span><span class="tips-content" v-cloak>{{tipsContent}}</span>
@@ -21,10 +21,9 @@ export default {
       // tipsContent: '￥100'
     }
   },
-  props: ['tipsTitle', 'tipsContent'],
+  props: ['tipsTitle', 'tipsContent', 'moneyPlaceholder'],
   watch: {
     amountMoney: function (newVal) {
-      // console.log(newVal)
       this.$emit('getAmountMoney', newVal)
     }
   }

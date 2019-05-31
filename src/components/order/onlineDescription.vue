@@ -67,7 +67,7 @@ export default {
       width: 120px;
     }
     .field-input {
-      color: $color-88;
+      color: $color-35;
       margin-left: 56px;
       width: 64%;
       font-size: 28px;
