@@ -19,7 +19,7 @@
     "postcss-url": "^8.0.0",
     "postcss-viewport-units": "^0.1.6",
     "postcss-write-svg": "^3.0.1",
-    "vant": "^1.5.2-beta",
+    "vant": "^2.1.8",
     "vue": "^2.5.17",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1",
